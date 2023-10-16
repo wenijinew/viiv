@@ -1,0 +1,21 @@
+{
+  "name": "eu-vscode",
+  "displayName": "eu.vscode",
+  "description": "A VsCode theme that puts developers into focus mode quickly. ",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.83.0"
+  },
+  "categories": [
+    "Themes"
+  ],
+  "contributes": {
+    "themes": [
+      {
+        "label": "Eu.VsCode",
+        "uiTheme": "vs-dark",
+        "path": "./themes/Eu.VsCode-color-theme.json"
+      }
+    ]
+  }
+}
