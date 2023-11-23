@@ -19,7 +19,7 @@
     "editor.findMatchHighlightBackground": "#82000050",
     "editor.findMatchBorder": "#ffb733",
     "editor.findMatchHighlightBorder": "#ffb73350",
-    "editor.foreground": "#d4d4d4",
+    "editor.foreground": "#b7b7ff",
     "editor.hoverHighlightBackground": "#30304e",
     "editor.inactiveSelectionBackground": "#30304e",
     "editor.lineHighlightBackground": "#30304e",
@@ -566,8 +566,8 @@
     //"statusBar.noFolderForeground": "#b7b7ff",
     //"statusBarItem.activeBackground": "#b7b7ff2e",
     //"statusBarItem.compactHoverBackground": "#b7b7ff33",
-    //"statusBarItem.errorBackground": "#c72e0f",
-    //"statusBarItem.errorForeground": "#b7b7ff",
+    "statusBarItem.errorBackground": "#82000050",
+    "statusBarItem.errorForeground": "#b7b7ff",
     //"statusBarItem.errorHoverBackground": "#b7b7ff1f",
     //"statusBarItem.errorHoverForeground": "#b7b7ff",
     //"statusBarItem.focusBorder": "#b7b7ff",
@@ -1108,7 +1108,7 @@
     {
       "scope": "keyword.operator",
       "settings": {
-        "foreground": "#D4D4D4"
+        "foreground": "#7141c6"
       }
     },
     {
@@ -1269,7 +1269,7 @@
         "constant.other.placeholder"
       ],
       "settings": {
-        "foreground": "#b0b0ce"
+        "foreground": "#8181b0"
       }
     },
     {
@@ -1393,7 +1393,11 @@
       }
     },
     {
-      "scope": ["comment.block.javadoc.java", "comment.line.double-slash.c"],
+      "scope": [
+        "comment.block.javadoc.java",
+        "comment.line.double-slash.c",
+        "comment.line.double-slash.cpp"
+      ],
       "settings": {
         "foreground": "#84b384"
       }
