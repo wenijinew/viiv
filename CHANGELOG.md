@@ -6,4 +6,20 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- Initial release
+- [0.0.7] - 2023-12-31
+
+### Added
+
+### Fixed
+
+### Changed
+
+### Removed
+
+## [0.0.6] - 2023-11-24
+
+### Added
+
+- Logo
+- Preview
+- Change log structure
