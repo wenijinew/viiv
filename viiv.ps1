@@ -1,3 +1,6 @@
+# Test Code
+# > for($i=1;$i -lt 500; $i++){pwsh -File .\viiv.ps1; Write-Output $i; Start-Sleep -Seconds 20 }
+
 # Set working directory
 $DIR = $PSScriptRoot
 
