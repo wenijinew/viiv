@@ -734,7 +734,7 @@
     {
       "scope": "constant.language",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
@@ -757,7 +757,7 @@
     {
       "scope": "entity.name.tag",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
@@ -796,7 +796,7 @@
     {
       "scope": "markup.raw.block.markdown",
       "settings": {
-        "foreground": "C_08_15"
+        "foreground": "C_03_45"
       }
     },
     {
@@ -808,14 +808,14 @@
     {
       "scope": "markup.bold",
       "settings": {
-        "foreground": "C_01_23",
+        "foreground": "C_01_15",
         "fontStyle": "bold"
       }
     },
     {
       "scope": "markup.heading",
       "settings": {
-        "foreground": "C_01_23",
+        "foreground": "C_01_15",
         "fontStyle": "bold"
       }
     },
@@ -846,13 +846,13 @@
     {
       "scope": "meta.paragraph.markdown",
       "settings": {
-        "foreground": "C_11_00"
+        "foreground": "C_11_10"
       }
     },
     {
       "scope": "markup.changed",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_03_15"
       }
     },
     {
@@ -882,7 +882,7 @@
     {
       "scope": ["meta.preprocessor", "entity.name.function.preprocessor"],
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
@@ -894,13 +894,13 @@
     {
       "scope": "source.python",
       "settings": {
-        "foreground": "C_11_05"
+        "foreground": "C_11_35"
       }
     },
     {
       "scope": "keyword.control.import.python",
       "settings": {
-        "foreground": "C_09_1080"
+        "foreground": "C_03_4080"
       }
     },
     {
@@ -912,7 +912,7 @@
     {
       "scope": "meta.member.access.python",
       "settings": {
-        "foreground": "C_06_15"
+        "foreground": "C_06_45"
       }
     },
     {
@@ -924,7 +924,7 @@
     {
       "scope": "constant.other.caps.python",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
@@ -942,19 +942,21 @@
     {
       "scope": "meta.diff.header",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
-      "scope": "storage",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
-      "scope": "storage.type",
+      "scope": [
+        "storage.type",
+        "storage"
+      ],
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_02_15"
       }
     },
     {
@@ -994,7 +996,7 @@
         "punctuation.section.embedded"
       ],
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
@@ -1019,13 +1021,13 @@
     {
       "scope": "keyword",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
       "scope": "keyword.control",
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
@@ -1048,7 +1050,7 @@
         "keyword.operator.wordlike"
       ],
       "settings": {
-        "foreground": "C_01_23"
+        "foreground": "C_01_15"
       }
     },
     {
@@ -1081,7 +1083,7 @@
     {
       "scope": ["punctuation.terminator.java"],
       "settings": {
-        "foreground": "C_08_20"
+        "foreground": "C_03_50"
       }
     },
     {
@@ -1102,7 +1104,7 @@
         "variable.language.wildcard.java"
       ],
       "settings": {
-        "foreground": "C_11_10"
+        "foreground": "C_11_40"
       }
     },
     {
@@ -1114,7 +1116,7 @@
     {
       "scope": "source.powershell",
       "settings": {
-        "foreground": "C_11_00"
+        "foreground": "C_11_10"
       }
     },
     {
@@ -1127,7 +1129,7 @@
         "entity.name.operator.custom-literal"
       ],
       "settings": {
-        "foreground": "C_07_10"
+        "foreground": "C_07_40"
       }
     },
     {
@@ -1135,7 +1137,7 @@
         "meta.function-call.python"
       ],
       "settings": {
-        "foreground": "C_03_15"
+        "foreground": "C_03_45"
       }
     },
     {
@@ -1282,7 +1284,7 @@
     {
       "scope": ["keyword.operator.or.regexp", "keyword.control.anchor.regexp"],
       "settings": {
-        "foreground": "C_08_15"
+        "foreground": "C_03_45"
       }
     },
     {
