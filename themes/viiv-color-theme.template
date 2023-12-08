@@ -894,7 +894,7 @@
     {
       "scope": "source.python",
       "settings": {
-        "foreground": "C_11_00"
+        "foreground": "C_11_05"
       }
     },
     {
@@ -918,7 +918,7 @@
     {
       "scope": "meta.member.access.python",
       "settings": {
-        "foreground": "C_08_15"
+        "foreground": "C_06_15"
       }
     },
     {
@@ -1093,7 +1093,7 @@
     {
       "scope": ["storage.modifier.package.java"],
       "settings": {
-        "foreground": "C_08_20"
+        "foreground": "C_11_15"
       }
     },
     {
@@ -1102,7 +1102,7 @@
         "variable.language.wildcard.java"
       ],
       "settings": {
-        "foreground": "C_08_15"
+        "foreground": "C_11_10"
       }
     },
     {
@@ -1122,11 +1122,19 @@
         "entity.name.function",
         "support.function",
         "support.constant.handlebars",
-        "source.powershell variable.other.member",
+        "source.powershell.variable.other.member",
         "entity.name.operator.custom-literal"
       ],
       "settings": {
-        "foreground": "C_08_15"
+        "foreground": "C_07_10"
+      }
+    },
+    {
+      "scope": [
+        "meta.function-call.python"
+      ],
+      "settings": {
+        "foreground": "C_03_15"
       }
     },
     {
@@ -1204,7 +1212,7 @@
         "constant.other.placeholder"
       ],
       "settings": {
-        "foreground": "#8181b0"
+        "foreground": "C_08_20"
       }
     },
     {
