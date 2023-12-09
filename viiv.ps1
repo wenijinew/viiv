@@ -8,10 +8,10 @@ $DIR = $PSScriptRoot
 $DYNAMIC_THEME_NAME = "dynamic"
 $THEME_FILE_EXTENSION = "-color-theme.json"
 $DYNAMIC_PALETTE_FILENAME = "dynamic-palette.txt"
-$TEMPLATE_THEME_FILENAME = "viiv-color-theme.template"
+$TEMPLATE_THEME_FILENAME = "viiv-color-theme.template.json"
 $BASE_COLOR_TOTAL = 10
 $GRADATIONAL_TOTAL = 30 
-$GENERAL_MAX_COLOR = 20
+$GENERAL_MAX_COLOR = 60 
 $DARK_MAX_COLOR = 10
 
 # Generate palette colors
