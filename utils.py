@@ -24,24 +24,23 @@ def get_scopes(json_file):
     return scopes
     
 
-def get_scope_groups(scopes):
-    """Get pref from the given scopes.
+def group_scopes(scopes):
+    """Group scopes by the prefix.
     
-    To add this linek
     """
     scope_groups = {}
-    for _scope in scopes:
-        group_name = _scope.split(".")[0]
+    for scope in scopes:
+        group_name = scope.split(".")[0]
         if group_name not in scope_groups:
-            scope_groups[group_name] = [_scope]
+            scope_groups[group_name] = [scope]
         else:
             if len(scope_groups[group_name]) < 5:
-                scope_groups[group_name].append(_scope)
+                scope_groups[group_name].append(scope)
             else:
                 if f"{group_name}2" not in scope_groups:
-                    scope_groups[f"{group_name}2"] = [_scope]
+                    scope_groups[f"{group_name}2"] = [scope]
                 else:
-                    scope_groups[f"{group_name}2"].append(_scope)
+                    scope_groups[f"{group_name}2"].append(scope)
     return scope_groups
 
 
