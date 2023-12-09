@@ -95,7 +95,7 @@ def group_scopes(scopes):
     return scope_groups
 
 
-def define_token_colors(scope_groups):
+def define_token_colors(scope_groups = None, base_colors_range=[1, 12], light_level_range = [14, 23]):
     """for each scope, set its foreground
 
     Example.
@@ -105,13 +105,25 @@ def define_token_colors(scope_groups):
             "foreground": "#ff0000"
         }
     }
+
+    Parameters
+    ----------
+    scope_groups : dict
+    base_colors_range : list, not includ the 2nd value.
+    light_level_range : list, not includ the 2nd value.
     """
+    # if not passed scope_groups, then read from json file
+    if not scope_groups:
+        template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+        scopes = get_scopes(template_json_file)
+        scope_groups = group_scopes(scopes)
+        print(f"Read {len(scopes)} scopes from json file {template_json_file}.")
     # color placeholder value format "C_[0-9]{2}_[0-9]{2}",
     color_placeholders = []
-    for i in range(1, 12):
+    for i in range(base_colors_range[0], base_colors_range[1]):
         if i < 10:
             i = "0" + str(i)
-        for j in range(14, 23):
+        for j in range(light_level_range[0], light_level_range[1]):
             j = str(j)
             color_placeholders.append(f"C_{i}_{j}")
     import random
@@ -133,3 +145,6 @@ def define_token_colors(scope_groups):
         token_colors, open(f'{os.getenv("HOME")}/Downloads/token_colors.json', "w")
     )
     return token_colors
+
+if __name__ == "__main__":
+    define_token_colors()
