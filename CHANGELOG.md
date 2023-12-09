@@ -16,10 +16,10 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ### Removed
 
-## [0.0.6] - 2023-11-24
+## [0.1.4] - 2023-12-09
 
 ### Added
 
-- Logo
-- Preview
-- Change log structure
+* Python utility script to help automatically generate token colors in the theme file.
+* Applied placeholders for all colors in the theme template file.
+* Be able to generate countless charming theme files.
