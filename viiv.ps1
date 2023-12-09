@@ -12,7 +12,7 @@ $TEMPLATE_THEME_FILENAME = "viiv-color-theme.template.json"
 $BASE_COLOR_TOTAL = 10
 $GRADATIONAL_TOTAL = 30 
 $GENERAL_MAX_COLOR = 60 
-$DARK_MAX_COLOR = 10
+$DARK_MAX_COLOR = 20
 
 # Generate palette colors
 Function GeneratePaletteColors { 
