@@ -15,12 +15,12 @@ def get_scopes(json_file):
             if "scope" in token:
                 token_scope = token.get("scope", [])
                 if isinstance(token_scope, str):
-                    scopes.append(token_scope)
+                    scopes.extend(token_scope.split(" "))
                 elif isinstance(token_scope, list):
                     scopes.extend(token_scope)
             else:
                 print("No scope in {}.".format(token))
-    return scopes
+    return [scope.strip() for scope in scopes]
 
 
 def get_color_properties(theme_json_file):
@@ -43,29 +43,37 @@ def get_color_properties_by_suffix(color_properties, suffix):
 def group_color_properties(color_properties):
     """Set colors from the given color properties."""
     _bg_properties = get_color_properties_by_suffix(color_properties, "Background")
-    _active_bg_properties = get_color_properties_by_suffix(color_properties, "ActiveBackground")
-    _inactive_bg_properties = get_color_properties_by_suffix(color_properties, "InactiveBackground")
+    _active_bg_properties = get_color_properties_by_suffix(
+        color_properties, "ActiveBackground"
+    )
+    _inactive_bg_properties = get_color_properties_by_suffix(
+        color_properties, "InactiveBackground"
+    )
     # remove _active_bg_properties and _inactive_bg_properties from _bg_properties
     for _active_bg_property in _active_bg_properties:
         if _active_bg_property in _bg_properties:
             _bg_properties.remove(_active_bg_property)
     for _inactive_bg_property in _inactive_bg_properties:
-        if _inactive_bg_property in _bg_properties:            
+        if _inactive_bg_property in _bg_properties:
             _bg_properties.remove(_inactive_bg_property)
-    
+
     _fg_properties = get_color_properties_by_suffix(color_properties, "Foreground")
-    _active_fg_properties = get_color_properties_by_suffix(color_properties, "ActiveForeground")
-    _inactive_fg_properties = get_color_properties_by_suffix(color_properties, "InactiveForeground")
+    _active_fg_properties = get_color_properties_by_suffix(
+        color_properties, "ActiveForeground"
+    )
+    _inactive_fg_properties = get_color_properties_by_suffix(
+        color_properties, "InactiveForeground"
+    )
     # remove _active_fg_properties and _inactive_fg_properties from _fg_properties
     for _active_fg_property in _active_fg_properties:
-        if _active_fg_property in _fg_properties:            
+        if _active_fg_property in _fg_properties:
             _fg_properties.remove(_active_fg_property)
     for _inactive_fg_property in _inactive_fg_properties:
-        if _inactive_fg_property in _fg_properties:                        
+        if _inactive_fg_property in _fg_properties:
             _fg_properties.remove(_inactive_fg_property)
-    
+
     _border_properties = get_color_properties_by_suffix(color_properties, "Border")
-    
+
     return {
         "bg": _bg_properties,
         "active_bg": _active_bg_properties,
@@ -95,7 +103,9 @@ def group_scopes(scopes):
     return scope_groups
 
 
-def define_token_colors(scope_groups = None, base_colors_range=[1, 12], light_level_range = [14, 23]):
+def define_token_colors(
+    scope_groups=None, base_colors_range=[1, 12], light_level_range=[14, 23]
+):
     """for each scope, set its foreground
 
     Example.
@@ -113,8 +123,12 @@ def define_token_colors(scope_groups = None, base_colors_range=[1, 12], light_le
     light_level_range : list, not includ the 2nd value.
     """
     # if not passed scope_groups, then read from json file
+    template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+    if not os.path.exists(template_json_file):
+        print(f"Template json file {template_json_file} does not exist.")
+        return None
+    template_json = json.load(open(template_json_file))
     if not scope_groups:
-        template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
         scopes = get_scopes(template_json_file)
         scope_groups = group_scopes(scopes)
         print(f"Read {len(scopes)} scopes from json file {template_json_file}.")
@@ -124,6 +138,9 @@ def define_token_colors(scope_groups = None, base_colors_range=[1, 12], light_le
         if i < 10:
             i = "0" + str(i)
         for j in range(light_level_range[0], light_level_range[1]):
+            if j < 10:
+                j = "0" + str(j)
+            i = str(i)
             j = str(j)
             color_placeholders.append(f"C_{i}_{j}")
     import random
@@ -141,10 +158,10 @@ def define_token_colors(scope_groups = None, base_colors_range=[1, 12], light_le
                 },
             }
             token_colors.append(scope_settings)
-    json.dump(
-        token_colors, open(f'{os.getenv("HOME")}/Downloads/token_colors.json', "w")
-    )
+    template_json["tokenColors"] = token_colors
+    json.dump(template_json, open(template_json_file, "w"))
     return token_colors
 
+
 if __name__ == "__main__":
-    define_token_colors()
+    define_token_colors(light_level_range=[8, 18], base_colors_range=[1, 9])
