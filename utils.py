@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 """Functions to help quickly generate customized token colors in VsCode theme file."""
 
+import json
+import os
+
 def get_scopes(json_file):
     """Get scopes from the given json file which is VsCode theme file.
     
@@ -11,10 +14,11 @@ def get_scopes(json_file):
         token_colors = data["tokenColors"]
         for token in token_colors:
             if "scope" in token:
-                if type(token["scope"]) == str:
-                    scopes.append(token["scope"])
-                elif type(token["scope"]) == list:
-                    scopes.extend(token["scope"])
+                token_scope = token.get("scope", [])
+                if isinstance(token_scope, str):
+                    scopes.append(token_scope)
+                elif isinstance(token_scope, list):
+                    scopes.extend(token_scope)
             else:
                 print("No scope in {}.".format(token))
     return scopes
@@ -75,6 +79,5 @@ def define_token_colors(scope_groups):
                 }
             }
             token_colors.append(scope_settings)
-    import os
     json.dump(token_colors, open(f'{os.getenv("HOME")}/Downloads/token_colors.json', "w"))
     return token_colors
