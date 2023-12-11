@@ -11,10 +11,10 @@ $DYNAMIC_PALETTE_FILENAME = "dynamic-palette.txt"
 $TEMPLATE_THEME_FILENAME = "viiv-color-theme.template.json"
 $BASE_COLOR_TOTAL = 10
 $GRADATIONAL_TOTAL = 60 
-$DARK_COLOR_GRADATIONAL_TOTAL = 30 
-$GENERAL_MAX_COLOR = 60 
+$DARK_COLOR_GRADATIONAL_TOTAL = 60 
+$GENERAL_MAX_COLOR = 100 
 $DARK_MAX_COLOR = 20
-$DARK_BASE_COLORS = "['#08080e']"
+$DARK_BASE_COLORS = "['#0c0c0c']"
 
 # Generate palette colors
 Function GeneratePaletteColors { 
