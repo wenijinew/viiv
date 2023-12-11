@@ -180,11 +180,14 @@ def define_token_colors(
             _placeholder_with_alpha_regex = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
             _foreground = re.sub(_placeholder_regex, color_placeholder, _old_foreground) 
 
-            for _scope_prefix in ["comment", "docstring", "punctuation"]:
+            for _scope_prefix in ["comment", "docstring", "punctuation", "javadoc"]:
                 if scope.find(_scope_prefix) != -1:
-                    if not re.match(_placeholder_with_alpha_regex, _old_foreground):
-                        _foreground = f"{_foreground}60"
-                        break
+                    # do not set alpha
+                    if re.match(_placeholder_with_alpha_regex, _old_foreground):
+                        _foreground = re.sub(_placeholder_with_alpha_regex, color_placeholder, _old_foreground) 
+                    # set base color as dark color
+                    _foreground = re.sub(r'C_[a-zA-Z0-9]{2}', "C_11", _foreground)
+                    break
 
             scope_settings = {
                 "scope": scope,
@@ -200,4 +203,4 @@ def define_token_colors(
 
 
 if __name__ == "__main__":
-    define_token_colors(light_level_range=[20, 55], base_colors_range=[1, 10])
+    define_token_colors(light_level_range=[25, 50], base_colors_range=[1, 10])
