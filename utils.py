@@ -3,24 +3,27 @@
 
 import json
 import os
+import random
+import re
 
 
 def get_scopes(json_file):
     """Get scopes from the given json file which is VsCode theme file."""
     with open(json_file) as f:
         data = json.load(f)
-        scopes = []
+        scopes = {}
         token_colors = data["tokenColors"]
         for token in token_colors:
             if "scope" in token:
-                token_scope = token.get("scope", [])
-                if isinstance(token_scope, str):
-                    scopes.extend(token_scope.split(" "))
-                elif isinstance(token_scope, list):
-                    scopes.extend(token_scope)
+                foreground = token.get("settings", {}).get("foreground", "#000000")
+                token_scopes = token.get("scope", [])
+                if isinstance(token_scopes, str):
+                    token_scopes = token_scopes.split(" ")
+                for token_scope in token_scopes:
+                    scopes[token_scope] = foreground 
             else:
                 print("No scope in {}.".format(token))
-    return [scope.strip() for scope in scopes]
+    return scopes
 
 
 def get_color_properties(theme_json_file):
@@ -86,25 +89,36 @@ def group_color_properties(color_properties):
 
 
 def group_scopes(scopes):
-    """Group scopes by the prefix."""
+    """Group scopes by the prefix.
+    
+    Parameters:
+    ----------
+    scopes : dict[scope_name, foreground], e.g. {'scope 1': '#ff0000', 'scope 2': '#'}
+    """
     scope_groups = {}
-    for scope in scopes:
-        group_name = scope.split(".")[0]
+    for scope in scopes.keys():
+        _splits = scope.split(".")
+        if(len(_splits) == 1):
+            group_name = _splits[0]
+        else:
+            group_name = '.'.join(_splits[0:2])
+
         if group_name not in scope_groups:
             scope_groups[group_name] = [scope]
         else:
-            if len(scope_groups[group_name]) < 5:
-                scope_groups[group_name].append(scope)
-            else:
-                if f"{group_name}2" not in scope_groups:
-                    scope_groups[f"{group_name}2"] = [scope]
-                else:
-                    scope_groups[f"{group_name}2"].append(scope)
+            scope_groups[group_name].append(scope)
     return scope_groups
 
 
+def _create_color_placeholder(i, j):
+    if i < 10:
+        i = "0" + str(i)
+    if j < 10:
+        j = "0" + str(j)
+    return f"C_{i}_{j}"
+
 def define_token_colors(
-    scope_groups=None, base_colors_range=[1, 12], light_level_range=[14, 23]
+    scopes=None, base_colors_range=[1, 12], light_level_range=[14, 23]
 ):
     """for each scope, set its foreground
 
@@ -128,10 +142,12 @@ def define_token_colors(
         print(f"Template json file {template_json_file} does not exist.")
         return None
     template_json = json.load(open(template_json_file))
-    if not scope_groups:
+    if not scopes:
         scopes = get_scopes(template_json_file)
-        scope_groups = group_scopes(scopes)
         print(f"Read {len(scopes)} scopes from json file {template_json_file}.")
+    scope_groups = group_scopes(scopes)
+    print(scope_groups.keys())
+    
     # color placeholder value format "C_[0-9]{2}_[0-9]{2}",
     color_placeholders = []
     for i in range(base_colors_range[0], base_colors_range[1]):
@@ -143,18 +159,30 @@ def define_token_colors(
             i = str(i)
             j = str(j)
             color_placeholders.append(f"C_{i}_{j}")
-    import random
 
-    samples = random.sample(color_placeholders, len(scope_groups))
     token_colors = []
-    count = 0
-    for i, item in enumerate(scope_groups.items()):
-        for scope in item[1]:
-            count += 1
+    # assign random base colors to scope groups, assign random light colors to scopes in scope group
+    base_colors_total = base_colors_range[1]-base_colors_range[0]
+    base_color_samples = random.sample(range(base_colors_range[0], base_colors_range[1]), base_colors_total if len(scope_groups) > base_colors_total else len(scope_groups))
+    for i,scope_group in enumerate(scope_groups):
+        base_color_index = base_color_samples[i%len(base_color_samples)]
+        light_level_total = light_level_range[1]-light_level_range[0]
+        light_color_samples = random.sample(range(light_level_range[0], light_level_range[1]), light_level_total if len(scope_groups[scope_group]) > light_level_total else len(scope_groups[scope_group]))
+        for j,scope in enumerate(scope_groups[scope_group]):
+            light_color_index = light_color_samples[j%len(light_color_samples)]
+            color_placeholder = _create_color_placeholder(base_color_index, light_color_index)
+            _old_foreground = scopes[scope]
+            _placeholder_regex = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
+            _placeholder_with_alpha_regex = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
+            _foreground = re.sub(_placeholder_regex, color_placeholder, _old_foreground) 
+            for _scope_prefix in ["comment", "docstring"]:
+                if scope.find(_scope_prefix) != -1:
+                    if not re.match(_placeholder_with_alpha_regex, _old_foreground):
+                        _foreground = f"{_foreground}60"
             scope_settings = {
                 "scope": scope,
                 "settings": {
-                    "foreground": samples[count % len(samples)],
+                    "foreground": _foreground,
                 },
             }
             token_colors.append(scope_settings)
@@ -164,4 +192,4 @@ def define_token_colors(
 
 
 if __name__ == "__main__":
-    define_token_colors(light_level_range=[8, 18], base_colors_range=[1, 9])
+    define_token_colors(light_level_range=[25, 45], base_colors_range=[1, 10])
