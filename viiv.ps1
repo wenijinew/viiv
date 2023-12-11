@@ -14,7 +14,7 @@ $GRADATIONAL_TOTAL = 60
 $DARK_COLOR_GRADATIONAL_TOTAL = 60 
 $GENERAL_MAX_COLOR = 100 
 $DARK_MAX_COLOR = 20
-$DARK_BASE_COLORS = "['#00001b']"
+$DARK_BASE_COLORS = "['#101000']"
 
 # Generate palette colors
 Function GeneratePaletteColors { 
