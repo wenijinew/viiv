@@ -164,21 +164,28 @@ def define_token_colors(
     # assign random base colors to scope groups, assign random light colors to scopes in scope group
     base_colors_total = base_colors_range[1]-base_colors_range[0]
     base_color_samples = random.sample(range(base_colors_range[0], base_colors_range[1]), base_colors_total if len(scope_groups) > base_colors_total else len(scope_groups))
+
     for i,scope_group in enumerate(scope_groups):
+
         base_color_index = base_color_samples[i%len(base_color_samples)]
         light_level_total = light_level_range[1]-light_level_range[0]
         light_color_samples = random.sample(range(light_level_range[0], light_level_range[1]), light_level_total if len(scope_groups[scope_group]) > light_level_total else len(scope_groups[scope_group]))
+
         for j,scope in enumerate(scope_groups[scope_group]):
+
             light_color_index = light_color_samples[j%len(light_color_samples)]
             color_placeholder = _create_color_placeholder(base_color_index, light_color_index)
             _old_foreground = scopes[scope]
             _placeholder_regex = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
             _placeholder_with_alpha_regex = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
             _foreground = re.sub(_placeholder_regex, color_placeholder, _old_foreground) 
-            for _scope_prefix in ["comment", "docstring"]:
+
+            for _scope_prefix in ["comment", "docstring", "punctuation"]:
                 if scope.find(_scope_prefix) != -1:
                     if not re.match(_placeholder_with_alpha_regex, _old_foreground):
                         _foreground = f"{_foreground}60"
+                        break
+
             scope_settings = {
                 "scope": scope,
                 "settings": {
@@ -186,10 +193,11 @@ def define_token_colors(
                 },
             }
             token_colors.append(scope_settings)
+
     template_json["tokenColors"] = token_colors
     json.dump(template_json, open(template_json_file, "w"))
     return token_colors
 
 
 if __name__ == "__main__":
-    define_token_colors(light_level_range=[25, 45], base_colors_range=[1, 10])
+    define_token_colors(light_level_range=[20, 55], base_colors_range=[1, 10])
