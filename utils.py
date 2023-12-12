@@ -8,6 +8,9 @@ import random
 import re
 import sys
 
+PLACEHOLDER_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
+PLACEHOLDER_WITH_ALPHA_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
+
 
 class ColorRange(dict):
     def __init__(self, base_color_range, light_level_range, alpha_range):
@@ -68,12 +71,12 @@ DEFAULT_COLOR_RANGE = ColorRange([1, 12], [25, 45], [])
 COLOR_RANGE_MAP = {
     "Foreground": ColorRange([1, 12], [15, 20], []),
     "Background": ColorRange([1, 12], [55, 57], []),
-    "Border": ColorRange([1, 12], [45, 50], [30, 40]),
+    "Border": ColorRange([1, 12], [45, 50], []),
     "Outline": ColorRange([1, 12], [45, 50], [30, 60]),
     "Highlight": ColorRange([1, 12], [30, 35], [30, 40]),
     "Stroke": ColorRange([1, 12], [35, 40], [60, 90]),
-    "Shadow": ColorRange([1, 12], [50, 60], []),
-    "Panel": ColorRange([1, 12], [55, 60], []),
+    "Shadow": ColorRange([1, 12], [44, 54], []),
+    "Panel": ColorRange([1, 12], [50, 53], []),
     "Tree": ColorRange([1, 12], [50, 55], []),
     "Icon": ColorRange([1, 12], [30, 40], []),
     "breadcrumb": ColorRange([1, 12], [10, 30], []),
@@ -86,7 +89,7 @@ COLOR_RANGE_MAP = {
     "editorIndentGuide": ColorRange([1, 12], [0, 30], [30, 40]),
     "editorGutter": ColorRange([1, 12], [20, 30], []),
     "activeBackground": ColorRange([1, 12], [53, 55], []),
-    "activeForeground": ColorRange([1, 12], [0, 10], []),
+    "activeForeground": ColorRange([1, 12], [0, 10], [60, 90]),
     "activeBorder": ColorRange([1, 12], [40, 45], [30, 40]),
     "activeOutline": ColorRange([1, 12], [40, 45], [30, 40]),
     "InactiveBackground": ColorRange([1, 12], [57, 60], [60, 90]),
@@ -181,6 +184,7 @@ THEME_BASE_COLOR_PROPERTIES = [
     "editorGroup.emptyBackground",
     "editorGroupHeader.noTabsBackground",
     "editorGroupHeader.tabsBackground",
+    "sash.hoverBorder",
     "sideBar.background",
     "sideBar.dropBackground",
     "sideBar.border",
@@ -190,12 +194,14 @@ THEME_BASE_COLOR_PROPERTIES = [
     "scrollbarSlider.activeBackground",
     "scrollbarSlider.background",
     "scrollbarSlider.hoverBackground",
+    "tree.tableOddRowsBackground",
     "minimap.background",
     "notebook.cellEditorBackground",
     "notebook.editorBackground",
     "notebook.focusedCellBackground",
     "notebook.selectedCellBackground",
     "panel.background",
+    "panel.border",
     "panelSectionHeader.border",
     "panelSection.dropBackground",
     "panelSectionHeader.background",
@@ -214,6 +220,7 @@ THEME_BASE_COLOR_PROPERTIES = [
     "tab.unfocusedInactiveBackground",
     "input.background",
 ]
+
 
 def get_scopes(json_file):
     """Get scopes from the given json file which is VsCode theme file."""
@@ -345,7 +352,15 @@ def _create_color_range(group_name):
     --------
     _create_color_range("Background")
     """
-    _color_range = DEFAULT_BACKGROUND_COLOR_RANGE if group_name.lower().find("background")!=-1 else DEFAULT_FOREGROUND_COLOR_RANGE if group_name.lower().find("foreground")!=-1 else DEFAULT_BORDER_COLOR_RANGE if group_name.lower().find("border")!=-1 else DEFAULT_COLOR_RANGE
+    _color_range = (
+        DEFAULT_BACKGROUND_COLOR_RANGE
+        if group_name.lower().find("background") != -1
+        else DEFAULT_FOREGROUND_COLOR_RANGE
+        if group_name.lower().find("foreground") != -1
+        else DEFAULT_BORDER_COLOR_RANGE
+        if group_name.lower().find("border") != -1
+        else DEFAULT_COLOR_RANGE
+    )
     for k in COLOR_RANGE_MAP.keys():
         if group_name.lower() == k.lower():
             _color_range = COLOR_RANGE_MAP[k]
@@ -394,14 +409,18 @@ def define_colors():
     colors = {}
     color_properties_group = group_color_properties(all_color_properties)
     color_properties_use_default_range = []
+    color_group_and_color_placeholders = {}
     for group_name, color_properties in color_properties_group.items():
         color_range = _create_color_range(group_name)
         color_placeholders = _create_color_placeholders(color_range)
+        color_group_and_color_placeholders[group_name] = color_placeholders
         color_placeholders = random.sample(
             color_placeholders, min(len(color_placeholders), len(color_properties))
         )
         for i, color_property in enumerate(color_properties):
-            if (color_range == DEFAULT_BACKGROUND_COLOR_RANGE) and (color_property in colors):
+            if (color_range == DEFAULT_BACKGROUND_COLOR_RANGE) and (
+                color_property in colors
+            ):
                 continue
             if color_range == DEFAULT_BACKGROUND_COLOR_RANGE:
                 color_properties_use_default_range.append({color_property: group_name})
@@ -409,6 +428,15 @@ def define_colors():
                 color_placeholder = "#00000000"
             else:
                 color_placeholder = color_placeholders[i % len(color_placeholders)]
+                # try to extract the alpha value from the old color placeholder
+                if color_property in colors:
+                    _old_color_placeholder = colors[color_property]
+                    if re.match(PLACEHOLDER_WITH_ALPHA_REGEX, _old_color_placeholder) and not re.match(
+                        PLACEHOLDER_WITH_ALPHA_REGEX, color_placeholder
+                    ):
+                        color_placeholder = f"{color_placeholder}{_old_color_placeholder[-2:]}"
+                        
+
                 if color_property in THEME_BASE_COLOR_PROPERTIES:
                     color_placeholder = _replace_base_color(
                         color_placeholder, theme_base_color
@@ -423,6 +451,14 @@ def define_colors():
     json.dump(
         color_properties_group,
         open(os.getenv("USERPROFILE") + r"\Downloads\color_properties_group.json", "w"),
+    )
+    json.dump(
+        color_group_and_color_placeholders,
+        open(
+            os.getenv("USERPROFILE")
+            + r"\Downloads\color_group_and_color_placeholders.json",
+            "w",
+        ),
     )
     json.dump(
         color_properties_use_default_range,
@@ -465,14 +501,14 @@ def _create_color_placeholders(color_range):
             i = str(i)
             j = str(j)
             _placeholder = f"C_{i}_{j}"
-        if alpha_range is not None and len(alpha_range) > 0:
-            for k in range(alpha_range[0], alpha_range[1]):
-                if k < 10:
-                    k = "0" + str(k)
-                _placeholder = f"C_{i}_{j}{k}"
+            if alpha_range is not None and len(alpha_range) > 0:
+                for k in range(alpha_range[0], alpha_range[1]):
+                    if k < 10:
+                        k = "0" + str(k)
+                    _placeholder = f"C_{i}_{j}{k}"
+                    color_placeholders.append(_placeholder)
+            else:
                 color_placeholders.append(_placeholder)
-        else:
-            color_placeholders.append(_placeholder)
 
     return color_placeholders
 
@@ -507,11 +543,6 @@ def define_token_colors(
         print(f"Read {len(scopes)} scopes from json file {template_json_file}.")
     scope_groups = group_scopes(scopes)
     print(scope_groups.keys())
-
-    # color placeholder value format "C_[0-9]{2}_[0-9]{2}",
-    color_placeholders = _create_color_placeholders(
-        base_colors_range, light_level_range
-    )
 
     token_colors = []
     # assign random base colors to scope groups, assign random light colors to scopes in scope group
