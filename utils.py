@@ -73,6 +73,36 @@ DEFAULT_COLOR_RANGES = [
 ]
 
 CUSTOMIZED_COLOR_PLACEHOLDERS = {
+    "editorWarning.background": "#ffb73334",
+    "editorWarning.border": "#ffb73336",
+    "editorWarning.foreground": "#ffb73332",
+    "editorError.background": "#ff4d4d34",
+    "editorError.border": "#ff4d4d36",
+    "editorError.foreground": "#ff4d4d32",
+    "problemsErrorIcon.foreground": "#ff4d4d32",
+    "problemsWarningIcon.foreground": "#ffb73332",
+    "testing.iconErrored": "#ff4d4d",
+    "testing.iconFailed": "#ff1a1a",
+    "testing.iconPassed": "#009a00",
+    "testing.iconQueued": "#6767ff",
+    "testing.iconSkipped": "#a6a6a6",
+    "testing.iconUnset": "#635a50",
+    "terminal.ansiBlack": "#0c0c0c",
+    "terminal.ansiBrightBlack": "#333333",
+    "terminal.ansiBlue": "#2f2841",
+    "terminal.ansiBrightBlue": "#514570",
+    "terminal.ansiCyan": "#008b8b",
+    "terminal.ansiBrightCyan": "#00a5a5",
+    "terminal.ansiGreen": "#008000",
+    "terminal.ansiBrightGreen": "#009a00",
+    "terminal.ansiMagenta": "#670067",
+    "terminal.ansiBrightMagenta": "#b400b4",
+    "terminal.ansiRed": "#cd0000",
+    "terminal.ansiBrightRed": "#ff1a1a",
+    "terminal.ansiWhite": "#cecece",
+    "terminal.ansiBrightWhite": "#f4f4f4",
+    "terminal.ansiYellow": "#808000",
+    "terminal.ansiBrightYellow": "#b3b300",
 }
 
 # more specific, topper
@@ -142,7 +172,6 @@ HIDDEN_PROPERTIES = [
     "editorGroupHeader.border",
     "editorGroupHeader.tabsBorder",
     "editor.lineHighlightBorder",
-    "sideBarSectionHeader.border",
 ]
 
 LIGHT_COLOR_LEVEL_MAP = {
@@ -155,6 +184,7 @@ LIGHT_COLOR_LEVEL_MAP = {
     "57": [
         "activityBar.activeBackground",
         "sideBar.background",
+        "badge.foreground",
         "terminal.background",
         "panel.background",
         "sideBarSectionHeader.background",
@@ -184,7 +214,7 @@ LIGHT_COLOR_LEVEL_MAP = {
     "35": ["scrollbarSlider.background"],
     "30": ["scrollbarSlider.hoverBackground"],
     "25": ["scrollbarSlider.activeBackground"],
-    "10": ["activityBarBadge.background"],
+    "10": ["activityBarBadge.background", "badge.background"],
 }
 
 BASE_COLOR_LEVEL_MAP = {
@@ -206,6 +236,7 @@ BASE_COLOR_LEVEL_MAP = {
         "editorOverviewRuler.background",
         "input.background",
         "menu.background",
+        "menu.foreground",
         "minimap.background",
         "notebook.cellEditorBackground",
         "notebook.editorBackground",
@@ -221,6 +252,7 @@ BASE_COLOR_LEVEL_MAP = {
         "panelSectionHeader.border",
         "quickInput.background",
         "sideBar.background",
+        "sideBar.foreground",
         "sideBar.border",
         "sideBar.dropBackground",
         "sideBarSectionHeader.background",
