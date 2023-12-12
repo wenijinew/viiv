@@ -72,6 +72,12 @@ DEFAULT_COLOR_RANGES = [
     DEFAULT_COLOR_RANGE,
 ]
 
+CUSTOMIZED_COLOR_PLACEHOLDERS = {
+    "scrollbarSlider.activeBackground": "C_11_30",
+    "scrollbarSlider.background": "C_11_45",
+    "scrollbarSlider.hoverBackground": "C_11_35",
+}
+
 # more specific, topper
 COLOR_RANGE_MAP = {
     "Foreground": ColorRange([1, 12], [15, 20], []),
@@ -93,15 +99,15 @@ COLOR_RANGE_MAP = {
     "editorLineNumber": ColorRange([1, 12], [0, 30], [30, 40]),
     "editorIndentGuide": ColorRange([1, 12], [0, 30], [30, 40]),
     "editorGutter": ColorRange([1, 12], [20, 30], []),
-    "activeBackground": ColorRange([1, 12], [53, 55], []),
+    "activeBackground": ColorRange([1, 12], [40, 47], []),
     "activeForeground": ColorRange([1, 12], [0, 10], [60, 90]),
-    "activeBorder": ColorRange([1, 12], [40, 45], [30, 40]),
-    "activeOutline": ColorRange([1, 12], [40, 45], [30, 40]),
-    "InactiveBackground": ColorRange([1, 12], [57, 60], [60, 90]),
-    "InactiveForeground": ColorRange([1, 12], [20, 30], []),
+    "activeBorder": ColorRange([1, 12], [40, 45], []),
+    "activeOutline": ColorRange([1, 12], [40, 45], []),
+    "InactiveBackground": ColorRange([1, 12], [57, 60], [39, 69]),
+    "InactiveForeground": ColorRange([1, 12], [15, 19], []),
     "InactiveBorder": ColorRange([1, 12], [50, 55], [30, 40]),
     "InactiveOutline": ColorRange([1, 12], [50, 55], [30, 40]),
-    "HoverBackground": ColorRange([1, 12], [46, 50], [43, 53]),
+    "HoverBackground": ColorRange([1, 12], [40, 45], [43, 47]),
     "HoverForeground": ColorRange([1, 12], [5, 10], []),
     "HoverBorder": ColorRange([1, 12], [35, 40], []),
     "HoverOutline": ColorRange([1, 12], [36, 42], []),
@@ -126,6 +132,7 @@ COLOR_RANGE_MAP = {
     "SelectionForeground": ColorRange([1, 12], [7, 17], [30, 40]),
     "SelectionBorder": ColorRange([1, 12], [19, 29], [30, 40]),
     "SelectionOutline": ColorRange([1, 12], [13, 23], [30, 40]),
+    "ScrollbarSlider": ColorRange([1, 12], [35, 45], [90, 99]),
     "Other": DEFAULT_BACKGROUND_COLOR_RANGE,
 }
 
@@ -141,7 +148,7 @@ HIDDEN_PROPERTIES = [
     "sideBarSectionHeader.border",
 ]
 
-LIGHT_LEVEL_MAP = {
+LIGHT_COLOR_LEVEL_MAP = {
     "59": [
         "activityBar.background",
         "statusBar.background",
@@ -168,66 +175,73 @@ LIGHT_LEVEL_MAP = {
         "editorGroup.emptyBackground",
     ],
     "55": [
-        "tab.activeBackground",
         "tab.border",
         "tab.hoverBorder",
         "tree.tableOddRowsBackground",
         "tileHoverBackground",
     ],
-    "54": ["keybindingTable.rowsBackground"],
+    "54": ["keybindingTable.rowsBackground", "activityBarBadge.foreground"],
+    "53": ["tab.activeBackground", "breadcrumb.background"],
+    "40": ["scrollbar.shadow"],
+    "35": ["scrollbarSlider.background"],
+    "30": ["scrollbarSlider.hoverBackground"],
+    "25": ["scrollbarSlider.activeBackground"],
+    "10": ["activityBarBadge.background"],
 }
 
-THEME_BASE_COLOR_PROPERTIES = [
-    "activityBar.activeBackground",
-    "activityBar.background",
-    "activityBar.border",
-    "activityBarBadge.background",
-    "breadcrumb.background",
-    "commandCenter.background",
-    "editor.background",
-    "editorHoverWidget.background",
-    "panel.background",
-    "editorGroup.emptyBackground",
-    "editorGroupHeader.noTabsBackground",
-    "editorGroupHeader.tabsBackground",
-    "sash.hoverBorder",
-    "sideBar.background",
-    "sideBar.dropBackground",
-    "sideBar.border",
-    "sideBarSectionHeader.background",
-    "sideBarSectionHeader.border",
-    "scrollbar.shadow",
-    "scrollbarSlider.activeBackground",
-    "scrollbarSlider.background",
-    "scrollbarSlider.hoverBackground",
-    "tree.tableOddRowsBackground",
-    "minimap.background",
-    "notebook.cellEditorBackground",
-    "notebook.editorBackground",
-    "notebook.focusedCellBackground",
-    "notebook.selectedCellBackground",
-    "panel.background",
-    "panel.border",
-    "panelSectionHeader.border",
-    "panelSection.dropBackground",
-    "panelSectionHeader.background",
-    "terminal.background",
-    "terminal.dropBackground",
-    "editorGutter.background",
-    "editorInfo.background",
-    "editorInlayHint.background",
-    "titleBar.activeBackground",
-    "titleBar.border",
-    "tab.activeBackground",
-    "tab.hoverBackground",
-    "tab.inactiveBackground",
-    "tab.unfocusedActiveBackground",
-    "tab.unfocusedHoverBackground",
-    "tab.unfocusedInactiveBackground",
-    "input.background",
-    "statusBar.background",
-    "statusBar.border",
-]
+BASE_COLOR_LEVEL_MAP = {
+    "11": [
+        "activityBar.activeBackground",
+        "activityBar.background",
+        "activityBar.border",
+        "breadcrumb.background",
+        "breadcrumbPicker.background",
+        "commandCenter.background",
+        "editor.background",
+        "editorGroup.emptyBackground",
+        "editorGroupHeader.noTabsBackground",
+        "editorGroupHeader.tabsBackground",
+        "editorGutter.background",
+        "editorHoverWidget.background",
+        "editorInfo.background",
+        "editorInlayHint.background",
+        "editorOverviewRuler.background",
+        "input.background",
+        "menu.background",
+        "minimap.background",
+        "notebook.cellEditorBackground",
+        "notebook.editorBackground",
+        "notebook.focusedCellBackground",
+        "notebook.selectedCellBackground",
+        "notificationCenterHeader.background",
+        "notifications.background",
+        "panel.background",
+        "panel.background",
+        "panel.border",
+        "panelSection.dropBackground",
+        "panelSectionHeader.background",
+        "panelSectionHeader.border",
+        "quickInput.background",
+        "sideBar.background",
+        "sideBar.border",
+        "sideBar.dropBackground",
+        "sideBarSectionHeader.background",
+        "sideBarSectionHeader.border",
+        "statusBar.background",
+        "statusBar.border",
+        "tab.activeBackground",
+        "tab.hoverBackground",
+        "tab.inactiveBackground",
+        "tab.unfocusedActiveBackground",
+        "tab.unfocusedHoverBackground",
+        "tab.unfocusedInactiveBackground",
+        "terminal.background",
+        "terminal.dropBackground",
+        "titleBar.activeBackground",
+        "titleBar.border",
+        "tree.tableOddRowsBackground",
+    ]
+}
 
 
 def get_scopes(json_file):
@@ -429,17 +443,12 @@ def define_colors():
         )
 
         for i, color_property in enumerate(color_properties):
-            if color_property == "activityBar.border":
-                print(f"{color_property} used default color range {color_range}.")
-                if color_property in colors:
-                    print(f"{colors[color_property]}")
+            if color_property in CUSTOMIZED_COLOR_PLACEHOLDERS:
+                color_placeholder = CUSTOMIZED_COLOR_PLACEHOLDERS[color_property]
+                colors[color_property] = color_placeholder
+                continue
             if (color_range in DEFAULT_COLOR_RANGES) and (color_property in colors):
                 continue
-            if color_property == "activityBar.border":
-                print(f"{color_property} used default color range {color_range}.")
-                if color_property in colors:
-                    print(f"{colors[color_property]}")
-                print(color_range in DEFAULT_COLOR_RANGES)
             if color_range in DEFAULT_COLOR_RANGES:
                 color_properties_use_default_range.append({color_property: group_name})
             if color_property in HIDDEN_PROPERTIES:
@@ -456,11 +465,11 @@ def define_colors():
                             f"{color_placeholder}{_old_color_placeholder[-2:]}"
                         )
 
-                if color_property in THEME_BASE_COLOR_PROPERTIES:
-                    color_placeholder = _replace_base_color(
-                        color_placeholder, theme_base_color
-                    )
-                for k, v in LIGHT_LEVEL_MAP.items():
+                for k, v in BASE_COLOR_LEVEL_MAP.items():
+                    if color_property in v:
+                        color_placeholder = _replace_base_color(color_placeholder, k)
+
+                for k, v in LIGHT_COLOR_LEVEL_MAP.items():
                     if color_property in v:
                         color_placeholder = _replace_light_level(color_placeholder, k)
 
