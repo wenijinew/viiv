@@ -65,7 +65,12 @@ DEFAULT_BACKGROUND_COLOR_RANGE = ColorRange([1, 12], [50, 60], [])
 DEFAULT_FOREGROUND_COLOR_RANGE = ColorRange([1, 12], [5, 25], [])
 DEFAULT_BORDER_COLOR_RANGE = ColorRange([1, 12], [55, 60], [30, 40])
 DEFAULT_COLOR_RANGE = ColorRange([1, 12], [25, 45], [])
-
+DEFAULT_COLOR_RANGES = [
+    DEFAULT_BACKGROUND_COLOR_RANGE,
+    DEFAULT_FOREGROUND_COLOR_RANGE,
+    DEFAULT_BORDER_COLOR_RANGE,
+    DEFAULT_COLOR_RANGE,
+]
 
 # more specific, topper
 COLOR_RANGE_MAP = {
@@ -176,6 +181,7 @@ THEME_BASE_COLOR_PROPERTIES = [
     "activityBar.activeBackground",
     "activityBar.background",
     "activityBar.border",
+    "activityBarBadge.background",
     "breadcrumb.background",
     "commandCenter.background",
     "editor.background",
@@ -219,6 +225,8 @@ THEME_BASE_COLOR_PROPERTIES = [
     "tab.unfocusedHoverBackground",
     "tab.unfocusedInactiveBackground",
     "input.background",
+    "statusBar.background",
+    "statusBar.border",
 ]
 
 
@@ -352,7 +360,7 @@ def _create_color_range(group_name):
     --------
     _create_color_range("Background")
     """
-    _color_range = (
+    _default_color_range = (
         DEFAULT_BACKGROUND_COLOR_RANGE
         if group_name.lower().find("background") != -1
         else DEFAULT_FOREGROUND_COLOR_RANGE
@@ -361,6 +369,7 @@ def _create_color_range(group_name):
         if group_name.lower().find("border") != -1
         else DEFAULT_COLOR_RANGE
     )
+    _color_range = _default_color_range
     for k in COLOR_RANGE_MAP.keys():
         if group_name.lower() == k.lower():
             _color_range = COLOR_RANGE_MAP[k]
@@ -413,16 +422,25 @@ def define_colors():
     for group_name, color_properties in color_properties_group.items():
         color_range = _create_color_range(group_name)
         color_placeholders = _create_color_placeholders(color_range)
+
         color_group_and_color_placeholders[group_name] = color_placeholders
         color_placeholders = random.sample(
             color_placeholders, min(len(color_placeholders), len(color_properties))
         )
+
         for i, color_property in enumerate(color_properties):
-            if (color_range == DEFAULT_BACKGROUND_COLOR_RANGE) and (
-                color_property in colors
-            ):
+            if color_property == "activityBar.border":
+                print(f"{color_property} used default color range {color_range}.")
+                if color_property in colors:
+                    print(f"{colors[color_property]}")
+            if (color_range in DEFAULT_COLOR_RANGES) and (color_property in colors):
                 continue
-            if color_range == DEFAULT_BACKGROUND_COLOR_RANGE:
+            if color_property == "activityBar.border":
+                print(f"{color_property} used default color range {color_range}.")
+                if color_property in colors:
+                    print(f"{colors[color_property]}")
+                print(color_range in DEFAULT_COLOR_RANGES)
+            if color_range in DEFAULT_COLOR_RANGES:
                 color_properties_use_default_range.append({color_property: group_name})
             if color_property in HIDDEN_PROPERTIES:
                 color_placeholder = "#00000000"
@@ -431,11 +449,12 @@ def define_colors():
                 # try to extract the alpha value from the old color placeholder
                 if color_property in colors:
                     _old_color_placeholder = colors[color_property]
-                    if re.match(PLACEHOLDER_WITH_ALPHA_REGEX, _old_color_placeholder) and not re.match(
-                        PLACEHOLDER_WITH_ALPHA_REGEX, color_placeholder
-                    ):
-                        color_placeholder = f"{color_placeholder}{_old_color_placeholder[-2:]}"
-                        
+                    if re.match(
+                        PLACEHOLDER_WITH_ALPHA_REGEX, _old_color_placeholder
+                    ) and not re.match(PLACEHOLDER_WITH_ALPHA_REGEX, color_placeholder):
+                        color_placeholder = (
+                            f"{color_placeholder}{_old_color_placeholder[-2:]}"
+                        )
 
                 if color_property in THEME_BASE_COLOR_PROPERTIES:
                     color_placeholder = _replace_base_color(
