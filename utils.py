@@ -98,32 +98,91 @@ def group_scopes(scopes):
             scope_groups[group_name].append(scope)
     return scope_groups
 
+class ColorRange(dict):
+    def __init__(self, base_color_range, light_level_range, alpha_range):
+        self.base_color_range = base_color_range
+        self.light_level_range = light_level_range
+        self.alpha_range = alpha_range
+        super().__init__(base_color_range=base_color_range, light_level_range=light_level_range, alpha_range=alpha_range)
 
+    def is_valid(self):
+        """Check if the color range is valid.
+        Each color range starts from min and ends at max. min is less than max.
+        Color range should not be None or empty.
+        Alpha range could be None or empty.
+        """
+        if (
+            self.base_color_range is None
+            or self.light_level_range is None
+            ):
+            return False
+        if not self.base_color_range or not self.light_level_range:
+            return False
+        if self.base_color_range[0] >= self.base_color_range[1]:
+            return False
+        if self.light_level_range[0] >= self.light_level_range[1]:
+            return False
+        if self.alpha_range and self.alpha_range[0] >= self.alpha_range[1]:
+            return False
+        return True
+
+    def __repr__(self) -> str:
+        return super().__repr__()
+
+
+DEFAULT_COLOR_RANGE = ColorRange([1, 12], [20, 40], [])
+
+# more specific, topper
 COLOR_RANGE_MAP = {
-    "activeBorder": ([1, 12], [0, 10], []),
-    "editorRuler": ([1, 12], [0, 30], [30, 40]),
-    "editorIndentGuide": ([1, 12], [40, 50], [30, 40]),
-    "editorGutter": ([1, 12], [20, 30], []),
-    "Background": ([1, 12], [55, 60], []),
-    "Foreground": ([1, 12], [0, 30], []),
-    "Border": ([1, 12], [50, 55], [30, 40]),
-    "Outline": ([1, 12], [45, 50], [30, 60]),
-    "Highlight": ([1, 12], [30, 35], [30, 40]),
-    "Stroke": ([1, 12], [35, 40], [60, 90]),
-    "Shadow": ([1, 12], [50, 60], []),
-    "Panel": ([1, 12], [55, 60], []),
-    "Other": ([1, 12], [0, 60], []),
+    "editorRuler": ColorRange([1, 12], [0, 30], [30, 40]),
+    "editorIndentGuide": ColorRange([1, 12], [40, 50], [30, 40]),
+    "editorGutter": ColorRange([1, 12], [20, 30], []),
+    "InactiveBackground": ColorRange([1, 12], [57, 60], [60, 90]),
+    "activeBackground": ColorRange([1, 12], [53, 55], []),
+    "InactiveForeground": ColorRange([1, 12], [20, 30], []),
+    "activeForeground": ColorRange([1, 12], [0, 10], []),
+    "InactiveBorder": ColorRange([1, 12], [50, 55], [30, 40]),
+    "activeBorder": ColorRange([1, 12], [40, 45], [30, 40]),
+    "Foreground": ColorRange([1, 12], [10, 20], []),
+    "Background": ColorRange([1, 12], [55, 57], []),
+    "Border": ColorRange([1, 12], [45, 50], [30, 40]),
+    "Outline": ColorRange([1, 12], [45, 50], [30, 60]),
+    "Highlight": ColorRange([1, 12], [30, 35], [30, 40]),
+    "Stroke": ColorRange([1, 12], [35, 40], [60, 90]),
+    "Shadow": ColorRange([1, 12], [50, 60], []),
+    "Panel": ColorRange([1, 12], [55, 60], []),
+    "Other": DEFAULT_COLOR_RANGE,
 }
+
+HIDDEN_PROPERTIES = [
+    "tab.activeBorder",
+    "tab.unfocusedActiveBorder",
+    "contrastActiveBorder",
+]
 
 
 def _create_color_range(group_name):
-    """Create color range from the given color properties group."""
+    """Create color range from the given color properties group.
+
+    If the group name is not found, return None.
+
+    Parameters:
+    ----------
+    group_name : str, e.g. "Background"
+
+    Returns:
+    str
+
+    Examples:
+    --------
+    _create_color_range("Background")
+    """
+    _color_range = DEFAULT_COLOR_RANGE
     for k in COLOR_RANGE_MAP.keys():
         if group_name.lower().find(k.lower()) != -1:
-            return COLOR_RANGE_MAP[k]
-    print(f"No color range found for {group_name}.")
-    return COLOR_RANGE_MAP["Other"]
-
+            _color_range = COLOR_RANGE_MAP[k]
+            break
+    return _color_range
 
 def _replace_light_level(color_placeholder, light_level):
     _splits = color_placeholder.split("_")
@@ -559,33 +618,36 @@ def define_colors_for_background_properties(color_properties):
 def define_colors():
     template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
     template_data = json.load(open(template_json_file))
-    color_properties = get_color_properties(template_json_file)
+    all_color_properties = get_color_properties(template_json_file)
+    print(len(all_color_properties))
     theme_base_color = "11"
     colors = {}
     color_placeholders_groups = {}
-    color_properties_group = group_color_properties(color_properties)
+    color_properties_group = group_color_properties(all_color_properties)
     for group_name, color_properties in color_properties_group.items():
-        base_colors_range, light_level_range, alpha_range = _create_color_range(
-            group_name
-        )
-        color_placeholders = _create_color_placeholders(
-            base_colors_range, light_level_range, alpha_range
-        )
+        color_range = _create_color_range(group_name)
+        color_placeholders = _create_color_placeholders(color_range)
         color_placeholders = random.sample(
-            color_placeholders, min(len(color_placeholders), len(color_properties))
+            color_placeholders, min(len(color_placeholders), len(all_color_properties))
         )
         color_placeholders_groups[group_name] = color_placeholders
         for i, color_property in enumerate(color_properties):
-            if color_property in colors:
+            if (color_range == DEFAULT_COLOR_RANGE) and (color_property in colors):
                 continue
-            color_placeholder = color_placeholders[i % len(color_placeholders)]
-            if color_property in THEME_BASE_COLOR_PROPERTIES:
-                color_placeholder = _replace_base_color(
-                    color_placeholder, theme_base_color
-                )
-            for k, v in LIGHT_LEVEL_MAP.items():
-                if color_property in v:
-                    color_placeholder = _replace_light_level(color_placeholder, k)
+            #if (color_range == DEFAULT_COLOR_RANGE):
+            #    print(f"To use default color range {color_property}")
+            if color_property in HIDDEN_PROPERTIES:
+                color_placeholder = "#00000000"
+            else:
+                color_placeholder = color_placeholders[i % len(color_placeholders)]
+                if color_property in THEME_BASE_COLOR_PROPERTIES:
+                    color_placeholder = _replace_base_color(
+                        color_placeholder, theme_base_color
+                    )
+                for k, v in LIGHT_LEVEL_MAP.items():
+                    if color_property in v:
+                        color_placeholder = _replace_light_level(color_placeholder, k)
+
             colors[color_property] = color_placeholder
 
     template_data["colors"] = dict(sorted(colors.items(), key=lambda x: x[0]))
@@ -605,19 +667,18 @@ def _create_color_placeholder(i, j):
     return f"C_{i}_{j}"
 
 
-def _create_color_placeholders(base_colors_range, light_level_range, alpha_range):
+def _create_color_placeholders(color_range):
     """Create color placeholders.
-    # olor placeholder value format "C_[0-9]{2}_[0-9]{2}",
+    olor placeholder value format "C_[0-9]{2}_[0-9]{2}",
     """
     assert (
-        base_colors_range is not None
-        and light_level_range is not None
-        and len(base_colors_range) == 2
-        and len(light_level_range) == 2
-    ), f"Invalid arguments: base_colors_range={base_colors_range}, light_level_range={light_level_range}"
+        isinstance(color_range, ColorRange) and color_range.is_valid() 
+    ), f"Invalid arguments: {color_range}"
     color_placeholders = []
-
-    for i in range(base_colors_range[0], base_colors_range[1]):
+    base_color_range = color_range.base_color_range
+    light_level_range = color_range.light_level_range
+    alpha_range = color_range.alpha_range 
+    for i in range(base_color_range[0], base_color_range[1]):
         _placeholder = ""
         if i < 10:
             i = "0" + str(i)
@@ -631,7 +692,7 @@ def _create_color_placeholders(base_colors_range, light_level_range, alpha_range
             for k in range(alpha_range[0], alpha_range[1]):
                 if k < 10:
                     k = "0" + str(k)
-                _placeholder = f"C_{i}_{j}_{k}"
+                _placeholder = f"C_{i}_{j}{k}"
                 color_placeholders.append(_placeholder)
         else:
             color_placeholders.append(_placeholder)
