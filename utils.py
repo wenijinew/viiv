@@ -9,6 +9,212 @@ import re
 import sys
 
 
+class ColorRange(dict):
+    def __init__(self, base_color_range, light_level_range, alpha_range):
+        self.base_color_range = base_color_range
+        self.light_level_range = light_level_range
+        self.alpha_range = alpha_range
+        super().__init__(
+            base_color_range=base_color_range,
+            light_level_range=light_level_range,
+            alpha_range=alpha_range,
+        )
+
+    def is_valid(self):
+        """Check if the color range is valid.
+        Each color range starts from min and ends at max. min is less than max.
+        Color range should not be None or empty.
+        Alpha range could be None or empty.
+        """
+        if self.base_color_range is None or self.light_level_range is None:
+            return False
+        if not self.base_color_range or not self.light_level_range:
+            return False
+        if self.base_color_range[0] >= self.base_color_range[1]:
+            return False
+        if self.light_level_range[0] >= self.light_level_range[1]:
+            return False
+        if self.alpha_range and self.alpha_range[0] >= self.alpha_range[1]:
+            return False
+        return True
+
+    def __repr__(self) -> str:
+        return super().__repr__()
+
+
+GENERAL_GROUPS = ["background", "foreground", "border", "outline"]
+HIGH_PRIORITY_GROUPS_PREFIXES = [
+    "active",
+    "inactive",
+    "hover",
+    "match",
+    "focus",
+    "highlight",
+    "highlighttext",
+    "highlightstrong",
+    "focushighlight",
+    "selection",
+    "header",
+]
+
+
+DEFAULT_BACKGROUND_COLOR_RANGE = ColorRange([1, 12], [50, 60], [])
+DEFAULT_FOREGROUND_COLOR_RANGE = ColorRange([1, 12], [5, 25], [])
+DEFAULT_BORDER_COLOR_RANGE = ColorRange([1, 12], [55, 60], [30, 40])
+DEFAULT_COLOR_RANGE = ColorRange([1, 12], [25, 45], [])
+
+
+# more specific, topper
+COLOR_RANGE_MAP = {
+    "Foreground": ColorRange([1, 12], [15, 20], []),
+    "Background": ColorRange([1, 12], [55, 57], []),
+    "Border": ColorRange([1, 12], [45, 50], [30, 40]),
+    "Outline": ColorRange([1, 12], [45, 50], [30, 60]),
+    "Highlight": ColorRange([1, 12], [30, 35], [30, 40]),
+    "Stroke": ColorRange([1, 12], [35, 40], [60, 90]),
+    "Shadow": ColorRange([1, 12], [50, 60], []),
+    "Panel": ColorRange([1, 12], [55, 60], []),
+    "Tree": ColorRange([1, 12], [50, 55], []),
+    "Icon": ColorRange([1, 12], [30, 40], []),
+    "breadcrumb": ColorRange([1, 12], [10, 30], []),
+    "editorRuler": ColorRange([1, 12], [0, 30], [30, 40]),
+    "editorWarning": ColorRange([1, 12], [25, 30], [30, 40]),
+    "editorError": ColorRange([1, 12], [20, 25], [30, 40]),
+    "editorBracketMatch": ColorRange([1, 12], [20, 25], [30, 40]),
+    "editorHoverWidget": ColorRange([1, 12], [45, 55], []),
+    "editorLineNumber": ColorRange([1, 12], [0, 30], [30, 40]),
+    "editorIndentGuide": ColorRange([1, 12], [0, 30], [30, 40]),
+    "editorGutter": ColorRange([1, 12], [20, 30], []),
+    "activeBackground": ColorRange([1, 12], [53, 55], []),
+    "activeForeground": ColorRange([1, 12], [0, 10], []),
+    "activeBorder": ColorRange([1, 12], [40, 45], [30, 40]),
+    "activeOutline": ColorRange([1, 12], [40, 45], [30, 40]),
+    "InactiveBackground": ColorRange([1, 12], [57, 60], [60, 90]),
+    "InactiveForeground": ColorRange([1, 12], [20, 30], []),
+    "InactiveBorder": ColorRange([1, 12], [50, 55], [30, 40]),
+    "InactiveOutline": ColorRange([1, 12], [50, 55], [30, 40]),
+    "HoverBackground": ColorRange([1, 12], [46, 50], [43, 53]),
+    "HoverForeground": ColorRange([1, 12], [5, 10], []),
+    "HoverBorder": ColorRange([1, 12], [35, 40], []),
+    "HoverOutline": ColorRange([1, 12], [36, 42], []),
+    "MatchBackground": ColorRange([1, 12], [33, 42], [30, 40]),
+    "MatchForeground": ColorRange([1, 12], [13, 23], [30, 40]),
+    "MatchBorder": ColorRange([1, 12], [31, 41], [30, 40]),
+    "MatchOutline": ColorRange([1, 12], [33, 43], [30, 40]),
+    "HeaderBackground": ColorRange([1, 12], [51, 56], []),
+    "HighlightBackground": ColorRange([1, 12], [28, 38], [30, 40]),
+    "HighlightForeground": ColorRange([1, 12], [8, 18], []),
+    "HighlightBorder": ColorRange([1, 12], [14, 24], [30, 40]),
+    "HighlightOutline": ColorRange([1, 12], [13, 23], [30, 40]),
+    "HighlightStrongBackground": ColorRange([1, 12], [15, 25], [30, 40]),
+    "HighlightStrongBorder": ColorRange([1, 12], [23, 33], [60, 90]),
+    "HighlightTextBackground": ColorRange([1, 12], [37, 47], [30, 40]),
+    "HighlightTextBorder": ColorRange([1, 12], [18, 28], [30, 40]),
+    "FocusHighlightBackground": ColorRange([1, 12], [37, 47], [30, 40]),
+    "FocusHighlightForeground": ColorRange([1, 12], [6, 16], [30, 40]),
+    "FocusHighlightBorder": ColorRange([1, 12], [26, 36], [30, 40]),
+    "FocusHighlightOutline": ColorRange([1, 12], [11, 21], [30, 40]),
+    "SelectionBackground": ColorRange([1, 12], [39, 49], [39, 69]),
+    "SelectionForeground": ColorRange([1, 12], [7, 17], [30, 40]),
+    "SelectionBorder": ColorRange([1, 12], [19, 29], [30, 40]),
+    "SelectionOutline": ColorRange([1, 12], [13, 23], [30, 40]),
+    "Other": DEFAULT_BACKGROUND_COLOR_RANGE,
+}
+
+HIDDEN_PROPERTIES = [
+    "tab.border",
+    "tab.activeBorder",
+    "tab.unfocusedActiveBorder",
+    "contrastActiveBorder",
+    "editorGroup.border",
+    "editorGroupHeader.border",
+    "editorGroupHeader.tabsBorder",
+    "editor.lineHighlightBorder",
+    "sideBarSectionHeader.border",
+]
+
+LIGHT_LEVEL_MAP = {
+    "59": [
+        "activityBar.background",
+        "statusBar.background",
+        "menu.background",
+        "scrollbar.shadow",
+        "titleBar.activeBackground",
+    ],
+    "57": [
+        "activityBar.activeBackground",
+        "sideBar.background",
+        "terminal.background",
+        "panel.background",
+        "sideBarSectionHeader.background",
+        "editorGroupHeader.tabsBackground",
+        "editorGroupHeader.noTabsBackground",
+        "tileBackground",
+        "breadcrumb.background",
+        "minimap.background",
+    ],
+    "56": [
+        "editor.background",
+        "editorGutter.background",
+        "tab.inactiveBackground",
+        "editorGroup.emptyBackground",
+    ],
+    "55": [
+        "tab.activeBackground",
+        "tab.border",
+        "tab.hoverBorder",
+        "tree.tableOddRowsBackground",
+        "tileHoverBackground",
+    ],
+    "54": ["keybindingTable.rowsBackground"],
+}
+
+THEME_BASE_COLOR_PROPERTIES = [
+    "activityBar.activeBackground",
+    "activityBar.background",
+    "activityBar.border",
+    "breadcrumb.background",
+    "commandCenter.background",
+    "editor.background",
+    "editorHoverWidget.background",
+    "panel.background",
+    "editorGroup.emptyBackground",
+    "editorGroupHeader.noTabsBackground",
+    "editorGroupHeader.tabsBackground",
+    "sideBar.background",
+    "sideBar.dropBackground",
+    "sideBar.border",
+    "sideBarSectionHeader.background",
+    "sideBarSectionHeader.border",
+    "scrollbar.shadow",
+    "scrollbarSlider.activeBackground",
+    "scrollbarSlider.background",
+    "scrollbarSlider.hoverBackground",
+    "minimap.background",
+    "notebook.cellEditorBackground",
+    "notebook.editorBackground",
+    "notebook.focusedCellBackground",
+    "notebook.selectedCellBackground",
+    "panel.background",
+    "panelSectionHeader.border",
+    "panelSection.dropBackground",
+    "panelSectionHeader.background",
+    "terminal.background",
+    "terminal.dropBackground",
+    "editorGutter.background",
+    "editorInfo.background",
+    "editorInlayHint.background",
+    "titleBar.activeBackground",
+    "titleBar.border",
+    "tab.activeBackground",
+    "tab.hoverBackground",
+    "tab.inactiveBackground",
+    "tab.unfocusedActiveBackground",
+    "tab.unfocusedHoverBackground",
+    "tab.unfocusedInactiveBackground",
+    "input.background",
+]
+
 def get_scopes(json_file):
     """Get scopes from the given json file which is VsCode theme file."""
     with open(json_file) as f:
@@ -54,9 +260,21 @@ def get_color_properties_by_prefix(color_properties, prefix):
     return color_properties_by_prefix
 
 
+def _create_high_priority_groups():
+    priority_groups = []
+    for prefix in HIGH_PRIORITY_GROUPS_PREFIXES:
+        for group in GENERAL_GROUPS:
+            priority_groups.append(prefix + group)
+
+    return priority_groups
+
+
 def group_color_properties(color_properties):
     """Group color properties by suffix."""
     _groups = {}
+
+    # group by suffix
+    # these are most general groups, e.g. background, foreground, etc.
     for color_property in color_properties:
         _splits = color_property.split(".")
         if len(_splits) > 1:
@@ -66,6 +284,7 @@ def group_color_properties(color_properties):
             else:
                 _groups[group_name].append(color_property)
 
+    # group by prefix, they are more specific
     for color_property in color_properties:
         _splits = color_property.split(".")
         group_name = _splits[0]
@@ -73,6 +292,17 @@ def group_color_properties(color_properties):
             _groups[group_name] = [color_property]
         else:
             _groups[group_name].append(color_property)
+
+    # high priority groups, e.g. activebackground, activeforeground, etc. are handled finally to override others
+    high_priority_groups = _create_high_priority_groups()
+    for color_property in color_properties:
+        for _group_name in high_priority_groups:
+            if color_property.lower().endswith(_group_name.lower()):
+                group_name = _group_name
+                if group_name not in _groups:
+                    _groups[group_name] = [color_property]
+                else:
+                    _groups[group_name].append(color_property)
 
     return _groups
 
@@ -98,68 +328,6 @@ def group_scopes(scopes):
             scope_groups[group_name].append(scope)
     return scope_groups
 
-class ColorRange(dict):
-    def __init__(self, base_color_range, light_level_range, alpha_range):
-        self.base_color_range = base_color_range
-        self.light_level_range = light_level_range
-        self.alpha_range = alpha_range
-        super().__init__(base_color_range=base_color_range, light_level_range=light_level_range, alpha_range=alpha_range)
-
-    def is_valid(self):
-        """Check if the color range is valid.
-        Each color range starts from min and ends at max. min is less than max.
-        Color range should not be None or empty.
-        Alpha range could be None or empty.
-        """
-        if (
-            self.base_color_range is None
-            or self.light_level_range is None
-            ):
-            return False
-        if not self.base_color_range or not self.light_level_range:
-            return False
-        if self.base_color_range[0] >= self.base_color_range[1]:
-            return False
-        if self.light_level_range[0] >= self.light_level_range[1]:
-            return False
-        if self.alpha_range and self.alpha_range[0] >= self.alpha_range[1]:
-            return False
-        return True
-
-    def __repr__(self) -> str:
-        return super().__repr__()
-
-
-DEFAULT_COLOR_RANGE = ColorRange([1, 12], [20, 40], [])
-
-# more specific, topper
-COLOR_RANGE_MAP = {
-    "editorRuler": ColorRange([1, 12], [0, 30], [30, 40]),
-    "editorIndentGuide": ColorRange([1, 12], [40, 50], [30, 40]),
-    "editorGutter": ColorRange([1, 12], [20, 30], []),
-    "InactiveBackground": ColorRange([1, 12], [57, 60], [60, 90]),
-    "activeBackground": ColorRange([1, 12], [53, 55], []),
-    "InactiveForeground": ColorRange([1, 12], [20, 30], []),
-    "activeForeground": ColorRange([1, 12], [0, 10], []),
-    "InactiveBorder": ColorRange([1, 12], [50, 55], [30, 40]),
-    "activeBorder": ColorRange([1, 12], [40, 45], [30, 40]),
-    "Foreground": ColorRange([1, 12], [10, 20], []),
-    "Background": ColorRange([1, 12], [55, 57], []),
-    "Border": ColorRange([1, 12], [45, 50], [30, 40]),
-    "Outline": ColorRange([1, 12], [45, 50], [30, 60]),
-    "Highlight": ColorRange([1, 12], [30, 35], [30, 40]),
-    "Stroke": ColorRange([1, 12], [35, 40], [60, 90]),
-    "Shadow": ColorRange([1, 12], [50, 60], []),
-    "Panel": ColorRange([1, 12], [55, 60], []),
-    "Other": DEFAULT_COLOR_RANGE,
-}
-
-HIDDEN_PROPERTIES = [
-    "tab.activeBorder",
-    "tab.unfocusedActiveBorder",
-    "contrastActiveBorder",
-]
-
 
 def _create_color_range(group_name):
     """Create color range from the given color properties group.
@@ -177,12 +345,13 @@ def _create_color_range(group_name):
     --------
     _create_color_range("Background")
     """
-    _color_range = DEFAULT_COLOR_RANGE
+    _color_range = DEFAULT_BACKGROUND_COLOR_RANGE if group_name.lower().find("background")!=-1 else DEFAULT_FOREGROUND_COLOR_RANGE if group_name.lower().find("foreground")!=-1 else DEFAULT_BORDER_COLOR_RANGE if group_name.lower().find("border")!=-1 else DEFAULT_COLOR_RANGE
     for k in COLOR_RANGE_MAP.keys():
-        if group_name.lower().find(k.lower()) != -1:
+        if group_name.lower() == k.lower():
             _color_range = COLOR_RANGE_MAP[k]
             break
     return _color_range
+
 
 def _replace_light_level(color_placeholder, light_level):
     _splits = color_placeholder.split("_")
@@ -207,405 +376,7 @@ def _get_theme_base_color(color_placeholder_groups):
         "bg": ["C_11_59"],
     }
     """
-    # return color_placeholder_groups["bg"][0].split("_")[1]
-    return "11"
-
-
-LIGHT_LEVEL_MAP = {
-    "59": [
-        "activityBar.background",
-        "statusBar.background",
-        "sideBarSectionHeader.background",
-        "menu.background",
-        "scrollbar.shadow",
-    ],
-    "58": [
-        "activityBar.activeBackground",
-        "sideBar.background",
-        "terminal.background",
-        "panel.background",
-        "sideBarSectionHeader.background",
-    ],
-    "57": ["editor.background", "editorGutter.background", "tab.inactiveBackground"],
-    "56": ["tab.activeBackground", "tab.activeBorder", "tab.border", "tab.hoverBorder"],
-}
-
-THEME_BASE_COLOR_PROPERTIES = [
-    "activityBar.activeBackground",
-    "activityBar.activeBorder",
-    "activityBar.activeFocusBorder",
-    "activityBar.background",
-    "activityBar.border",
-    "activityBar.foreground",
-    "activityBar.inactiveForeground",
-    "activityBarBadge.background",
-    "activityBarBadge.foreground",
-    "badge.background",
-    "badge.foreground",
-    "banner.background",
-    "banner.foreground",
-    "breadcrumb.activeSelectionForeground",
-    "breadcrumb.background",
-    "breadcrumb.focusForeground",
-    "breadcrumb.foreground",
-    "breadcrumbPicker.background",
-    "button.separator",
-    "charts.foreground",
-    "charts.lines",
-    "chat.requestBorder",
-    "chat.slashCommandBackground",
-    "chat.slashCommandForeground",
-    "checkbox.background",
-    "checkbox.border",
-    "checkbox.foreground",
-    "checkbox.selectBackground",
-    "checkbox.selectBorder",
-    "commandCenter.activeBackground",
-    "commandCenter.activeBorder",
-    "commandCenter.activeForeground",
-    "commandCenter.background",
-    "commandCenter.border",
-    "commandCenter.foreground",
-    "commandCenter.inactiveBorder",
-    "commandCenter.inactiveForeground",
-    "commentsView.resolvedIcon",
-    "contrastActiveBorder",
-    "contrastBorder",
-    "debugConsole.sourceForeground",
-    "debugConsoleInputIcon.foreground",
-    "debugTokenExpression.value",
-    "debugToolBar.background",
-    "debugToolBar.border",
-    "debugView.exceptionLabelForeground",
-    "debugView.stateLabelForeground",
-    "descriptionForeground",
-    "diffEditor.border",
-    "diffEditor.diagonalFill",
-    "diffEditor.insertedTextBorder",
-    "diffEditor.removedTextBorder",
-    "disabledForeground",
-    "dropdown.background",
-    "dropdown.border",
-    "dropdown.foreground",
-    "dropdown.listBackground",
-    "editor.background",
-    "editor.findRangeHighlightBorder",
-    "editor.foldBackground",
-    "editor.hoverHighlightBackground",
-    "editor.inactiveSelectionBackground",
-    "editor.inlineValuesForeground",
-    "editor.lineHighlightBackground",
-    "editor.lineHighlightBorder",
-    "editor.rangeHighlightBackground",
-    "editor.rangeHighlightBorder",
-    "editor.selectionForeground",
-    "editor.selectionHighlightBackground",
-    "editor.selectionHighlightBorder",
-    "editor.snippetFinalTabstopHighlightBackground",
-    "editor.snippetFinalTabstopHighlightBorder",
-    "editor.snippetTabstopHighlightBackground",
-    "editor.snippetTabstopHighlightBorder",
-    "editorBracketHighlight.foreground6",
-    "editorCodeLens.foreground",
-    "editorCommentsWidget.resolvedBorder",
-    "editorCursor.background",
-    "editorGhostText.background",
-    "editorGhostText.border",
-    "editorGhostText.foreground",
-    "editorGroup.border",
-    "editorGroup.dropBackground",
-    "editorGroup.dropIntoPromptBackground",
-    "editorGroup.dropIntoPromptBorder",
-    "editorGroup.dropIntoPromptForeground",
-    "editorGroup.emptyBackground",
-    "editorGroup.focusedEmptyBorder",
-    "editorGroupHeader.border",
-    "editorGroupHeader.noTabsBackground",
-    "editorGroupHeader.tabsBackground",
-    "editorGroupHeader.tabsBorder",
-    "editorGutter.background",
-    "editorHint.border",
-    "editorHoverWidget.background",
-    "editorHoverWidget.border",
-    "editorHoverWidget.foreground",
-    "editorIndentGuide.activeBackground1",
-    "editorIndentGuide.background1",
-    "editorInfo.background",
-    "editorInfo.border",
-    "editorInlayHint.background",
-    "editorInlayHint.parameterBackground",
-    "editorInlayHint.typeBackground",
-    "editorLineNumber.foreground",
-    "editorLink.activeForeground",
-    "editorMarkerNavigation.background",
-    "editorOverviewRuler.background",
-    "editorOverviewRuler.border",
-    "editorOverviewRuler.commentForeground",
-    "editorOverviewRuler.commentUnresolvedForeground",
-    "editorOverviewRuler.wordHighlightTextForeground",
-    "editorPane.background",
-    "editorStickyScroll.background",
-    "editorSuggestWidget.background",
-    "editorSuggestWidget.border",
-    "editorSuggestWidget.foreground",
-    "editorSuggestWidget.selectedBackground",
-    "editorSuggestWidget.selectedForeground",
-    "editorSuggestWidget.selectedIconForeground",
-    "editorSuggestWidgetStatus.foreground",
-    "editorUnnecessaryCode.border",
-    "editorWhitespace.foreground",
-    "editorWidget.background",
-    "editorWidget.border",
-    "extensionBadge.remoteForeground",
-    "extensionButton.background",
-    "extensionButton.foreground",
-    "extensionButton.prominentBackground",
-    "extensionButton.prominentForeground",
-    "extensionButton.separator",
-    "focusBorder",
-    "foreground",
-    "icon.foreground",
-    "inlineChat.background",
-    "inlineChat.border",
-    "inlineChat.regionHighlight",
-    "inlineChat.shadow",
-    "inlineChatInput.background",
-    "inlineChatInput.border",
-    "input.background",
-    "input.border",
-    "input.foreground",
-    "inputOption.activeBackground",
-    "inputOption.activeBorder",
-    "inputOption.activeForeground",
-    "inputOption.hoverBackground",
-    "inputValidation.errorForeground",
-    "inputValidation.infoForeground",
-    "inputValidation.warningForeground",
-    "interactive.inactiveCodeBorder",
-    "keybindingLabel.background",
-    "keybindingLabel.border",
-    "keybindingLabel.bottomBorder",
-    "keybindingLabel.foreground",
-    "keybindingTable.headerBackground",
-    "keybindingTable.rowsBackground",
-    "list.activeSelectionBackground",
-    "list.deemphasizedForeground",
-    "list.dropBackground",
-    "list.focusBackground",
-    "list.focusOutline",
-    "list.highlightForeground",
-    "list.hoverBackground",
-    "list.hoverForeground",
-    "list.inactiveFocusBackground",
-    "list.inactiveSelectionBackground",
-    "list.invalidItemForeground",
-    "listFilterWidget.background",
-    "listFilterWidget.shadow",
-    "menu.background",
-    "menu.border",
-    "menu.foreground",
-    "menu.selectionBackground",
-    "menu.selectionBorder",
-    "menu.selectionForeground",
-    "menu.separatorBackground",
-    "menubar.selectionBackground",
-    "menubar.selectionBorder",
-    "menubar.selectionForeground",
-    "merge.border",
-    "minimap.background",
-    "minimapSlider.background",
-    "minimapSlider.hoverBackground",
-    "notebook.cellBorderColor",
-    "notebook.cellEditorBackground",
-    "notebook.cellHoverBackground",
-    "notebook.cellStatusBarItemHoverBackground",
-    "notebook.editorBackground",
-    "notebook.focusedCellBackground",
-    "notebook.focusedCellBorder",
-    "notebook.focusedEditorBorder",
-    "notebook.inactiveFocusedCellBorder",
-    "notebook.inactiveSelectedCellBorder",
-    "notebook.outputContainerBackgroundColor",
-    "notebook.outputContainerBorderColor",
-    "notebook.selectedCellBackground",
-    "notebook.selectedCellBorder",
-    "notebook.symbolHighlightBackground",
-    "notebookScrollbarSlider.background",
-    "notebookScrollbarSlider.hoverBackground",
-    "notebookStatusRunningIcon.foreground",
-    "notificationCenter.border",
-    "notificationCenterHeader.background",
-    "notificationCenterHeader.foreground",
-    "notificationToast.border",
-    "notifications.background",
-    "notifications.border",
-    "panel.background",
-    "panel.border",
-    "panel.dropBorder",
-    "panelInput.border",
-    "panelSection.border",
-    "panelSection.dropBackground",
-    "panelSectionHeader.background",
-    "panelSectionHeader.border",
-    "panelSectionHeader.foreground",
-    "panelTitle.activeBorder",
-    "panelTitle.activeForeground",
-    "panelTitle.inactiveForeground",
-    "peekViewEditor.matchHighlightBorder",
-    "peekViewResult.fileForeground",
-    "peekViewResult.selectionForeground",
-    "peekViewTitleDescription.foreground",
-    "peekViewTitleLabel.foreground",
-    "profileBadge.background",
-    "profileBadge.foreground",
-    "quickInput.background",
-    "quickInput.foreground",
-    "quickInputList.focusBackground",
-    "quickInputList.focusForeground",
-    "quickInputList.focusIconForeground",
-    "quickInputTitle.background",
-    "sash.hoverBorder",
-    "scrollbar.shadow",
-    "scrollbarSlider.activeBackground",
-    "scrollbarSlider.background",
-    "scrollbarSlider.hoverBackground",
-    "search.resultsInfoForeground",
-    "searchEditor.textInputBorder",
-    "selection.background",
-    "settings.checkboxBackground",
-    "settings.checkboxBorder",
-    "settings.dropdownBackground",
-    "settings.dropdownBorder",
-    "settings.dropdownListBorder",
-    "settings.focusedRowBackground",
-    "settings.focusedRowBorder",
-    "settings.headerBorder",
-    "settings.headerForeground",
-    "settings.numberInputBackground",
-    "settings.numberInputBorder",
-    "settings.rowHoverBackground",
-    "settings.sashBorder",
-    "settings.textInputBackground",
-    "settings.textInputBorder",
-    "settings.textInputForeground",
-    "sideBar.background",
-    "sideBar.border",
-    "sideBar.dropBackground",
-    "sideBar.foreground",
-    "sideBarSectionHeader.background",
-    "sideBarSectionHeader.border",
-    "sideBarSectionHeader.foreground",
-    "sideBarTitle.foreground",
-    "sideBySideEditor.horizontalBorder",
-    "sideBySideEditor.verticalBorder",
-    "statusBar.background",
-    "statusBar.border",
-    "statusBar.debuggingBorder",
-    "statusBar.debuggingForeground",
-    "statusBar.focusBorder",
-    "statusBar.foreground",
-    "statusBar.noFolderBorder",
-    "statusBar.noFolderForeground",
-    "statusBarItem.activeBackground",
-    "statusBarItem.compactHoverBackground",
-    "statusBarItem.errorForeground",
-    "statusBarItem.errorHoverBackground",
-    "statusBarItem.errorHoverForeground",
-    "statusBarItem.focusBorder",
-    "statusBarItem.hoverBackground",
-    "statusBarItem.hoverForeground",
-    "statusBarItem.offlineForeground",
-    "statusBarItem.offlineHoverBackground",
-    "statusBarItem.offlineHoverForeground",
-    "statusBarItem.prominentForeground",
-    "statusBarItem.prominentHoverForeground",
-    "statusBarItem.remoteForeground",
-    "statusBarItem.remoteHoverBackground",
-    "statusBarItem.remoteHoverForeground",
-    "statusBarItem.warningForeground",
-    "statusBarItem.warningHoverForeground",
-    "symbolIcon.arrayForeground",
-    "symbolIcon.booleanForeground",
-    "symbolIcon.colorForeground",
-    "symbolIcon.constantForeground",
-    "symbolIcon.fileForeground",
-    "symbolIcon.folderForeground",
-    "symbolIcon.keyForeground",
-    "symbolIcon.keywordForeground",
-    "symbolIcon.moduleForeground",
-    "symbolIcon.namespaceForeground",
-    "symbolIcon.nullForeground",
-    "symbolIcon.numberForeground",
-    "symbolIcon.objectForeground",
-    "symbolIcon.operatorForeground",
-    "symbolIcon.packageForeground",
-    "symbolIcon.propertyForeground",
-    "symbolIcon.referenceForeground",
-    "symbolIcon.snippetForeground",
-    "symbolIcon.stringForeground",
-    "symbolIcon.structForeground",
-    "symbolIcon.textForeground",
-    "symbolIcon.typeParameterForeground",
-    "symbolIcon.unitForeground",
-    "tab.activeBackground",
-    "tab.activeBorder",
-    "tab.activeBorderTop",
-    "tab.activeForeground",
-    "tab.border",
-    "tab.hoverBackground",
-    "tab.hoverBorder",
-    "tab.inactiveBackground",
-    "tab.inactiveForeground",
-    "tab.inactiveModifiedBorder",
-    "tab.lastPinnedBorder",
-    "tab.unfocusedActiveBackground",
-    "tab.unfocusedActiveBorder",
-    "tab.unfocusedActiveBorderTop",
-    "tab.unfocusedActiveForeground",
-    "tab.unfocusedHoverBackground",
-    "tab.unfocusedHoverBorder",
-    "tab.unfocusedHoverForeground",
-    "tab.unfocusedInactiveBackground",
-    "tab.unfocusedInactiveForeground",
-    "tab.unfocusedInactiveModifiedBorder",
-    "terminal.background",
-    "terminal.border",
-    "terminal.dropBackground",
-    "terminal.findMatchBorder",
-    "terminal.findMatchHighlightBorder",
-    "terminal.foreground",
-    "terminal.hoverHighlightBackground",
-    "terminal.inactiveSelectionBackground",
-    "terminal.selectionBackground",
-    "terminal.selectionForeground",
-    "terminal.tab.activeBorder",
-    "terminalCommandDecoration.defaultBackground",
-    "testing.message.info.lineBackground",
-    "textBlockQuote.border",
-    "textCodeBlock.background",
-    "textSeparator.foreground",
-    "titleBar.activeBackground",
-    "titleBar.activeForeground",
-    "titleBar.border",
-    "titleBar.inactiveBackground",
-    "titleBar.inactiveForeground",
-    "toolbar.activeBackground",
-    "toolbar.hoverBackground",
-    "toolbar.hoverOutline",
-    "tree.inactiveIndentGuidesStroke",
-    "tree.indentGuidesStroke",
-    "tree.tableColumnsBorder",
-    "tree.tableOddRowsBackground",
-    "walkthrough.stepTitle.foreground",
-    "welcomePage.background",
-    "welcomePage.progress.background",
-    "welcomePage.progress.foreground",
-    "welcomePage.tileBackground",
-    "welcomePage.tileBorder",
-    "widget.border",
-    "widget.shadow",
-    "window.inactiveBorder",
-]
+    return color_placeholder_groups["bg"][0].split("_")[1]
 
 
 def define_colors_for_background_properties(color_properties):
@@ -619,23 +390,21 @@ def define_colors():
     template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
     template_data = json.load(open(template_json_file))
     all_color_properties = get_color_properties(template_json_file)
-    print(len(all_color_properties))
     theme_base_color = "11"
     colors = {}
-    color_placeholders_groups = {}
     color_properties_group = group_color_properties(all_color_properties)
+    color_properties_use_default_range = []
     for group_name, color_properties in color_properties_group.items():
         color_range = _create_color_range(group_name)
         color_placeholders = _create_color_placeholders(color_range)
         color_placeholders = random.sample(
-            color_placeholders, min(len(color_placeholders), len(all_color_properties))
+            color_placeholders, min(len(color_placeholders), len(color_properties))
         )
-        color_placeholders_groups[group_name] = color_placeholders
         for i, color_property in enumerate(color_properties):
-            if (color_range == DEFAULT_COLOR_RANGE) and (color_property in colors):
+            if (color_range == DEFAULT_BACKGROUND_COLOR_RANGE) and (color_property in colors):
                 continue
-            #if (color_range == DEFAULT_COLOR_RANGE):
-            #    print(f"To use default color range {color_property}")
+            if color_range == DEFAULT_BACKGROUND_COLOR_RANGE:
+                color_properties_use_default_range.append({color_property: group_name})
             if color_property in HIDDEN_PROPERTIES:
                 color_placeholder = "#00000000"
             else:
@@ -653,7 +422,15 @@ def define_colors():
     template_data["colors"] = dict(sorted(colors.items(), key=lambda x: x[0]))
     json.dump(
         color_properties_group,
-        open(os.getenv("USERPROFILE") + r"\Downloads\a.json", "w"),
+        open(os.getenv("USERPROFILE") + r"\Downloads\color_properties_group.json", "w"),
+    )
+    json.dump(
+        color_properties_use_default_range,
+        open(
+            os.getenv("USERPROFILE")
+            + r"\Downloads\color_properties_use_default_range.json",
+            "w",
+        ),
     )
     json.dump(template_data, open(template_json_file, "w"))
     return color_properties_group
@@ -672,12 +449,12 @@ def _create_color_placeholders(color_range):
     olor placeholder value format "C_[0-9]{2}_[0-9]{2}",
     """
     assert (
-        isinstance(color_range, ColorRange) and color_range.is_valid() 
+        isinstance(color_range, ColorRange) and color_range.is_valid()
     ), f"Invalid arguments: {color_range}"
     color_placeholders = []
     base_color_range = color_range.base_color_range
     light_level_range = color_range.light_level_range
-    alpha_range = color_range.alpha_range 
+    alpha_range = color_range.alpha_range
     for i in range(base_color_range[0], base_color_range[1]):
         _placeholder = ""
         if i < 10:
