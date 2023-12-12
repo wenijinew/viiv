@@ -73,9 +73,6 @@ DEFAULT_COLOR_RANGES = [
 ]
 
 CUSTOMIZED_COLOR_PLACEHOLDERS = {
-    "scrollbarSlider.activeBackground": "C_11_30",
-    "scrollbarSlider.background": "C_11_45",
-    "scrollbarSlider.hoverBackground": "C_11_35",
 }
 
 # more specific, topper
@@ -91,16 +88,16 @@ COLOR_RANGE_MAP = {
     "Tree": ColorRange([1, 12], [50, 55], []),
     "Icon": ColorRange([1, 12], [30, 40], []),
     "breadcrumb": ColorRange([1, 12], [10, 30], []),
+    "editorOverviewRuler": ColorRange([1, 12], [15, 45], [35, 45]),
     "editorRuler": ColorRange([1, 12], [0, 30], [30, 40]),
     "editorWarning": ColorRange([1, 12], [25, 30], [30, 40]),
     "editorError": ColorRange([1, 12], [20, 25], [30, 40]),
     "editorBracketMatch": ColorRange([1, 12], [20, 25], [30, 40]),
-    "editorHoverWidget": ColorRange([1, 12], [45, 55], []),
     "editorLineNumber": ColorRange([1, 12], [0, 30], [30, 40]),
     "editorIndentGuide": ColorRange([1, 12], [0, 30], [30, 40]),
     "editorGutter": ColorRange([1, 12], [20, 30], []),
     "activeBackground": ColorRange([1, 12], [40, 47], []),
-    "activeForeground": ColorRange([1, 12], [0, 10], [60, 90]),
+    "activeForeground": ColorRange([1, 12], [0, 10], []),
     "activeBorder": ColorRange([1, 12], [40, 45], []),
     "activeOutline": ColorRange([1, 12], [40, 45], []),
     "InactiveBackground": ColorRange([1, 12], [57, 60], [39, 69]),
@@ -129,7 +126,7 @@ COLOR_RANGE_MAP = {
     "FocusHighlightBorder": ColorRange([1, 12], [26, 36], [30, 40]),
     "FocusHighlightOutline": ColorRange([1, 12], [11, 21], [30, 40]),
     "SelectionBackground": ColorRange([1, 12], [39, 49], [39, 69]),
-    "SelectionForeground": ColorRange([1, 12], [7, 17], [30, 40]),
+    "SelectionForeground": ColorRange([1, 12], [7, 17], []),
     "SelectionBorder": ColorRange([1, 12], [19, 29], [30, 40]),
     "SelectionOutline": ColorRange([1, 12], [13, 23], [30, 40]),
     "ScrollbarSlider": ColorRange([1, 12], [35, 45], [90, 99]),
@@ -153,7 +150,6 @@ LIGHT_COLOR_LEVEL_MAP = {
         "activityBar.background",
         "statusBar.background",
         "menu.background",
-        "scrollbar.shadow",
         "titleBar.activeBackground",
     ],
     "57": [
@@ -167,6 +163,7 @@ LIGHT_COLOR_LEVEL_MAP = {
         "tileBackground",
         "breadcrumb.background",
         "minimap.background",
+        "editorHoverWidget.background",
     ],
     "56": [
         "editor.background",
@@ -182,6 +179,7 @@ LIGHT_COLOR_LEVEL_MAP = {
     ],
     "54": ["keybindingTable.rowsBackground", "activityBarBadge.foreground"],
     "53": ["tab.activeBackground", "breadcrumb.background"],
+    "50": [],
     "40": ["scrollbar.shadow"],
     "35": ["scrollbarSlider.background"],
     "30": ["scrollbarSlider.hoverBackground"],
