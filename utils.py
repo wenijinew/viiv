@@ -195,6 +195,7 @@ HIDDEN_PROPERTIES = [
     "editorGroupHeader.border",
     "editorGroupHeader.tabsBorder",
     "editor.lineHighlightBorder",
+    "scrollbar.shadow",
 ]
 
 LIGHT_COLOR_LEVEL_MAP = {
