@@ -7,12 +7,19 @@ import os
 import random
 import re
 import sys
+from peelee import peelee as pe
 
 PLACEHOLDER_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
 PLACEHOLDER_WITH_ALPHA_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
 
 
 class ColorRange(dict):
+    """Wrapper class for color ranges.
+
+    Code range is used to construct code placeholders. Code placeholder is in the format: "C_[0-9]{2}_[0-9]{2}([a-zA-Z0-9]{2})?".
+    The first 2 digits are used to indicate the base color group, the 2nd 2 digits are used to indicate the color lightness level, the last 2 digits(hexadecimal) are used to indicate the real alpha value range(0x0 - 0xff).
+    """
+
     def __init__(self, base_color_range, light_level_range, alpha_range):
         self.base_color_range = base_color_range
         self.light_level_range = light_level_range
@@ -73,63 +80,98 @@ DEFAULT_COLOR_RANGES = [
 ]
 
 CUSTOMIZED_COLOR_PLACEHOLDERS = {
+    "editorWarning.background": "#ffb73300",
+    "editorWarning.border": "#ffb73300",
+    "editorWarning.foreground": "#ffb733",
+    "editorError.background": "#ff4d4d00",
+    "editorError.border": "#ff4d4d00",
+    "editorError.foreground": "#ff4d4d",
+    "problemsErrorIcon.foreground": "#ff4d4d",
+    "problemsWarningIcon.foreground": "#ffb733",
+    "testing.iconErrored": "#ff4d4d",
+    "testing.iconFailed": "#ff1a1a",
+    "testing.iconPassed": "#009a00",
+    "testing.iconQueued": "#6767ff",
+    "testing.iconSkipped": "#a6a6a6",
+    "testing.iconUnset": "#635a50",
+    "terminal.ansiBlack": "#0c0c0c",
+    "terminal.ansiBrightBlack": "#333333",
+    "terminal.ansiBlue": "#2f2841",
+    "terminal.ansiBrightBlue": "#514570",
+    "terminal.ansiCyan": "#008b8b",
+    "terminal.ansiBrightCyan": "#00a5a5",
+    "terminal.ansiGreen": "#008000",
+    "terminal.ansiBrightGreen": "#009a00",
+    "terminal.ansiMagenta": "#670067",
+    "terminal.ansiBrightMagenta": "#b400b4",
+    "terminal.ansiRed": "#cd3300",
+    "terminal.ansiBrightRed": "#ff1a1a",
+    "terminal.ansiWhite": "#cecece",
+    "terminal.ansiBrightWhite": "#f4f4f4",
+    "terminal.ansiYellow": "#808000",
+    "terminal.ansiBrightYellow": "#b3b300",
 }
 
 # more specific, topper
 COLOR_RANGE_MAP = {
     "Foreground": ColorRange([1, 12], [15, 20], []),
     "Background": ColorRange([1, 12], [55, 57], []),
-    "Border": ColorRange([1, 12], [45, 50], []),
-    "Outline": ColorRange([1, 12], [45, 50], [30, 60]),
-    "Highlight": ColorRange([1, 12], [30, 35], [30, 40]),
-    "Stroke": ColorRange([1, 12], [35, 40], [60, 90]),
+    "Border": ColorRange([1, 12], [45, 50], [0x73, 0x93]),
+    "Outline": ColorRange([1, 12], [45, 50], [0x30, 0x60]),
+    "Highlight": ColorRange([1, 12], [30, 35], [0x30, 0x40]),
+    "Stroke": ColorRange([1, 12], [35, 40], [0x60, 0x90]),
     "Shadow": ColorRange([1, 12], [44, 54], []),
     "Panel": ColorRange([1, 12], [50, 53], []),
-    "Tree": ColorRange([1, 12], [50, 55], []),
+    "Tree": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
     "Icon": ColorRange([1, 12], [30, 40], []),
-    "breadcrumb": ColorRange([1, 12], [10, 30], []),
-    "editorOverviewRuler": ColorRange([1, 12], [15, 45], [35, 45]),
-    "editorRuler": ColorRange([1, 12], [0, 30], [30, 40]),
-    "editorWarning": ColorRange([1, 12], [25, 30], [30, 40]),
-    "editorError": ColorRange([1, 12], [20, 25], [30, 40]),
-    "editorBracketMatch": ColorRange([1, 12], [20, 25], [30, 40]),
-    "editorLineNumber": ColorRange([1, 12], [0, 30], [30, 40]),
-    "editorIndentGuide": ColorRange([1, 12], [0, 30], [30, 40]),
-    "editorGutter": ColorRange([1, 12], [20, 30], []),
-    "activeBackground": ColorRange([1, 12], [40, 47], []),
-    "activeForeground": ColorRange([1, 12], [0, 10], []),
-    "activeBorder": ColorRange([1, 12], [40, 45], []),
-    "activeOutline": ColorRange([1, 12], [40, 45], []),
-    "InactiveBackground": ColorRange([1, 12], [57, 60], [39, 69]),
+    "Breadcrumb": ColorRange([1, 12], [10, 30], []),
+    "EditorOverviewRuler": ColorRange([1, 12], [15, 45], [0x35, 0x45]),
+    "EditorRuler": ColorRange([1, 12], [0, 30], [0x30, 0x40]),
+    "EditorWarning": ColorRange([1, 12], [25, 30], [0x30, 0x40]),
+    "EditorError": ColorRange([1, 12], [20, 25], [0x30, 0x40]),
+    "EditorBracketMatch": ColorRange([1, 12], [20, 25], [0x30, 0x40]),
+    "EditorLineNumber": ColorRange([1, 12], [10, 20], [0x60, 0x80]),
+    "EditorIndentGuide": ColorRange([1, 12], [0, 30], [0x30, 0x40]),
+    "EditorGutter": ColorRange([1, 12], [20, 30], []),
+    "EditorCodeLens": ColorRange([1, 12], [20, 30], [0x50, 0x70]),
+    "FocusBackground": ColorRange([1, 12], [20, 30], [0x50, 0x70]),
+    "InputOption": ColorRange([1, 12], [20, 30], [0x50, 0x70]),
+    "ScrollbarSlider": ColorRange([1, 12], [35, 45], [0x90, 0x99]),
+    "StatusBarBackground": ColorRange([1, 12], [55, 60], []),
+    "ActiveBackground": ColorRange([1, 12], [40, 47], [0x99, 0xcc]),
+    "ActiveForeground": ColorRange([1, 12], [0, 30], [0xcc, 0xff]),
+    "ActiveBorder": ColorRange([1, 12], [40, 45], []),
+    "ActiveOutline": ColorRange([1, 12], [40, 45], []),
+    "InactiveBackground": ColorRange([1, 12], [57, 60], [0x39, 0x69]),
     "InactiveForeground": ColorRange([1, 12], [15, 19], []),
-    "InactiveBorder": ColorRange([1, 12], [50, 55], [30, 40]),
-    "InactiveOutline": ColorRange([1, 12], [50, 55], [30, 40]),
-    "HoverBackground": ColorRange([1, 12], [40, 45], [43, 47]),
+    "InactiveBorder": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
+    "InactiveOutline": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
+    "HoverBackground": ColorRange([1, 12], [40, 45], [0x43, 0x47]),
     "HoverForeground": ColorRange([1, 12], [5, 10], []),
     "HoverBorder": ColorRange([1, 12], [35, 40], []),
     "HoverOutline": ColorRange([1, 12], [36, 42], []),
-    "MatchBackground": ColorRange([1, 12], [33, 42], [30, 40]),
-    "MatchForeground": ColorRange([1, 12], [13, 23], [30, 40]),
-    "MatchBorder": ColorRange([1, 12], [31, 41], [30, 40]),
-    "MatchOutline": ColorRange([1, 12], [33, 43], [30, 40]),
+    "MatchBackground": ColorRange([1, 12], [33, 42], [0x30, 0x40]),
+    "MatchForeground": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
+    "MatchBorder": ColorRange([1, 12], [31, 41], [0x30, 0x40]),
+    "MatchOutline": ColorRange([1, 12], [33, 43], [0x30, 0x40]),
     "HeaderBackground": ColorRange([1, 12], [51, 56], []),
-    "HighlightBackground": ColorRange([1, 12], [28, 38], [30, 40]),
+    "HighlightBackground": ColorRange([1, 12], [28, 38], [0x30, 0x40]),
     "HighlightForeground": ColorRange([1, 12], [8, 18], []),
-    "HighlightBorder": ColorRange([1, 12], [14, 24], [30, 40]),
-    "HighlightOutline": ColorRange([1, 12], [13, 23], [30, 40]),
-    "HighlightStrongBackground": ColorRange([1, 12], [15, 25], [30, 40]),
-    "HighlightStrongBorder": ColorRange([1, 12], [23, 33], [60, 90]),
-    "HighlightTextBackground": ColorRange([1, 12], [37, 47], [30, 40]),
-    "HighlightTextBorder": ColorRange([1, 12], [18, 28], [30, 40]),
-    "FocusHighlightBackground": ColorRange([1, 12], [37, 47], [30, 40]),
-    "FocusHighlightForeground": ColorRange([1, 12], [6, 16], [30, 40]),
-    "FocusHighlightBorder": ColorRange([1, 12], [26, 36], [30, 40]),
-    "FocusHighlightOutline": ColorRange([1, 12], [11, 21], [30, 40]),
-    "SelectionBackground": ColorRange([1, 12], [39, 49], [39, 69]),
+    "HighlightBorder": ColorRange([1, 12], [14, 24], [0x20, 0x40]),
+    "HighlightOutline": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
+    "HighlightStrongBackground": ColorRange([1, 12], [15, 25], [0x20, 0x30]),
+    "HighlightStrongForeground": ColorRange([1, 12], [23, 33], [0x60, 0x90]),
+    "HighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xff]),
+    "HighlightTextBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
+    "HighlightTextBorder": ColorRange([1, 12], [18, 28], [0x30, 0x40]),
+    "FocusHighlightBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
+    "FocusHighlightForeground": ColorRange([1, 12], [6, 16], [0x30, 0x40]),
+    "FocusHighlightBorder": ColorRange([1, 12], [26, 36], [0x30, 0x40]),
+    "FocusHighlightOutline": ColorRange([1, 12], [11, 21], [0x30, 0x40]),
+    "SelectionBackground": ColorRange([1, 12], [39, 49], [0x33, 0x66]),
     "SelectionForeground": ColorRange([1, 12], [7, 17], []),
-    "SelectionBorder": ColorRange([1, 12], [19, 29], [30, 40]),
-    "SelectionOutline": ColorRange([1, 12], [13, 23], [30, 40]),
-    "ScrollbarSlider": ColorRange([1, 12], [35, 45], [90, 99]),
+    "SelectionBorder": ColorRange([1, 12], [19, 29], [0x30, 0x40]),
+    "SelectionOutline": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
     "Other": DEFAULT_BACKGROUND_COLOR_RANGE,
 }
 
@@ -142,34 +184,35 @@ HIDDEN_PROPERTIES = [
     "editorGroupHeader.border",
     "editorGroupHeader.tabsBorder",
     "editor.lineHighlightBorder",
-    "sideBarSectionHeader.border",
 ]
 
 LIGHT_COLOR_LEVEL_MAP = {
     "59": [
         "activityBar.background",
         "statusBar.background",
-        "menu.background",
         "titleBar.activeBackground",
     ],
+    "58": ["menu.background"],
     "57": [
         "activityBar.activeBackground",
         "sideBar.background",
+        "badge.foreground",
         "terminal.background",
         "panel.background",
         "sideBarSectionHeader.background",
         "editorGroupHeader.tabsBackground",
         "editorGroupHeader.noTabsBackground",
         "tileBackground",
-        "breadcrumb.background",
         "minimap.background",
         "editorHoverWidget.background",
     ],
     "56": [
         "editor.background",
         "editorGutter.background",
-        "tab.inactiveBackground",
         "editorGroup.emptyBackground",
+        "notebook.cellEditorBackground",
+        "notebook.editorBackground",
+        "tab.inactiveBackground",
     ],
     "55": [
         "tab.border",
@@ -178,22 +221,23 @@ LIGHT_COLOR_LEVEL_MAP = {
         "tileHoverBackground",
     ],
     "54": ["keybindingTable.rowsBackground", "activityBarBadge.foreground"],
-    "53": ["tab.activeBackground", "breadcrumb.background"],
-    "50": [],
+    "52": ["tab.activeBackground", "breadcrumb.background"],
     "40": ["scrollbar.shadow"],
     "35": ["scrollbarSlider.background"],
     "30": ["scrollbarSlider.hoverBackground"],
     "25": ["scrollbarSlider.activeBackground"],
-    "10": ["activityBarBadge.background"],
+    "10": ["activityBarBadge.background", "badge.background"],
 }
 
 BASE_COLOR_LEVEL_MAP = {
     "11": [
         "activityBar.activeBackground",
         "activityBar.background",
+        "activityBar.foreground",
         "activityBar.border",
         "breadcrumb.background",
         "breadcrumbPicker.background",
+        "button.background",
         "commandCenter.background",
         "editor.background",
         "editorGroup.emptyBackground",
@@ -203,9 +247,14 @@ BASE_COLOR_LEVEL_MAP = {
         "editorHoverWidget.background",
         "editorInfo.background",
         "editorInlayHint.background",
+        "editorOverviewRuler.foreground",
         "editorOverviewRuler.background",
+        "editor.lineHighlightBackground",
+        "editorLineNumber.foreground",
         "input.background",
+        "titleBar.activeForeground",
         "menu.background",
+        "menu.foreground",
         "minimap.background",
         "notebook.cellEditorBackground",
         "notebook.editorBackground",
@@ -214,13 +263,13 @@ BASE_COLOR_LEVEL_MAP = {
         "notificationCenterHeader.background",
         "notifications.background",
         "panel.background",
-        "panel.background",
         "panel.border",
         "panelSection.dropBackground",
         "panelSectionHeader.background",
         "panelSectionHeader.border",
         "quickInput.background",
         "sideBar.background",
+        "sideBar.foreground",
         "sideBar.border",
         "sideBar.dropBackground",
         "sideBarSectionHeader.background",
@@ -233,11 +282,13 @@ BASE_COLOR_LEVEL_MAP = {
         "tab.unfocusedActiveBackground",
         "tab.unfocusedHoverBackground",
         "tab.unfocusedInactiveBackground",
+        "terminal.foreground",
         "terminal.background",
         "terminal.dropBackground",
         "titleBar.activeBackground",
         "titleBar.border",
         "tree.tableOddRowsBackground",
+        "widget.shadow"
     ]
 }
 
@@ -528,8 +579,9 @@ def _create_color_placeholders(color_range):
             j = str(j)
             _placeholder = f"C_{i}_{j}"
             if alpha_range is not None and len(alpha_range) > 0:
-                for k in range(alpha_range[0], alpha_range[1]):
-                    if k < 10:
+                for _k in range(alpha_range[0], alpha_range[1]):
+                    k = format(_k, "x")
+                    if len(k) == 1:
                         k = "0" + str(k)
                     _placeholder = f"C_{i}_{j}{k}"
                     color_placeholders.append(_placeholder)
@@ -598,21 +650,24 @@ def define_token_colors(
             _old_foreground = scopes[scope]
             _placeholder_regex = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
             _placeholder_with_alpha_regex = (
-                r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
+                r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2,}"
             )
             _foreground = re.sub(_placeholder_regex, color_placeholder, _old_foreground)
-
+            _foreground = re.sub(_placeholder_with_alpha_regex, color_placeholder, _foreground)
+            # if not re.match(_placeholder_with_alpha_regex, _old_foreground):
+            #    _foreground = f"{_foreground}"
             for _scope_prefix in ["comment", "docstring", "punctuation", "javadoc"]:
+                
                 if scope.find(_scope_prefix) != -1:
-                    # do not set alpha
-                    if re.match(_placeholder_with_alpha_regex, _old_foreground):
-                        _foreground = re.sub(
-                            _placeholder_with_alpha_regex,
-                            color_placeholder,
-                            _old_foreground,
-                        )
                     # set base color as dark color
                     _foreground = re.sub(r"C_[a-zA-Z0-9]{2}", "C_11", _foreground)
+                    if True:
+                        if not re.match(_placeholder_with_alpha_regex, _old_foreground):
+                            _foreground = f"{_foreground}70"
+                    else:
+                        if re.match(_placeholder_with_alpha_regex, _old_foreground):
+                            _foreground = re.sub(
+                                _placeholder_with_alpha_regex, color_placeholder, _foreground)    
                     break
 
             scope_settings = {
@@ -628,17 +683,30 @@ def define_token_colors(
     return token_colors
 
 
+def print_colors(value):
+    template_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
+    template_json = json.load(open(template_json_file))
+    colors = template_json["colors"]
+    for k, v in colors.items():
+        if k.lower().find(value) != -1:
+            print(f"{k}: {v}")
+            print(pe.bg(v, f"{k}: {v}"))
+
+
 if __name__ == "__main__":
     opts, _ = getopt.getopt(
         sys.argv[1:],
-        "ct",
+        "ctp:",
         [
             "--colors",
             "--token_colors",
+            "--print_colors="
         ],
     )
     for option, value in opts:
         if option in ("-c", "--colors"):
             define_colors()
         elif option in ("-t", "--token_colors"):
-            define_token_colors(light_level_range=[25, 35], base_colors_range=[1, 10])
+            define_token_colors(light_level_range=[0, 30], base_colors_range=[1, 10])
+        elif option in ("-p", "--print_colors"):
+            print_colors(value)

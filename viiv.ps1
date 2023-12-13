@@ -12,13 +12,15 @@ $TEMPLATE_THEME_FILENAME = "viiv-color-theme.template.json"
 $BASE_COLOR_TOTAL = 10
 $GRADATIONAL_TOTAL = 60 
 $DARK_COLOR_GRADATIONAL_TOTAL = 60 
-$GENERAL_MAX_COLOR = 100 
-$DARK_MAX_COLOR = 20
-$DARK_BASE_COLORS = "['#030313']"
+$GENERAL_MIN_COLOR = 20 
+$GENERAL_MAX_COLOR = 120 
+$DARK_MIN_COLOR = 0
+$DARK_MAX_COLOR = 10
+$DARK_BASE_COLORS = "['#0d0d0d']"
 
 # Generate palette colors
 Function GeneratePaletteColors { 
-	$palette = python -c "from peelee.peelee import Palette; palette = Palette($BASE_COLOR_TOTAL, $GRADATIONAL_TOTAL, $DARK_COLOR_GRADATIONAL_TOTAL, $GENERAL_MAX_COLOR, $DARK_MAX_COLOR, $DARK_BASE_COLORS).generate_palette(); print(palette)"
+	$palette = python -c "from peelee.peelee import Palette; palette = Palette($BASE_COLOR_TOTAL, $GRADATIONAL_TOTAL, $DARK_COLOR_GRADATIONAL_TOTAL, $GENERAL_MIN_COLOR, $GENERAL_MAX_COLOR, $DARK_MIN_COLOR, $DARK_MAX_COLOR, $DARK_BASE_COLORS).generate_palette(); print(palette)"
 	Select-String -Pattern 'C_\d{2}_\d{2}:#[A-Fa-f0-9]{6}' -InputObject $palette -AllMatches | ForEach-Object {$_.Matches} | ForEach-Object {$_.Value} | Set-Content "$DIR\themes\$DYNAMIC_PALETTE_FILENAME"
 }
 
