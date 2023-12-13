@@ -52,19 +52,21 @@ class ColorRange(dict):
         return super().__repr__()
 
 
-GENERAL_GROUPS = ["background", "foreground", "border", "outline"]
+GENERAL_GROUPS = ["Background", "Foreground", "Border", "Outline"]
 HIGH_PRIORITY_GROUPS_PREFIXES = [
-    "active",
-    "inactive",
-    "hover",
-    "match",
-    "focus",
-    "highlight",
-    "highlighttext",
-    "highlightstrong",
-    "focushighlight",
-    "selection",
-    "header",
+    "Active",
+    "ActiveSelection",
+    "Inactive",
+    "InactiveSelection",
+    "Hover",
+    "Match",
+    "Focus",
+    "FocusHighlight",
+    "Header",
+    "Highlight",
+    "HighlightText",
+    "HighlightStrong",
+    "Selection",
 ]
 
 
@@ -96,7 +98,7 @@ CUSTOMIZED_COLOR_PLACEHOLDERS = {
     "testing.iconUnset": "#635a50",
     "terminal.ansiBlack": "#0c0c0c",
     "terminal.ansiBrightBlack": "#333333",
-    "terminal.ansiBlue": "#2f2841",
+    "terminal.ansiBlue": "#73639f",
     "terminal.ansiBrightBlue": "#514570",
     "terminal.ansiCyan": "#008b8b",
     "terminal.ansiBrightCyan": "#00a5a5",
@@ -112,20 +114,54 @@ CUSTOMIZED_COLOR_PLACEHOLDERS = {
     "terminal.ansiBrightYellow": "#b3b300",
 }
 
-# more specific, topper
+# More specific groups, put it in topper position. The reason is that if the given group is not equal to the group in the list, it will try to use endwith to find the most matching group. 
+# The groups having more words are more specific.
 COLOR_RANGE_MAP = {
-    "Foreground": ColorRange([1, 12], [15, 20], []),
-    "Background": ColorRange([1, 12], [55, 57], []),
-    "Border": ColorRange([1, 12], [45, 50], [0x73, 0x93]),
-    "Outline": ColorRange([1, 12], [45, 50], [0x30, 0x60]),
-    "Highlight": ColorRange([1, 12], [30, 35], [0x30, 0x40]),
-    "Stroke": ColorRange([1, 12], [35, 40], [0x60, 0x90]),
-    "Shadow": ColorRange([1, 12], [44, 54], []),
-    "Panel": ColorRange([1, 12], [50, 53], []),
-    "Tree": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
-    "Icon": ColorRange([1, 12], [30, 40], []),
-    "Breadcrumb": ColorRange([1, 12], [10, 30], []),
+    "WordHighlightTextBackground": ColorRange([7, 9], [5, 15], [0x35,0x45]),
+    "WordHighlightStrongBackground": ColorRange([7, 9], [5, 15], [0x65,0x95]),
+    "WordHighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xff]),
+    "InactiveSelectionBackground": ColorRange([11, 12], [39, 49], [0x33, 0x66]),
+    "InactiveSelectionForeground": ColorRange([9, 10], [15, 19], [0x45, 0x65]),
     "EditorOverviewRuler": ColorRange([1, 12], [15, 45], [0x35, 0x45]),
+    "HighlightStrongBackground": ColorRange([1, 12], [15, 25], [0x20, 0x30]),
+    "HighlightStrongForeground": ColorRange([1, 12], [23, 33], [0x60, 0x90]),
+    "HighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xff]),
+    "HighlightTextBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
+    "HighlightTextBorder": ColorRange([1, 12], [18, 28], [0x30, 0x40]),
+    "FocusHighlightBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
+    "FocusHighlightForeground": ColorRange([1, 12], [6, 16], [0x30, 0x40]),
+    "FocusHighlightBorder": ColorRange([1, 12], [26, 36], [0x30, 0x40]),
+    "FocusHighlightOutline": ColorRange([1, 12], [11, 21], [0x30, 0x40]),
+    "ActiveSelectionBackground": ColorRange([7, 9], [39, 49], [0x66, 0x99]),
+    "ActiveSelectionForeground": ColorRange([7, 9], [5, 15], []),
+    "SelectionHighlightBackground": ColorRange([7, 9], [5, 15], [0x33,0x45]),
+    "WordHighlightBackground": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
+    "MatchBorder": ColorRange([1, 12], [31, 41], [0x30, 0x40]),
+    "MatchOutline": ColorRange([1, 12], [33, 43], [0x30, 0x40]),
+    "HeaderBackground": ColorRange([1, 12], [51, 56], []),
+    "HighlightBackground": ColorRange([1, 12], [28, 38], [0x30, 0x40]),
+    "HighlightForeground": ColorRange([1, 12], [8, 18], []),
+    "HighlightBorder": ColorRange([1, 12], [14, 24], [0x20, 0x40]),
+    "HighlightOutline": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
+    "SelectionBackground": ColorRange([1, 12], [39, 49], [0x63, 0x86]),
+    "SelectionForeground": ColorRange([1, 12], [7, 17], []),
+    "SelectionBorder": ColorRange([1, 12], [19, 29], [0x30, 0x40]),
+    "SelectionOutline": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
+    "ActiveBackground": ColorRange([1, 12], [40, 47], [0x99, 0xcc]),
+    "ActiveForeground": ColorRange([11, 12], [0, 30], [0xcc, 0xff]),
+    "ActiveBorder": ColorRange([1, 12], [40, 45], []),
+    "ActiveOutline": ColorRange([1, 12], [40, 45], []),
+    "InactiveBackground": ColorRange([11, 12], [39, 49], [0x33, 0x66]),
+    "InactiveForeground": ColorRange([9, 10], [15, 19], [0x89, 0xca]),
+    "InactiveBorder": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
+    "InactiveOutline": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
+    "StatusBarBackground": ColorRange([11, 12], [55, 60], []),
+    "HoverBackground": ColorRange([1, 2], [40, 45], [0x43, 0x47]),
+    "HoverForeground": ColorRange([2, 3], [5, 10], []),
+    "HoverBorder": ColorRange([1, 2], [35, 40], []),
+    "HoverOutline": ColorRange([2, 3], [36, 42], []),
+    "MatchBackground": ColorRange([1, 12], [33, 42], [0x30, 0x40]),
+    "MatchForeground": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
     "EditorRuler": ColorRange([1, 12], [0, 30], [0x30, 0x40]),
     "EditorWarning": ColorRange([1, 12], [25, 30], [0x30, 0x40]),
     "EditorError": ColorRange([1, 12], [20, 25], [0x30, 0x40]),
@@ -137,42 +173,17 @@ COLOR_RANGE_MAP = {
     "FocusBackground": ColorRange([1, 12], [20, 30], [0x50, 0x70]),
     "InputOption": ColorRange([1, 12], [20, 30], [0x50, 0x70]),
     "ScrollbarSlider": ColorRange([1, 12], [35, 45], [0x90, 0x99]),
-    "StatusBarBackground": ColorRange([1, 12], [55, 60], []),
-    "ActiveBackground": ColorRange([1, 12], [40, 47], [0x99, 0xcc]),
-    "ActiveForeground": ColorRange([1, 12], [0, 30], [0xcc, 0xff]),
-    "ActiveBorder": ColorRange([1, 12], [40, 45], []),
-    "ActiveOutline": ColorRange([1, 12], [40, 45], []),
-    "InactiveBackground": ColorRange([1, 12], [57, 60], [0x39, 0x69]),
-    "InactiveForeground": ColorRange([1, 12], [15, 19], []),
-    "InactiveBorder": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
-    "InactiveOutline": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
-    "HoverBackground": ColorRange([1, 12], [40, 45], [0x43, 0x47]),
-    "HoverForeground": ColorRange([1, 12], [5, 10], []),
-    "HoverBorder": ColorRange([1, 12], [35, 40], []),
-    "HoverOutline": ColorRange([1, 12], [36, 42], []),
-    "MatchBackground": ColorRange([1, 12], [33, 42], [0x30, 0x40]),
-    "MatchForeground": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
-    "MatchBorder": ColorRange([1, 12], [31, 41], [0x30, 0x40]),
-    "MatchOutline": ColorRange([1, 12], [33, 43], [0x30, 0x40]),
-    "HeaderBackground": ColorRange([1, 12], [51, 56], []),
-    "HighlightBackground": ColorRange([1, 12], [28, 38], [0x30, 0x40]),
-    "HighlightForeground": ColorRange([1, 12], [8, 18], []),
-    "HighlightBorder": ColorRange([1, 12], [14, 24], [0x20, 0x40]),
-    "HighlightOutline": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
-    "HighlightStrongBackground": ColorRange([1, 12], [15, 25], [0x20, 0x30]),
-    "HighlightStrongForeground": ColorRange([1, 12], [23, 33], [0x60, 0x90]),
-    "HighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xff]),
-    "HighlightTextBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
-    "HighlightTextBorder": ColorRange([1, 12], [18, 28], [0x30, 0x40]),
-    "FocusHighlightBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
-    "FocusHighlightForeground": ColorRange([1, 12], [6, 16], [0x30, 0x40]),
-    "FocusHighlightBorder": ColorRange([1, 12], [26, 36], [0x30, 0x40]),
-    "FocusHighlightOutline": ColorRange([1, 12], [11, 21], [0x30, 0x40]),
-    "SelectionBackground": ColorRange([1, 12], [39, 49], [0x33, 0x66]),
-    "SelectionForeground": ColorRange([1, 12], [7, 17], []),
-    "SelectionBorder": ColorRange([1, 12], [19, 29], [0x30, 0x40]),
-    "SelectionOutline": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
-    "Other": DEFAULT_BACKGROUND_COLOR_RANGE,
+    "Foreground": ColorRange([1, 12], [15, 20], []),
+    "Background": ColorRange([1, 12], [55, 57], []),
+    "Border": ColorRange([11, 12], [35, 45], [0x93, 0x96]),
+    "Outline": ColorRange([1, 12], [45, 50], [0x30, 0x60]),
+    "Highlight": ColorRange([1, 12], [30, 35], [0x30, 0x40]),
+    "Stroke": ColorRange([1, 12], [35, 40], [0x60, 0x90]),
+    "Panel": ColorRange([1, 12], [50, 53], []),
+    "Tree": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
+    "Icon": ColorRange([1, 12], [30, 40], []),
+    "Breadcrumb": ColorRange([1, 12], [10, 30], []),
+    "Shadow": ColorRange([1, 12], [13, 23], [0x0, 0x1]),
 }
 
 HIDDEN_PROPERTIES = [
@@ -205,6 +216,8 @@ LIGHT_COLOR_LEVEL_MAP = {
         "tileBackground",
         "minimap.background",
         "editorHoverWidget.background",
+        "dropdown.background",
+        "settings.dropdownBackground"
     ],
     "56": [
         "editor.background",
@@ -239,6 +252,8 @@ BASE_COLOR_LEVEL_MAP = {
         "breadcrumbPicker.background",
         "button.background",
         "commandCenter.background",
+        "dropdown.background",
+        "dropdown.listBackground",
         "editor.background",
         "editorGroup.emptyBackground",
         "editorGroupHeader.noTabsBackground",
@@ -268,6 +283,7 @@ BASE_COLOR_LEVEL_MAP = {
         "panelSectionHeader.background",
         "panelSectionHeader.border",
         "quickInput.background",
+        "quickInputTitle.background",
         "sideBar.background",
         "sideBar.foreground",
         "sideBar.border",
@@ -276,6 +292,12 @@ BASE_COLOR_LEVEL_MAP = {
         "sideBarSectionHeader.border",
         "statusBar.background",
         "statusBar.border",
+        "settings.checkboxBackground",
+        "settings.dropdownBackground",
+        "settings.focusedRowBackground",
+        "settings.numberInputBackground",
+        "settings.rowHoverBackground",
+        "settings.textInputBackground",
         "tab.activeBackground",
         "tab.hoverBackground",
         "tab.inactiveBackground",
@@ -288,7 +310,7 @@ BASE_COLOR_LEVEL_MAP = {
         "titleBar.activeBackground",
         "titleBar.border",
         "tree.tableOddRowsBackground",
-        "widget.shadow"
+        "widget.shadow",
     ]
 }
 
@@ -375,7 +397,7 @@ def group_color_properties(color_properties):
     high_priority_groups = _create_high_priority_groups()
     for color_property in color_properties:
         for _group_name in high_priority_groups:
-            if color_property.lower().endswith(_group_name.lower()):
+            if color_property.lower() == (_group_name.lower()):
                 group_name = _group_name
                 if group_name not in _groups:
                     _groups[group_name] = [color_property]
@@ -407,7 +429,7 @@ def group_scopes(scopes):
     return scope_groups
 
 
-def _create_color_range(group_name):
+def create_color_range(group_name):
     """Create color range from the given color properties group.
 
     If the group name is not found, return None.
@@ -421,7 +443,7 @@ def _create_color_range(group_name):
 
     Examples:
     --------
-    _create_color_range("Background")
+    create_color_range("Background")
     """
     _default_color_range = (
         DEFAULT_BACKGROUND_COLOR_RANGE
@@ -433,10 +455,19 @@ def _create_color_range(group_name):
         else DEFAULT_COLOR_RANGE
     )
     _color_range = _default_color_range
-    for k in COLOR_RANGE_MAP.keys():
+    for k,v in COLOR_RANGE_MAP.items():
+        assert v not in DEFAULT_COLOR_RANGES, f"{k}'s value is in DEFAULT_COLOR_RANGES"
         if group_name.lower() == k.lower():
             _color_range = COLOR_RANGE_MAP[k]
             break
+    # if didn't find the fully matched group, then try to use endswith or startswith
+    if _color_range in DEFAULT_COLOR_RANGES:
+        for k,v in COLOR_RANGE_MAP.items():
+            if group_name.lower().endswith(k.lower()) or group_name.lower().startswith(k.lower()):
+                _color_range = COLOR_RANGE_MAP[k]
+                break
+    if (group_name.lower() in ["shadow", "list"]) and (_color_range in DEFAULT_COLOR_RANGES):
+        print(f"create_color_range({group_name}) = {_color_range} - defualt code range is used.")
     return _color_range
 
 
@@ -483,8 +514,8 @@ def define_colors():
     color_properties_use_default_range = []
     color_group_and_color_placeholders = {}
     for group_name, color_properties in color_properties_group.items():
-        color_range = _create_color_range(group_name)
-        color_placeholders = _create_color_placeholders(color_range)
+        color_range = create_color_range(group_name)
+        color_placeholders = create_color_placeholders(color_range)
 
         color_group_and_color_placeholders[group_name] = color_placeholders
         color_placeholders = random.sample(
@@ -521,13 +552,14 @@ def define_colors():
                 for k, v in LIGHT_COLOR_LEVEL_MAP.items():
                     if color_property in v:
                         color_placeholder = _replace_light_level(color_placeholder, k)
-
+            if (group_name.lower() == "inactiveforeground"):
+                print(f"group {group_name}, {color_property} = {color_placeholder}") 
             colors[color_property] = color_placeholder
 
     template_data["colors"] = dict(sorted(colors.items(), key=lambda x: x[0]))
     json.dump(
         color_properties_group,
-        open(os.getenv("USERPROFILE") + r"\Downloads\color_properties_group.json", "w"),
+        open(os.getenv("USERPROFILE") + r"\Downloads\color_properties_group.json", "w"), indent=4, sort_keys=True
     )
     json.dump(
         color_group_and_color_placeholders,
@@ -535,7 +567,7 @@ def define_colors():
             os.getenv("USERPROFILE")
             + r"\Downloads\color_group_and_color_placeholders.json",
             "w",
-        ),
+        ), indent=4, sort_keys=True
     )
     json.dump(
         color_properties_use_default_range,
@@ -543,13 +575,13 @@ def define_colors():
             os.getenv("USERPROFILE")
             + r"\Downloads\color_properties_use_default_range.json",
             "w",
-        ),
+        ), indent=4, sort_keys=True
     )
-    json.dump(template_data, open(template_json_file, "w"))
+    json.dump(template_data, open(template_json_file, "w"),indent=4, sort_keys=True)
     return color_properties_group
 
 
-def _create_color_placeholder(i, j):
+def create_color_placeholder(i, j):
     if i < 10:
         i = "0" + str(i)
     if j < 10:
@@ -557,7 +589,7 @@ def _create_color_placeholder(i, j):
     return f"C_{i}_{j}"
 
 
-def _create_color_placeholders(color_range):
+def create_color_placeholders(color_range):
     """Create color placeholders.
     olor placeholder value format "C_[0-9]{2}_[0-9]{2}",
     """
@@ -644,7 +676,7 @@ def define_token_colors(
 
         for j, scope in enumerate(scope_groups[scope_group]):
             light_color_index = light_color_samples[j % len(light_color_samples)]
-            color_placeholder = _create_color_placeholder(
+            color_placeholder = create_color_placeholder(
                 base_color_index, light_color_index
             )
             _old_foreground = scopes[scope]
@@ -679,28 +711,30 @@ def define_token_colors(
             token_colors.append(scope_settings)
 
     template_json["tokenColors"] = token_colors
-    json.dump(template_json, open(template_json_file, "w"))
+    json.dump(template_json, open(template_json_file, "w"), indent=4, sort_keys=True)
     return token_colors
 
 
 def print_colors(value):
-    template_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
-    template_json = json.load(open(template_json_file))
-    colors = template_json["colors"]
+    dynamic_theme_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
+    dynamic_theme_json = json.load(open(dynamic_theme_json_file))
+    theme_template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+    theme_template_json = json.load(open(theme_template_json_file))
+    colors = dynamic_theme_json["colors"]
     for k, v in colors.items():
         if k.lower().find(value) != -1:
-            print(f"{k}: {v}")
-            print(pe.bg(v, f"{k}: {v}"))
+            print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
 
 
 if __name__ == "__main__":
     opts, _ = getopt.getopt(
         sys.argv[1:],
-        "ctp:",
+        "cg:tp:",
         [
             "--colors",
             "--token_colors",
-            "--print_colors="
+            "--print_colors=",
+            "--group_name="
         ],
     )
     for option, value in opts:
@@ -710,3 +744,7 @@ if __name__ == "__main__":
             define_token_colors(light_level_range=[0, 30], base_colors_range=[1, 10])
         elif option in ("-p", "--print_colors"):
             print_colors(value)
+        elif option in ("-g", "--group_name"):
+            color_range = create_color_range(value)
+            color_placeholders = create_color_placeholders(color_range)
+            print(color_range, color_placeholders)
