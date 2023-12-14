@@ -7,10 +7,392 @@ import os
 import random
 import re
 import sys
+from enum import Enum
 from peelee import peelee as pe
 
-PLACEHOLDER_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
-PLACEHOLDER_WITH_ALPHA_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
+PLACEHOLDER_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2,4}"
+PLACEHOLDER_REGEX_WITHOUT_ALPHA = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
+PLACEHOLDER_REGEX_WITH_ALPHA = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
+RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
+RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
+
+HEX_NUMBER_STR_PATTERN = re.compile(r"^[0-9a-zA-Z]+$")
+
+
+class MatchRule(Enum):
+    """Match rule for color range."""
+
+    EXACT = 1
+    ENDSWITH = 2
+    STARTSWITH = 3
+    FUZZY = 4
+
+
+def _to_int(value: str) -> int:
+    """Convert string to int."""
+    if isinstance(value, int) == int:
+        return value
+    elif isinstance(value, str) and HEX_NUMBER_STR_PATTERN.match(value):
+        return int(value, 16)
+    return int(value)
+
+
+def _read_config(config_path):
+    """Read config.json file and return the content."""
+    with open(config_path, "r") as f:
+        return json.load(f)
+
+
+def _random_range(range_values: list[str]) -> list[str]:
+    """Generate random numbers in string format with the given range values.
+    if the random number is less than 10, then add a 0 before the number.
+
+    Example:
+    _random_range([1, 12])
+    -> ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']
+    """
+    _random = []
+    _start = _to_int(range_values[0])
+    _end = _to_int(range_values[1])
+    for i in range(_to_int(range_values[0]), _to_int(range_values[1])):
+        _random.append(str(i) if i >= 10 else str("0" + str(i)))
+    return _random
+
+
+class Colors(dict):
+    """Wrapper class for color."""
+    def __init__(self, colors: list, area: str):
+        self.colors = colors
+        self.area = area
+        super().__init__(colors=colors, area = area)
+
+
+class Color(dict):
+    """Wrapper class for color.
+
+    One color consists of hex, color ranges for basic, light, and alpha.
+    If hex is given, then basic and light ranges will be ignored.
+    One color can generate multiple colors by using hex or basic and light ranges, together with alpha range.
+
+    If the hex is given, then the generated color hex values could be "#efefef3e". Otherwise, it could be "C_11_343e".
+    The first format is used directly in final theme config file.
+    The 2nd one is used in theme template file and will be replaced with the auto-generated color hex value.
+
+    The Color is configured in config.json file. It's content could be like:
+    {
+        "hex": "#008000",
+        "alpha_range": [
+            "0x99",
+            "0xcc"
+        ]
+    }
+    or
+    {
+        "basic_range": [
+            11,
+            12
+        ],
+        "light_range": [
+            59,
+            60
+        ],
+        "alpha_range": [
+            "0x99",
+            "0xcc"
+        ]
+    }
+    """
+
+    def __init__(self, config, area):
+        self.config = config
+        self.area = area
+        self.hex = config.get("hex", None)
+        self.alpha_range = config.get("alpha_range", None)
+        self.basic_range = config.get("basic_range", None)
+        self.light_range = config.get("light_range", None)
+        super().__init__(config=self.config)
+
+    def __repr__(self):
+        return f"Color({self.config})"
+
+    def create_colors(self) -> Colors:
+        """Generate colors by using hex or basic and light ranges."""
+        has_hex = self.hex is not None
+        has_alpha = self.alpha_range is not None and len(self.alpha_range) == 2
+        has_basic = self.basic_range is not None and len(self.basic_range) == 2
+        has_light = self.light_range is not None and len(self.light_range) == 2
+
+        if has_hex:
+            _head = [self.hex]
+        elif has_basic and has_light:
+            _head = [
+                "C_" + basic + "_" + light
+                for basic, light in zip(
+                    _random_range(self.basic_range), _random_range(self.light_range)
+                )
+            ]
+        else:
+            raise ValueError(f"Invalid config: {self.config}.")
+
+        if has_alpha:
+            _tail = []
+            for alpha in _random_range(self.alpha_range):
+                alpha = format(int(alpha), "x")
+                if len(alpha) == 1:
+                    alpha = "0" + alpha
+                _tail.append(alpha) 
+        else:
+            _tail = [""]
+        _colors = [f"{head}{tail}" for head in _head for tail in _tail]
+        return Colors(_colors, self.area)
+
+
+class ColorConfig(dict):
+    """Wrapper class for color config
+
+    Read and parse config.json file located in the current directory.
+    """
+
+    def __init__(self, config_path):
+        """Read config.json file and initialize."""
+        self.config_path = config_path
+        self.config = _read_config(config_path)
+        self.areas = list(list(filter(lambda x: x != "default" and x != "basic", self.config.keys())))
+        self.default_color = Color(self.config["default"], "default")
+        super().__init__(
+            config=self.config, areas=self.areas, default_color=self.default_color
+        )
+
+    def get_colors(self, target_group) -> Colors:
+        color = self.get_color(target_group)
+        print(target_group, color)
+        return color.create_colors()
+
+    def get_color(self, target):
+        """Go through the config items in the basic groups and set the color by checking if the given 'group' contains the key of the groups.
+
+        content example of basic groups:
+        {
+            "group": [
+                "success",
+                "add"
+            ],
+            "color": {
+                "hex": "#008000",
+                "alpha_range": [
+                    "0x99",
+                    "0xcc"
+                ]
+            }
+        }
+
+        colors config are divided by areas
+        basic, background, foreground, border, outline, shadow
+
+        basic: fuzzy matching
+
+        background, foreground, border, outline, shadow: need 3 different matching rules.
+        1. endswith '[group]background'
+        2. startswith '[group]background'
+        3. contains '[group]'
+
+
+        Parameters:
+            target (str): target group or target color perperty
+
+
+        Retrun :
+            Color object include area info, only those color perperty belong to that area can use that color. Color for backkground cannot be used by foreground color perperty.
+            If not found, return the default color.
+        """
+        # basic has higher priority
+        color = self._get_color(
+            "basic", target, MatchRule.FUZZY.name
+        )
+        if color is not None:
+            return color
+        for area in self.areas:
+            # try to find the configured color in the matching order
+            for match_rule_name in MatchRule._member_names_:
+                color = self._get_color(
+                    area, target, match_rule_name
+                )
+                if color is not None:
+                    break
+            if color is not None:
+                break
+        return color if color is not None else self.default_color
+
+    def _get_color(self, area, target_group, match_rule_name):
+        area_config = self.config[area]
+        for config in area_config:
+            groups = config["groups"]
+            for _group in groups:
+                if (
+                    match_rule_name == MatchRule.ENDSWITH.name
+                    and target_group.endswith(_group.lower())
+                ):
+                    color = config["color"]
+                    return Color(color, area)
+                elif (
+                    match_rule_name == MatchRule.STARTSWITH.name
+                    and target_group.lower().startswith(_group.lower())
+                ):
+                    color = config["color"]
+                    return Color(color, area)
+                elif match_rule_name == MatchRule.EXACT.name and target_group == _group:
+                    color = config["color"]
+                    return Color(color, area)
+                elif match_rule_name == MatchRule.FUZZY.name and re.match(
+                    _group, target_group, re.IGNORECASE
+                ):
+                    color = config["color"]
+                    return Color(color, area)
+        return None
+
+    def __repr__(self) -> str:
+        return super().__repr__()
+
+
+class TemplateConfig(dict):
+    """Wrapper class for template config."""
+
+    def __init__(self, config_path = None):
+        if config_path is None:
+            config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+        self.config_path = config_path
+        self.config = _read_config(config_path)
+        self.color_properties = list(self.config["colors"].keys())
+        super().__init__(config_path=config_path)
+
+    def get_basic_groups(self):
+        """Get suffix groups."""
+        # these are the basic groups, e.g. background, foreground, etc.
+        basic_groups = ["foreground", "background", "border", "outline", "shadow"]
+        _groups = {}
+        for _property in self.color_properties:
+            _splits = _property.split(".")
+            if len(_splits) == 1:
+                continue
+            suffix = _splits[-1]
+            for _group in basic_groups:
+                if suffix.lower().find(_group.lower()) != -1:
+                    if _group not in _groups:
+                        _groups[_group] = [_property]
+                    else:
+                        _groups[_group].append(_property)
+        return dict(sorted(_groups.items(), key=lambda x: x[0]))
+
+    def get_prefix_groups(self):
+        _groups = {}
+        for _property in self.color_properties:
+            _splits = _property.split(".")
+            component = _splits[0]
+            if component not in _groups:
+                _groups[component] = [_property]
+            else:
+                _groups[component].append(_property)
+        return dict(sorted(_groups.items(), key=lambda x: x[0]))
+
+    def get_status_groups(self):
+        """Get status group."""
+        _groups = {}
+        statuses = [
+            "active",
+            "focus",
+            "fold",
+            "select",
+            "selected",
+            "selection",
+            "hover",
+            "inactive",
+            "disabled",
+            "offline",
+        ]
+        for _property in self.color_properties:
+            for _status in statuses:
+                if _property.find(_status) != -1:
+                    if _status not in _groups:
+                        _groups[_status] = [_property]
+                    else:
+                        _groups[_status].append(_property)
+        return dict(sorted(_groups.items(), key=lambda x: x[0]))
+
+
+    def _append_or_replace_alpha(self, color, alpha):
+        if alpha is None or not re.match(r"[0-9a-zA-Z]{2}", alpha):
+            return color
+        if re.match(PLACEHOLDER_REGEX_WITH_ALPHA, color) or re.match(
+            RGB_HEX_REGEX_WITH_ALPHA, color
+        ):
+            _color = color[0:-2] + alpha 
+        elif re.match(
+            PLACEHOLDER_REGEX_WITHOUT_ALPHA, color
+        ) or re.match(RGB_HEX_REGEX_WITHOUT_ALPHA, color):
+            _color = color + alpha 
+        return _color 
+
+
+    def regenerate_template_colors(self, color_config: ColorConfig = None):
+        """Generate template with color configuration.
+
+        The template color could be color placeholder in the format 'C_11_343e' or the real color in hex format such as "#efefef3e".
+
+
+        Parameters:
+            color_config (dict): ColorConfig object.
+        """
+        if color_config is None:
+            _color_config_path = f"{os.getcwd()}/config.json"
+            color_config = ColorConfig(config_path=_color_config_path)
+        _basic_groups = self.get_basic_groups()
+        _prefix_groups = self.get_prefix_groups()
+        _status_groups = self.get_status_groups()
+
+        template_colors = {}
+        # the priority order: suffix, prefix, status
+        print("suffix", _basic_groups.keys())
+        for _group in _basic_groups:
+            colors = color_config.get_colors(_group)
+            _colors = colors.colors
+            _area = colors.area
+            _group_color_properties = _basic_groups[_group]
+            for index, _property in enumerate(_group_color_properties):
+                if _property.lower().find(_area.lower()) == -1 and _area != "basic" and _area != "default":
+                    continue
+                _color = _colors[index % len(_colors)]
+                template_colors[_property] = _color
+
+        print("prefix", _prefix_groups.keys())
+        for _group in _prefix_groups:
+            colors = color_config.get_colors(_group)
+            _colors = colors.colors
+            _area = colors.area
+            _group_color_properties = _prefix_groups[_group]
+            for index, _property in enumerate(_group_color_properties):
+                if _property.lower().find(_area.lower()) == -1 and _area != "basic" and _area != "default":
+                    continue
+                _color = _colors[index % len(_colors)]
+                template_colors[_property] = _color
+
+        print("status", _status_groups.keys())
+        for _group in _status_groups:
+            colors = color_config.get_colors(_group)
+            _colors = colors.colors
+            _area = colors.area
+            _group_color_properties = _status_groups[_group]
+            for index, _property in enumerate(_group_color_properties):
+                if _property.lower().find(_area.lower()) == -1 and _area != "basic" and _area != "default":
+                    continue
+                _color = _colors[index % len(_colors)]
+                if _property in template_colors:
+                    _old_color = template_colors[_property]
+                    alpha = _color[-2:] 
+                    _color = self._append_or_replace_alpha(_old_color, alpha)
+                template_colors[_property] = _color
+
+        self.config["colors"] = template_colors
+        json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
 
 
 class ColorRange(dict):
@@ -114,18 +496,18 @@ CUSTOMIZED_COLOR_PLACEHOLDERS = {
     "terminal.ansiBrightYellow": "#b3b300",
 }
 
-# More specific groups, put it in topper position. The reason is that if the given group is not equal to the group in the list, it will try to use endwith to find the most matching group. 
+# More specific groups, put it in topper position. The reason is that if the given group is not equal to the group in the list, it will try to use endwith to find the most matching group.
 # The groups having more words are more specific.
 COLOR_RANGE_MAP = {
-    "WordHighlightTextBackground": ColorRange([7, 9], [5, 15], [0x35,0x45]),
-    "WordHighlightStrongBackground": ColorRange([7, 9], [5, 15], [0x65,0x95]),
-    "WordHighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xff]),
+    "WordHighlightTextBackground": ColorRange([7, 9], [5, 15], [0x35, 0x45]),
+    "WordHighlightStrongBackground": ColorRange([7, 9], [5, 15], [0x65, 0x95]),
+    "WordHighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xFF]),
     "InactiveSelectionBackground": ColorRange([11, 12], [39, 49], [0x33, 0x66]),
     "InactiveSelectionForeground": ColorRange([9, 10], [15, 19], [0x45, 0x65]),
     "EditorOverviewRuler": ColorRange([1, 12], [15, 45], [0x35, 0x45]),
     "HighlightStrongBackground": ColorRange([1, 12], [15, 25], [0x20, 0x30]),
     "HighlightStrongForeground": ColorRange([1, 12], [23, 33], [0x60, 0x90]),
-    "HighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xff]),
+    "HighlightStrongBorder": ColorRange([1, 12], [23, 33], [0x90, 0xFF]),
     "HighlightTextBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
     "HighlightTextBorder": ColorRange([1, 12], [18, 28], [0x30, 0x40]),
     "FocusHighlightBackground": ColorRange([1, 12], [37, 47], [0x30, 0x40]),
@@ -134,7 +516,7 @@ COLOR_RANGE_MAP = {
     "FocusHighlightOutline": ColorRange([1, 12], [11, 21], [0x30, 0x40]),
     "ActiveSelectionBackground": ColorRange([7, 9], [39, 49], [0x66, 0x99]),
     "ActiveSelectionForeground": ColorRange([7, 9], [5, 15], []),
-    "SelectionHighlightBackground": ColorRange([7, 9], [5, 15], [0x33,0x45]),
+    "SelectionHighlightBackground": ColorRange([7, 9], [5, 15], [0x33, 0x45]),
     "WordHighlightBackground": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
     "MatchBorder": ColorRange([1, 12], [31, 41], [0x30, 0x40]),
     "MatchOutline": ColorRange([1, 12], [33, 43], [0x30, 0x40]),
@@ -147,12 +529,12 @@ COLOR_RANGE_MAP = {
     "SelectionForeground": ColorRange([1, 12], [7, 17], []),
     "SelectionBorder": ColorRange([1, 12], [19, 29], [0x30, 0x40]),
     "SelectionOutline": ColorRange([1, 12], [13, 23], [0x30, 0x40]),
-    "ActiveBackground": ColorRange([1, 12], [40, 47], [0x99, 0xcc]),
-    "ActiveForeground": ColorRange([11, 12], [0, 30], [0xcc, 0xff]),
+    "ActiveBackground": ColorRange([1, 12], [40, 47], [0x99, 0xCC]),
+    "ActiveForeground": ColorRange([11, 12], [0, 30], [0xCC, 0xFF]),
     "ActiveBorder": ColorRange([1, 12], [40, 45], []),
     "ActiveOutline": ColorRange([1, 12], [40, 45], []),
     "InactiveBackground": ColorRange([11, 12], [39, 49], [0x33, 0x66]),
-    "InactiveForeground": ColorRange([9, 10], [15, 19], [0x89, 0xca]),
+    "InactiveForeground": ColorRange([9, 10], [15, 19], [0x89, 0xCA]),
     "InactiveBorder": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
     "InactiveOutline": ColorRange([1, 12], [50, 55], [0x30, 0x40]),
     "StatusBarBackground": ColorRange([11, 12], [55, 60], []),
@@ -218,7 +600,7 @@ LIGHT_COLOR_LEVEL_MAP = {
         "minimap.background",
         "editorHoverWidget.background",
         "dropdown.background",
-        "settings.dropdownBackground"
+        "settings.dropdownBackground",
     ],
     "56": [
         "editor.background",
@@ -375,35 +757,39 @@ def group_color_properties(color_properties):
     _groups = {}
 
     # group by suffix
-    # these are most general groups, e.g. background, foreground, etc.
+    # these are the basic groups, e.g. background, foreground, etc.
+    basic_groups = ["foreground", "background", "border", "outline"]
     for color_property in color_properties:
         _splits = color_property.split(".")
         if len(_splits) > 1:
-            group_name = _splits[-1]
-            if group_name not in _groups:
-                _groups[group_name] = [color_property]
-            else:
-                _groups[group_name].append(color_property)
+            suffix = _splits[-1]
+            for _group in basic_groups:
+                if suffix.lower().find(_group.lower()) != -1:
+                    if _group not in _groups:
+                        _groups[_group] = [color_property]
+                    else:
+                        _groups[_group].append(color_property)
 
-    # group by prefix, they are more specific
+    # group by prefix
+    # these are the component groups, e.g. editor, list, etc.
     for color_property in color_properties:
         _splits = color_property.split(".")
-        group_name = _splits[0]
-        if group_name not in _groups:
-            _groups[group_name] = [color_property]
+        component = _splits[0]
+        if component not in _groups:
+            _groups[component] = [color_property]
         else:
-            _groups[group_name].append(color_property)
+            _groups[component].append(color_property)
 
     # high priority groups, e.g. activebackground, activeforeground, etc. are handled finally to override others
     high_priority_groups = _create_high_priority_groups()
     for color_property in color_properties:
         for _group_name in high_priority_groups:
             if color_property.lower() == (_group_name.lower()):
-                group_name = _group_name
-                if group_name not in _groups:
-                    _groups[group_name] = [color_property]
+                suffix = _group_name
+                if suffix not in _groups:
+                    _groups[suffix] = [color_property]
                 else:
-                    _groups[group_name].append(color_property)
+                    _groups[suffix].append(color_property)
 
     return _groups
 
@@ -456,19 +842,25 @@ def create_color_range(group_name):
         else DEFAULT_COLOR_RANGE
     )
     _color_range = _default_color_range
-    for k,v in COLOR_RANGE_MAP.items():
+    for k, v in COLOR_RANGE_MAP.items():
         assert v not in DEFAULT_COLOR_RANGES, f"{k}'s value is in DEFAULT_COLOR_RANGES"
         if group_name.lower() == k.lower():
             _color_range = COLOR_RANGE_MAP[k]
             break
     # if didn't find the fully matched group, then try to use endswith or startswith
     if _color_range in DEFAULT_COLOR_RANGES:
-        for k,v in COLOR_RANGE_MAP.items():
-            if group_name.lower().endswith(k.lower()) or group_name.lower().startswith(k.lower()):
+        for k, v in COLOR_RANGE_MAP.items():
+            if group_name.lower().endswith(k.lower()) or group_name.lower().startswith(
+                k.lower()
+            ):
                 _color_range = COLOR_RANGE_MAP[k]
                 break
-    if (group_name.lower() in ["shadow", "list"]) and (_color_range in DEFAULT_COLOR_RANGES):
-        print(f"create_color_range({group_name}) = {_color_range} - defualt code range is used.")
+    if (group_name.lower() in ["shadow", "list"]) and (
+        _color_range in DEFAULT_COLOR_RANGES
+    ):
+        print(
+            f"create_color_range({group_name}) = {_color_range} - defualt code range is used."
+        )
     return _color_range
 
 
@@ -480,8 +872,11 @@ def _replace_light_level(color_placeholder, light_level):
 
 
 def _replace_base_color(color_placeholder, base_color):
-    _splits = color_placeholder.split("_")
-    return "_".join([_splits[0], base_color, _splits[2]])
+    if not re.match(PLACEHOLDER_REGEX, color_placeholder):
+        return color_placeholder
+    else:
+        _splits = color_placeholder.split("_")
+        return "_".join([_splits[0], base_color, _splits[2]])
 
 
 def _get_theme_base_color(color_placeholder_groups):
@@ -505,7 +900,13 @@ def define_colors_for_background_properties(color_properties):
     return colors
 
 
+def get_color_config():
+    config_path = f"{os.getcwd()}/config.json"
+    return ColorConfig(config_path)
+
+
 def define_colors():
+    color_config = get_color_config()
     template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
     template_data = json.load(open(template_json_file))
     all_color_properties = get_color_properties(template_json_file)
@@ -515,8 +916,12 @@ def define_colors():
     color_properties_use_default_range = []
     color_group_and_color_placeholders = {}
     for group_name, color_properties in color_properties_group.items():
-        color_range = create_color_range(group_name)
-        color_placeholders = create_color_placeholders(color_range)
+        color = color_config.get_color(group_name)
+        if color == color_config.default_color:
+            color_range = create_color_range(group_name)
+            color_placeholders = create_color_placeholders(color_range)
+        else:
+            color_placeholders = color.create_colors()
 
         color_group_and_color_placeholders[group_name] = color_placeholders
         color_placeholders = random.sample(
@@ -540,8 +945,8 @@ def define_colors():
                 if color_property in colors:
                     _old_color_placeholder = colors[color_property]
                     if re.match(
-                        PLACEHOLDER_WITH_ALPHA_REGEX, _old_color_placeholder
-                    ) and not re.match(PLACEHOLDER_WITH_ALPHA_REGEX, color_placeholder):
+                        PLACEHOLDER_REGEX_WITH_ALPHA, _old_color_placeholder
+                    ) and not re.match(PLACEHOLDER_REGEX_WITH_ALPHA, color_placeholder):
                         color_placeholder = (
                             f"{color_placeholder}{_old_color_placeholder[-2:]}"
                         )
@@ -553,14 +958,16 @@ def define_colors():
                 for k, v in LIGHT_COLOR_LEVEL_MAP.items():
                     if color_property in v:
                         color_placeholder = _replace_light_level(color_placeholder, k)
-            if (group_name.lower() == "inactiveforeground"):
-                print(f"group {group_name}, {color_property} = {color_placeholder}") 
+            if group_name.lower() == "inactiveforeground":
+                print(f"group {group_name}, {color_property} = {color_placeholder}")
             colors[color_property] = color_placeholder
 
     template_data["colors"] = dict(sorted(colors.items(), key=lambda x: x[0]))
     json.dump(
         color_properties_group,
-        open(os.getenv("USERPROFILE") + r"\Downloads\color_properties_group.json", "w"), indent=4, sort_keys=True
+        open(os.getenv("USERPROFILE") + r"\Downloads\color_properties_group.json", "w"),
+        indent=4,
+        sort_keys=True,
     )
     json.dump(
         color_group_and_color_placeholders,
@@ -568,7 +975,9 @@ def define_colors():
             os.getenv("USERPROFILE")
             + r"\Downloads\color_group_and_color_placeholders.json",
             "w",
-        ), indent=4, sort_keys=True
+        ),
+        indent=4,
+        sort_keys=True,
     )
     json.dump(
         color_properties_use_default_range,
@@ -576,9 +985,11 @@ def define_colors():
             os.getenv("USERPROFILE")
             + r"\Downloads\color_properties_use_default_range.json",
             "w",
-        ), indent=4, sort_keys=True
+        ),
+        indent=4,
+        sort_keys=True,
     )
-    json.dump(template_data, open(template_json_file, "w"),indent=4, sort_keys=True)
+    json.dump(template_data, open(template_json_file, "w"), indent=4, sort_keys=True)
     return color_properties_group
 
 
@@ -686,11 +1097,12 @@ def define_token_colors(
                 r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2,}"
             )
             _foreground = re.sub(_placeholder_regex, color_placeholder, _old_foreground)
-            _foreground = re.sub(_placeholder_with_alpha_regex, color_placeholder, _foreground)
+            _foreground = re.sub(
+                _placeholder_with_alpha_regex, color_placeholder, _foreground
+            )
             # if not re.match(_placeholder_with_alpha_regex, _old_foreground):
             #    _foreground = f"{_foreground}"
             for _scope_prefix in ["comment", "docstring", "punctuation", "javadoc"]:
-                
                 if scope.find(_scope_prefix) != -1:
                     # set base color as dark color
                     _foreground = re.sub(r"C_[a-zA-Z0-9]{2}", "C_11", _foreground)
@@ -700,7 +1112,10 @@ def define_token_colors(
                     else:
                         if re.match(_placeholder_with_alpha_regex, _old_foreground):
                             _foreground = re.sub(
-                                _placeholder_with_alpha_regex, color_placeholder, _foreground)    
+                                _placeholder_with_alpha_regex,
+                                color_placeholder,
+                                _foreground,
+                            )
                     break
 
             scope_settings = {
@@ -731,16 +1146,12 @@ if __name__ == "__main__":
     opts, _ = getopt.getopt(
         sys.argv[1:],
         "cg:tp:",
-        [
-            "--colors",
-            "--token_colors",
-            "--print_colors=",
-            "--group_name="
-        ],
+        ["--colors", "--token_colors", "--print_colors=", "--group_name="],
     )
     for option, value in opts:
         if option in ("-c", "--colors"):
-            define_colors()
+            # define_colors()
+            TemplateConfig().regenerate_template_colors()
         elif option in ("-t", "--token_colors"):
             define_token_colors(light_level_range=[0, 30], base_colors_range=[1, 10])
         elif option in ("-p", "--print_colors"):
@@ -749,3 +1160,24 @@ if __name__ == "__main__":
             color_range = create_color_range(value)
             color_placeholders = create_color_placeholders(color_range)
             print(color_range, color_placeholders)
+
+
+color_1 = {
+    "basic_range": [11, 12],
+    "light_range": [59, 60],
+    "alpha_range": ["0x99", "0xcc"],
+}
+
+color_2 = {"hex": "#0f6f99", "alpha_range": ["0x99", "0xcc"]}
+
+
+#config_path = f"{os.getcwd()}/config.json"
+#color_config = ColorConfig(config_path)
+#color = color_config.get_color("activeBorder")
+#print(color.create_colors())
+#color = color_config.get_color("error")
+#print(color.create_colors())
+
+template_config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+config = TemplateConfig(template_config_path)
+config.regenerate_template_colors()
