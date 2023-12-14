@@ -16,7 +16,7 @@ PLACEHOLDER_REGEX_WITH_ALPHA = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
 RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
-HEX_NUMBER_STR_PATTERN = re.compile(r"^[0-9a-zA-Z]+$")
+HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 
 class MatchRule(Enum):
@@ -30,9 +30,9 @@ class MatchRule(Enum):
 
 def _to_int(value: str) -> int:
     """Convert string to int."""
-    if isinstance(value, int) == int:
+    if isinstance(value, int):
         return value
-    elif isinstance(value, str) and HEX_NUMBER_STR_PATTERN.match(value):
+    elif isinstance(value, str) and (HEX_NUMBER_STR_PATTERN.match(value)):
         return int(value, 16)
     return int(value)
 
@@ -41,6 +41,11 @@ def _read_config(config_path):
     """Read config.json file and return the content."""
     with open(config_path, "r") as f:
         return json.load(f)
+
+
+def _is_generic_area(area):
+    """Check if the current theme is a generic area."""
+    return area in ["default", "basic", "status"]
 
 
 def _random_range(range_values: list[str]) -> list[str]:
@@ -54,17 +59,22 @@ def _random_range(range_values: list[str]) -> list[str]:
     _random = []
     _start = _to_int(range_values[0])
     _end = _to_int(range_values[1])
-    for i in range(_to_int(range_values[0]), _to_int(range_values[1])):
+    for i in range(_start, _end):
         _random.append(str(i) if i >= 10 else str("0" + str(i)))
     return _random
 
 
-class Colors(dict):
+class ColorsWrapper(dict):
     """Wrapper class for color."""
-    def __init__(self, colors: list, area: str):
+
+    def __init__(self, colors: list, area:str, group: str):
         self.colors = colors
         self.area = area
-        super().__init__(colors=colors, area = area)
+        self.group = group
+        super().__init__(colors=colors, group=group)
+
+    def __repr__(self) -> str:
+        return super().__repr__()
 
 
 class Color(dict):
@@ -103,9 +113,10 @@ class Color(dict):
     }
     """
 
-    def __init__(self, config, area):
+    def __init__(self, config, area, group):
         self.config = config
         self.area = area
+        self.group = group
         self.hex = config.get("hex", None)
         self.alpha_range = config.get("alpha_range", None)
         self.basic_range = config.get("basic_range", None)
@@ -115,21 +126,18 @@ class Color(dict):
     def __repr__(self):
         return f"Color({self.config})"
 
-    def create_colors(self) -> Colors:
+    def create_colors_wrapper(self) -> ColorsWrapper:
         """Generate colors by using hex or basic and light ranges."""
         has_hex = self.hex is not None
         has_alpha = self.alpha_range is not None and len(self.alpha_range) == 2
         has_basic = self.basic_range is not None and len(self.basic_range) == 2
         has_light = self.light_range is not None and len(self.light_range) == 2
-
         if has_hex:
             _head = [self.hex]
         elif has_basic and has_light:
             _head = [
                 "C_" + basic + "_" + light
-                for basic, light in zip(
-                    _random_range(self.basic_range), _random_range(self.light_range)
-                )
+                for basic in _random_range(self.basic_range) for light in _random_range(self.light_range)
             ]
         else:
             raise ValueError(f"Invalid config: {self.config}.")
@@ -140,11 +148,13 @@ class Color(dict):
                 alpha = format(int(alpha), "x")
                 if len(alpha) == 1:
                     alpha = "0" + alpha
-                _tail.append(alpha) 
+                _tail.append(alpha)
         else:
             _tail = [""]
         _colors = [f"{head}{tail}" for head in _head for tail in _tail]
-        return Colors(_colors, self.area)
+
+        _wrapper = ColorsWrapper(_colors, self.area, self.group)
+        return _wrapper
 
 
 class ColorConfig(dict):
@@ -157,18 +167,15 @@ class ColorConfig(dict):
         """Read config.json file and initialize."""
         self.config_path = config_path
         self.config = _read_config(config_path)
-        self.areas = list(list(filter(lambda x: x != "default" and x != "basic", self.config.keys())))
-        self.default_color = Color(self.config["default"], "default")
+        self.areas = list(
+            list(filter(lambda x: x != "default" and x != "basic", self.config.keys()))
+        )
+        self.default_color = Color(self.config["default"], "default", "default")
         super().__init__(
             config=self.config, areas=self.areas, default_color=self.default_color
         )
 
-    def get_colors(self, target_group) -> Colors:
-        color = self.get_color(target_group)
-        print(target_group, color)
-        return color.create_colors()
-
-    def get_color(self, target):
+    def get_colors(self, target) -> ColorsWrapper:
         """Go through the config items in the basic groups and set the color by checking if the given 'group' contains the key of the groups.
 
         content example of basic groups:
@@ -206,48 +213,54 @@ class ColorConfig(dict):
             If not found, return the default color.
         """
         # basic has higher priority
-        color = self._get_color(
-            "basic", target, MatchRule.FUZZY.name
-        )
+        color = self._get_color("basic", target, MatchRule.FUZZY.name)
         if color is not None:
-            return color
+            return [color.create_colors_wrapper()]
+
+        colors = []
         for area in self.areas:
             # try to find the configured color in the matching order
             for match_rule_name in MatchRule._member_names_:
-                color = self._get_color(
-                    area, target, match_rule_name
-                )
+                color = self._get_color(area, target, match_rule_name)
+                if target == "extensionBadge" and color is not None:
+                    print(target, color)
                 if color is not None:
                     break
             if color is not None:
-                break
-        return color if color is not None else self.default_color
+                colors.append(color.create_colors_wrapper())
+        _final_colors = colors if len(colors) > 0 else [self.default_color.create_colors_wrapper()]
+
+        # print(target, len(_final_colors), [f.area for f in _final_colors])
+        return _final_colors
 
     def _get_color(self, area, target_group, match_rule_name):
         area_config = self.config[area]
+        color = None
         for config in area_config:
             groups = config["groups"]
             for _group in groups:
                 if (
                     match_rule_name == MatchRule.ENDSWITH.name
-                    and target_group.endswith(_group.lower())
+                    and target_group.lower().endswith(_group.lower())
                 ):
                     color = config["color"]
-                    return Color(color, area)
+                    break
                 elif (
                     match_rule_name == MatchRule.STARTSWITH.name
                     and target_group.lower().startswith(_group.lower())
                 ):
                     color = config["color"]
-                    return Color(color, area)
-                elif match_rule_name == MatchRule.EXACT.name and target_group == _group:
+                    break
+                elif match_rule_name == MatchRule.EXACT.name and target_group.lower() == _group.lower():
                     color = config["color"]
-                    return Color(color, area)
+                    break
                 elif match_rule_name == MatchRule.FUZZY.name and re.match(
                     _group, target_group, re.IGNORECASE
                 ):
                     color = config["color"]
-                    return Color(color, area)
+                    break
+            if color is not None:
+                return Color(color, area, _group)
         return None
 
     def __repr__(self) -> str:
@@ -257,7 +270,7 @@ class ColorConfig(dict):
 class TemplateConfig(dict):
     """Wrapper class for template config."""
 
-    def __init__(self, config_path = None):
+    def __init__(self, config_path=None):
         if config_path is None:
             config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
         self.config_path = config_path
@@ -268,19 +281,26 @@ class TemplateConfig(dict):
     def get_basic_groups(self):
         """Get suffix groups."""
         # these are the basic groups, e.g. background, foreground, etc.
-        basic_groups = ["foreground", "background", "border", "outline", "shadow"]
+        basic_groups = ["foreground", "background", "border", "outline", "shadow", "ruler"]
         _groups = {}
         for _property in self.color_properties:
             _splits = _property.split(".")
-            if len(_splits) == 1:
-                continue
             suffix = _splits[-1]
+            _found_basic_group = False
             for _group in basic_groups:
                 if suffix.lower().find(_group.lower()) != -1:
+                    _found_basic_group = True
                     if _group not in _groups:
                         _groups[_group] = [_property]
                     else:
                         _groups[_group].append(_property)
+            if not _found_basic_group:
+                _default_group = "default"
+                if _default_group not in _groups:
+                    _groups[_default_group] = [_property]
+                else:
+                    _groups[_default_group].append(_property)
+
         return dict(sorted(_groups.items(), key=lambda x: x[0]))
 
     def get_prefix_groups(self):
@@ -311,13 +331,12 @@ class TemplateConfig(dict):
         ]
         for _property in self.color_properties:
             for _status in statuses:
-                if _property.find(_status) != -1:
+                if _property.lower().find(_status) != -1:
                     if _status not in _groups:
                         _groups[_status] = [_property]
                     else:
                         _groups[_status].append(_property)
         return dict(sorted(_groups.items(), key=lambda x: x[0]))
-
 
     def _append_or_replace_alpha(self, color, alpha):
         if alpha is None or not re.match(r"[0-9a-zA-Z]{2}", alpha):
@@ -325,12 +344,30 @@ class TemplateConfig(dict):
         if re.match(PLACEHOLDER_REGEX_WITH_ALPHA, color) or re.match(
             RGB_HEX_REGEX_WITH_ALPHA, color
         ):
-            _color = color[0:-2] + alpha 
-        elif re.match(
-            PLACEHOLDER_REGEX_WITHOUT_ALPHA, color
-        ) or re.match(RGB_HEX_REGEX_WITHOUT_ALPHA, color):
-            _color = color + alpha 
-        return _color 
+            _color = color[0:-2] + alpha
+        elif re.match(PLACEHOLDER_REGEX_WITHOUT_ALPHA, color) or re.match(
+            RGB_HEX_REGEX_WITHOUT_ALPHA, color
+        ):
+            _color = color + alpha
+        return _color
+
+    def _replace_basic_color(self, color, basic_color):
+        if basic_color is None or not re.match(r"[0-9a-zA-Z]{2}", basic_color):
+            return color
+        if re.match(PLACEHOLDER_REGEX, color):
+            _splits = color.split("_")
+            _color = '_'.join([_splits[0], basic_color, _splits[2]])
+        return _color
+
+
+    def _replace_light_color(self, color, light_color):
+        if light_color is None or not re.match(r"[0-9a-zA-Z]{2}", light_color):
+            return color
+        if re.match(PLACEHOLDER_REGEX, color):
+            _splits = color.split("_")
+            _alpha = _splits[-1][2:]
+            _color = '_'.join([_splits[0], _splits[1], light_color + _alpha])
+        return _color
 
 
     def regenerate_template_colors(self, color_config: ColorConfig = None):
@@ -351,46 +388,74 @@ class TemplateConfig(dict):
 
         template_colors = {}
         # the priority order: suffix, prefix, status
-        print("suffix", _basic_groups.keys())
-        for _group in _basic_groups:
-            colors = color_config.get_colors(_group)
-            _colors = colors.colors
-            _area = colors.area
-            _group_color_properties = _basic_groups[_group]
-            for index, _property in enumerate(_group_color_properties):
-                if _property.lower().find(_area.lower()) == -1 and _area != "basic" and _area != "default":
-                    continue
-                _color = _colors[index % len(_colors)]
-                template_colors[_property] = _color
 
-        print("prefix", _prefix_groups.keys())
-        for _group in _prefix_groups:
-            colors = color_config.get_colors(_group)
-            _colors = colors.colors
-            _area = colors.area
-            _group_color_properties = _prefix_groups[_group]
-            for index, _property in enumerate(_group_color_properties):
-                if _property.lower().find(_area.lower()) == -1 and _area != "basic" and _area != "default":
-                    continue
-                _color = _colors[index % len(_colors)]
-                template_colors[_property] = _color
+        for _group, _color_properties in _basic_groups.items():
+            color_wrappers = color_config.get_colors(_group)
+            for _wrapper in color_wrappers:
+                _colors = _wrapper.colors
+                _area = _wrapper.area
+                _colors_group = _wrapper.group
+                _colors = random.sample(_colors, len(_colors))
+                for index, _property in enumerate(_color_properties):
+                    if _is_generic_area(_area):
+                        _color = _colors[index % len(_colors)]
+                        template_colors[_property] = _color
+                    elif (
+                        (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
+                    ): 
+                        _color = _colors[index % len(_colors)]
+                        template_colors[_property] = _color
 
-        print("status", _status_groups.keys())
-        for _group in _status_groups:
-            colors = color_config.get_colors(_group)
-            _colors = colors.colors
-            _area = colors.area
-            _group_color_properties = _status_groups[_group]
-            for index, _property in enumerate(_group_color_properties):
-                if _property.lower().find(_area.lower()) == -1 and _area != "basic" and _area != "default":
-                    continue
-                _color = _colors[index % len(_colors)]
-                if _property in template_colors:
-                    _old_color = template_colors[_property]
-                    alpha = _color[-2:] 
-                    _color = self._append_or_replace_alpha(_old_color, alpha)
-                template_colors[_property] = _color
+        for _group, _color_properties in _prefix_groups.items():
+            color_wrappers = color_config.get_colors(_group)
 
+            for _wrapper in color_wrappers:
+                _colors = _wrapper.colors
+                _area = _wrapper.area
+                _colors_group = _wrapper.group
+                _colors_group = _wrapper.group
+                _colors = random.sample(_colors, len(_colors))
+                for index, _property in enumerate(_color_properties):
+                    if (
+                        (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
+                    ): 
+                        _color = _colors[index % len(_colors)]
+                        template_colors[_property] = _color
+
+        for _group, _color_properties in _status_groups.items():
+            color_wrappers = color_config.get_colors(_group)
+            for _wrapper in color_wrappers:
+                _colors_group = _wrapper.group
+                _colors = _wrapper.colors
+                _area = _wrapper.area
+                _colors = random.sample(_colors, len(_colors))
+                for index, _property in enumerate(_color_properties):
+                    if (
+                        _property.lower().find(_colors_group.lower()) == -1
+                    ):
+                        continue
+                    _color = _colors[index % len(_colors)]
+                    if _property in template_colors:
+                        _old_color = template_colors[_property]
+                        basic_color = _color.split('_')[1]
+                        light_color = _color.split('_')[2][0:2]
+                        alpha = _color[-2:]
+                        if _property == "activityBar.inactiveForeground":
+                            print("0. activityBar.inactiveForeground", _old_color, _color, basic_color ,light_color,alpha)
+                        _color = self._append_or_replace_alpha(_old_color, 
+                                                               alpha)
+                        if _property == "activityBar.inactiveForeground":
+                            print("1. activityBar.inactiveForeground", _old_color, _color, basic_color, light_color, alpha)
+                        #_color = self._replace_basic_color(_color, 
+                        #                                   basic_color)
+                        if _property == "activityBar.inactiveForeground":
+                            print("2. activityBar.inactiveForeground", _old_color, _color, basic_color, light_color, alpha)
+                        #_color = self._replace_light_color(_color, 
+                        #                                   light_color)
+                        if _property == "activityBar.inactiveForeground":
+                            print("3. activityBar.inactiveForeground", _old_color, _color, basic_color, alpha, light_color)
+                        template_colors[_property] = _color
+                        
         self.config["colors"] = template_colors
         json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
 
@@ -1064,7 +1129,6 @@ def define_token_colors(
         scopes = get_scopes(template_json_file)
         print(f"Read {len(scopes)} scopes from json file {template_json_file}.")
     scope_groups = group_scopes(scopes)
-    print(scope_groups.keys())
 
     token_colors = []
     # assign random base colors to scope groups, assign random light colors to scopes in scope group
@@ -1171,13 +1235,13 @@ color_1 = {
 color_2 = {"hex": "#0f6f99", "alpha_range": ["0x99", "0xcc"]}
 
 
-#config_path = f"{os.getcwd()}/config.json"
-#color_config = ColorConfig(config_path)
-#color = color_config.get_color("activeBorder")
-#print(color.create_colors())
-#color = color_config.get_color("error")
-#print(color.create_colors())
+# config_path = f"{os.getcwd()}/config.json"
+# color_config = ColorConfig(config_path)
+# color = color_config.get_color("activeBorder")
+# print(color.create_colors())
+# color = color_config.get_color("error")
+# print(color.create_colors())
 
-template_config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
-config = TemplateConfig(template_config_path)
-config.regenerate_template_colors()
+#template_config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+#config = TemplateConfig(template_config_path)
+#config.regenerate_template_colors()
