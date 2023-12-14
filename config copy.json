@@ -1,5 +1,5 @@
 {
-    "default": {
+    "default_color": {
         "basic_range": [
             "1",
             "12"
@@ -9,7 +9,7 @@
             "60"
         ],
         "alpha_range": [
-            "0xee",
+            "0x0",
             "0xff"
         ]
     },
@@ -103,35 +103,13 @@
     "background": [
         {
             "groups": [
-                ".*background.*"
-            ],
-            "color": {
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    55,
-                    60
-                ],
-                "alpha_range": [
-                    "0xef",
-                    "0xff"
-                ]
-            }
-        },
-        {
-            "groups": [
                 "activityBar",
-                "titleBar",
-                "editorGroup",
-                "tab",
-                "breadcrumb"
+                "titleBar"
             ],
             "color": {
                 "basic_range": [
-                    11,
-                    12
+                    10,
+                    11
                 ],
                 "light_range": [
                     59,
@@ -147,9 +125,7 @@
             "groups": [
                 "sideBar",
                 "panel",
-                "minimap",
-                "terminal",
-                "commandCenter"
+                "minimap"
             ],
             "color": {
                 "basic_range": [
@@ -209,93 +185,7 @@
                     "0xff"
                 ]
             }
-        }
-    ],
-    "foreground": [
-        {
-            "groups": [
-                ".*foreground.*"
-            ],
-            "color": {
-                "basic_range": [
-                    10,
-                    12
-                ],
-                "light_range": [
-                    0,
-                    30
-                ],
-                "alpha_range": [
-                    "0xef",
-                    "0xff"
-                ]
-            }
-        }
-    ],
-    "border": [
-        {
-            "groups": [
-                ".*border.*"
-            ],
-            "color": {
-                "basic_range": [
-                    7,
-                    8 
-                ],
-                "light_range": [
-                    40,
-                    45
-                ],
-                "alpha_range": [
-                    "0xef",
-                    "0xff"
-                ]
-            }
-        }
-    ],
-    "outline": [
-        {
-            "groups": [
-                ".*outline.*"
-            ],
-            "color": {
-                "basic_range": [
-                    7,
-                    10 
-                ],
-                "light_range": [
-                    45,
-                    50
-                ],
-                "alpha_range": [
-                    "0xef",
-                    "0xff"
-                ]
-            }
-        }
-    ],
-    "shadow": [
-        {
-            "groups": [
-                ".*"
-            ],
-            "color": {
-                "basic_range": [
-                    7,
-                    10 
-                ],
-                "light_range": [
-                    45,
-                    50
-                ],
-                "alpha_range": [
-                    "0x0",
-                    "0x1"
-                ]
-            }
-        }
-    ],
-    "status": [
+        },
         {
             "groups": [
                 "active",
