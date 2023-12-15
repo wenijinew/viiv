@@ -85,7 +85,7 @@ class ColorsWrapper(dict):
         self.area = area
         self.group = group
         self.replace_color_component = replace_color_component
-        super().__init__(colors=colors, group=group, area=area)
+        super().__init__(colors=colors, group=group, area=area, replace_color_component=replace_color_component)
 
     def __repr__(self) -> str:
         return super().__repr__()
@@ -169,7 +169,7 @@ class Color(dict):
             _tail = [""]
         _colors = [f"{head}{tail}" for head in _head for tail in _tail]
 
-        _wrapper = ColorsWrapper(_colors, self.area, self.group)
+        _wrapper = ColorsWrapper(_colors, self.area, self.group, self.replace_color_component)
         return _wrapper
 
 
@@ -252,7 +252,11 @@ class ColorConfig(dict):
         color = None
         for config in area_config:
             groups = config["groups"]
-            replace_color_component = config.get("replace_color_component", ColorComponent.ALL if area != "status" else ColorComponent.ALPHA)
+            replace_color_component = config.get("replace_color_component")
+            if replace_color_component is not None and isinstance(replace_color_component, list):
+                replace_color_component = [ColorComponent[_component] for _component in replace_color_component]
+            else:
+                replace_color_component = [ColorComponent.ALL] if area != "status" else [ColorComponent.ALPHA]
             for _group in groups:
                 if (
                     match_rule_name == MatchRule.ENDSWITH.name
@@ -389,9 +393,8 @@ class TemplateConfig(dict):
 
 
     def _append_or_replace_alpha(self, old_color, new_color, component: ColorComponent):
-        print(old_color, new_color, component)
         if component == ColorComponent.ALPHA:
-            _color = old_color[0:8] + new_color[8:10]
+            _color = old_color[0:7] + new_color[7:9]
         elif component == ColorComponent.LIGHT:
             _color = old_color[0:5] + new_color[5:7] + old_color[7:]
         elif component == ColorComponent.BASIC:
@@ -447,15 +450,11 @@ class TemplateConfig(dict):
                     if _is_generic_area(_area):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        if (_property == "tab.activeBorderTop"):
-                            print(_area, _property, _color, _group, _wrapper)
                     elif (
                         (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
                     ): 
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-
-        print(template_colors["tab.activeBorderTop"], "after basic")
 
         for _group, _color_properties in _prefix_groups.items():
             color_wrappers = color_config.get_colors(_group)
@@ -472,25 +471,46 @@ class TemplateConfig(dict):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
 
-        print(template_colors["tab.activeBorderTop"], "after prefix")
 
+        _debug_property = "editorLineNumber.activeForeground"
         for _group, _color_properties in _status_groups.items():
             color_wrappers = color_config.get_colors(_group)
             for _wrapper in color_wrappers:
-                _colors_group = _wrapper.group.lower()
-                _colors = _wrapper.colors
                 _area = _wrapper.area
+                # only handle "status" area color configuration
+                if _area != "status":
+                    continue
+                _colors_group = _wrapper.group
+                _replace_color_component = _wrapper.replace_color_component
+                _colors = _wrapper.colors
                 _colors = random.sample(_colors, len(_colors))
+                if _colors_group == _debug_property:
+                    print(_color_properties)
                 for index, _property in enumerate(_color_properties):
-                    _property = _property.lower()
                     if _property.lower().find(_colors_group.lower()) == -1:
                         continue
-                    _color = _colors[index % len(_colors)]
+                    if _property == _debug_property:
+                        print(_color, _group, _replace_color_component, _area, _colors)
+                        print("B", ColorComponent.ALPHA in _replace_color_component, _replace_color_component)
+                    _color_orig = _colors[index % len(_colors)]
                     if _property in template_colors:
                         _old_color = template_colors[_property]
-                        _color = self._append_or_replace_alpha(_old_color, _color, ColorComponent.ALPHA)
+                        _color = _color_orig
+                        _changed = False
+                        if ColorComponent.ALPHA in _replace_color_component:
+                            _color = self._append_or_replace_alpha(_old_color, _color_orig, ColorComponent.ALPHA)
+                            _changed = True
+                        if _property == _debug_property:
+                            print("changed alpha: ", template_colors[_property], _color, _old_color, _color_orig, _colors_group)
+                        if ColorComponent.LIGHT in _replace_color_component:
+                            _color = self._append_or_replace_alpha(_old_color if not _changed else _color, _color_orig, ColorComponent.LIGHT)
+                        if _property == _debug_property:
+                            print("changed light: ", template_colors[_property], _color, _old_color, _color_orig, _colors_group)
+                        if ColorComponent.BASIC in _replace_color_component:
+                            _color = self._append_or_replace_alpha(_old_color if not _changed else _color, _color_orig, ColorComponent.BASIC)    
                         template_colors[_property] = _color
-                        
+                        if _property == _debug_property:
+                            print("changed final: ", template_colors[_property], _color, _old_color, _color_orig, _colors_group)
         self.config["colors"] = template_colors
         json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
 
