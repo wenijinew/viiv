@@ -17,7 +17,9 @@
         {
             "groups": [
                 "success",
-                "add"
+                "add",
+                "editorGutter.addedBackground",
+                "minimapGutter.addedBackground"
             ],
             "color": {
                 "hex": "#008000",
@@ -31,7 +33,8 @@
             "groups": [
                 "warning",
                 "problemsWarning",
-                "editorWarning"
+                "editorWarning",
+                "minimap.warningHighlight"
             ],
             "color": {
                 "hex": "#ffcc00",
@@ -43,7 +46,9 @@
         },
         {
             "groups": [
-                "modified"
+                "modified",
+                "editorGutter.modifiedBackground",
+                "minimapGutter.modifiedBackground"
             ],
             "color": {
                 "hex": "#a5682a",
@@ -55,7 +60,9 @@
         },
         {
             "groups": [
-                "info"
+                "info",
+                "minimap.selectionHighlight",
+                "minimap.selectionOccurrenceHighlight"
             ],
             "color": {
                 "hex": "#6767ff",
@@ -84,7 +91,9 @@
             "groups": [
                 "error",
                 "problemsError",
-                "editorError"
+                "editorError",
+                "editorGutter.deletedBackground",
+                "minimap.errorHighlight"
             ],
             "color": {
                 "hex": "#ff4d4d",
@@ -96,7 +105,8 @@
         },
         {
             "groups": [
-                "delete"
+                "delete",
+                "minimapGutter.deletedBackground"
             ],
             "color": {
                 "hex": "#cd3300",
@@ -108,6 +118,7 @@
         },
         {
             "groups": [
+                "minimap.findMatchHighlight",
                 "debug"
             ],
             "color": {
@@ -142,7 +153,8 @@
         {
             "groups": [
                 "activityBar",
-                "titleBar"
+                "titleBar",
+                "editorGutter.background"
             ],
             "color": {
                 "basic_range": [
@@ -188,7 +200,8 @@
         {
             "groups": [
                 ".*badge.*",
-                "activityBarBadge"
+                "activityBarBadge",
+                "scrollbarSlider.background"
             ],
             "color": {
                 "basic_range": [
@@ -534,9 +547,7 @@
         {
             "groups": [
                 "scrollbarSlider.activeBackground",
-                "scrollbarSlider.background",
-                "scrollbarSlider.hoverBackground",
-                "tree.indentGuidesStroke"
+                "scrollbarSlider.hoverBackground"
             ],
             "color": {
                 "basic_range": [
@@ -551,7 +562,12 @@
                     "0x97",
                     "0x9f"
                 ]
-            }
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
