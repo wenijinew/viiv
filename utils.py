@@ -453,11 +453,13 @@ class TemplateConfig(dict):
         _prefix_groups = dict(sorted(_prefix_groups.items(), key=lambda x: len(x[0]), reverse=True))
         _status_groups = dict(sorted(_status_groups.items(), key=lambda x: len(x[0]), reverse=True))
 
-        _debug_property = "tab.activeBackground"
+        _debug_property = "editorWarning.background"
         print(_debug_property, "debug property")
 
         template_colors = {}
         # the priority order: suffix, prefix, status
+        # 'basic' area is special to handle those color properties which are better to use well-knonw colors: error use red, warning use yellow or orange.
+        _basic_area_processed_properties = []
         for _group, _color_properties in _basic_groups.items():
             color_wrappers = color_config.get_colors(_group)
             if _group.find(_debug_property) != -1:
@@ -475,11 +477,15 @@ class TemplateConfig(dict):
                     if _is_generic_area(_area):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
+                        if _area == "basic":
+                            _basic_area_processed_properties.append(_property)
                     elif (
                         (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
                     ): 
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
+                        if _area == "basic":
+                            _basic_area_processed_properties.append(_property)
 
         print("After basic:", template_colors[_debug_property])
 
@@ -494,6 +500,9 @@ class TemplateConfig(dict):
                 _colors_group = _wrapper.group
                 _colors = random.sample(_colors, len(_colors))
                 for index, _property in enumerate(_color_properties):
+                    # do not override the processed properties by 'basic' area
+                    if _property in _basic_area_processed_properties:
+                        continue
                     if _property == _debug_property:
                         print(_wrapper.area)
                     # if has been processed by basic matching rule, then ignore it
