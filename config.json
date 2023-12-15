@@ -126,6 +126,7 @@
             "groups": [
                 "activityBar",
                 "titleBar",
+                "breadcrumb",
                 "tab"
             ],
             "color": {
@@ -138,8 +139,8 @@
                     60
                 ],
                 "alpha_range": [
-                    "0x99",
-                    "0xcc"
+                    "0xdd",
+                    "0xff"
                 ]
             }
         },
@@ -151,7 +152,6 @@
                 "terminal",
                 "commandCenter",
                 "editorGroup",
-                "breadcrumb",
                 "editorSuggestWidget",
                 "editorHoverWidget"
             ],
@@ -172,19 +172,20 @@
         },
         {
             "groups": [
-                ".*badge.*"
+                ".*badge.*",
+                "activityBarBadge"
             ],
             "color": {
                 "basic_range": [
-                    11,
-                    12
+                    6,
+                    9 
                 ],
                 "light_range": [
-                    5,
-                    10
+                    15,
+                    30
                 ],
                 "alpha_range": [
-                    "0xef",
+                    "0xf9",
                     "0xff"
                 ]
             }
@@ -236,7 +237,8 @@
         {
             "groups": [
                 "IndentGuide",
-                "scrollbarSlider"
+                "scrollbarSlider",
+                "editorBracketMatch"
             ],
             "color": {
                 "basic_range": [
@@ -265,8 +267,8 @@
                     3
                 ],
                 "light_range": [
-                    5,
-                    20
+                    15,
+                    25 
                 ],
                 "alpha_range": [
                     "0xde",
@@ -290,25 +292,6 @@
                 "alpha_range": [
                     "0x95",
                     "0xa5"
-                ]
-            }
-        },
-        {
-            "groups": [
-                ".*activityBar.*"
-            ],
-            "color": {
-                "basic_range": [
-                    1,
-                    3
-                ],
-                "light_range": [
-                    40,
-                    45
-                ],
-                "alpha_range": [
-                    "0xa5",
-                    "0xc5"
                 ]
             }
         },
@@ -347,6 +330,26 @@
                 "alpha_range": [
                     "0x50",
                     "0x90"
+                ]
+            }
+        },
+        {
+            "groups": [
+                ".*badge.*",
+                "activityBarBadge"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    40,
+                    45
+                ],
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
                 ]
             }
         }
@@ -460,8 +463,8 @@
             ],
             "color": {
                 "basic_range": [
-                    1,
-                    3
+                    7,
+                    9 
                 ],
                 "light_range": [
                     17,
@@ -477,7 +480,8 @@
             "groups": [
                 "tab.border",
                 "tabsBorder",
-                "tab.activeBorder"
+                "tab.activeBorder",
+                "editor.lineHighlightBorder"
             ],
             "color": {
                 "basic_range": [
@@ -536,12 +540,12 @@
         },
         {
             "groups": [
-                "highlight"
+                ".*highlight.*"
             ],
             "color": {
                 "basic_range": [
-                    5,
-                    6
+                    1,
+                    11 
                 ],
                 "light_range": [
                     20,
@@ -551,7 +555,8 @@
                     "0x43",
                     "0x63"
                 ]
-            }
+            },
+            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
         },
         {
             "groups": [
@@ -568,10 +573,11 @@
                     56
                 ],
                 "alpha_range": [
-                    "0xee",
-                    "0xff"
+                    "0x89",
+                    "0xac"
                 ]
-            }
+            },
+            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
         },
         {
             "groups": [
