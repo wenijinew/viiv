@@ -173,6 +173,9 @@ class Color(dict):
         return _wrapper
 
 
+
+
+
 class ColorConfig(dict):
     """Wrapper class for color config
 
@@ -453,7 +456,7 @@ class TemplateConfig(dict):
         _prefix_groups = dict(sorted(_prefix_groups.items(), key=lambda x: len(x[0]), reverse=True))
         _status_groups = dict(sorted(_status_groups.items(), key=lambda x: len(x[0]), reverse=True))
 
-        _debug_property = "editorWarning.background"
+        _debug_property = "minimap.errorHighlight"
         print(_debug_property, "debug property")
 
         template_colors = {}
@@ -536,6 +539,9 @@ class TemplateConfig(dict):
                 _colors = _wrapper.colors
                 _colors = random.sample(_colors, len(_colors))
                 for index, _property in enumerate(_color_properties):
+                    # do not override the processed properties by 'basic' area
+                    if _property in _basic_area_processed_properties:
+                        continue
                     if (_property.lower().find(_colors_group.lower()) == -1) and (not re.match(_colors_group.lower(), _property.lower())):
                         continue
                     if _property == _debug_property:
@@ -1280,16 +1286,8 @@ def define_token_colors(
                 if scope.find(_scope_prefix) != -1:
                     # set base color as dark color
                     _foreground = re.sub(r"C_[a-zA-Z0-9]{2}", "C_11", _foreground)
-                    if True:
-                        if not re.match(_placeholder_with_alpha_regex, _old_foreground):
-                            _foreground = f"{_foreground}70"
-                    else:
-                        if re.match(_placeholder_with_alpha_regex, _old_foreground):
-                            _foreground = re.sub(
-                                _placeholder_with_alpha_regex,
-                                color_placeholder,
-                                _foreground,
-                            )
+                    if not re.match(PLACEHOLDER_REGEX_WITH_ALPHA, _foreground) and len(_foreground) == 7:
+                        _foreground = f"{_foreground}70"
                     break
 
             scope_settings = {
@@ -1327,7 +1325,7 @@ if __name__ == "__main__":
             # define_colors()
             TemplateConfig().regenerate_template_colors()
         elif option in ("-t", "--token_colors"):
-            define_token_colors(light_level_range=[0, 30], base_colors_range=[1, 10])
+            define_token_colors(light_level_range=[0, 60], base_colors_range=[1, 10])
         elif option in ("-p", "--print_colors"):
             print_colors(value)
         elif option in ("-g", "--group_name"):
