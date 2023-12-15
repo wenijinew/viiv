@@ -352,6 +352,7 @@ class TemplateConfig(dict):
             "inactive",
             "disabled",
             "offline",
+            "highlight",
         ]
         for _property in self.color_properties:
             for _status in statuses:
@@ -472,7 +473,10 @@ class TemplateConfig(dict):
                         template_colors[_property] = _color
 
 
-        _debug_property = "editorLineNumber.activeForeground"
+        _debug_property = "editor.lineHighlightBackground"
+        print("A", _debug_property in _status_groups.keys(), _status_groups[_debug_property])
+        print("A2", [g for g in _status_groups if g.lower().find("highlight") != -1])
+        _status_changed_properties = []
         for _group, _color_properties in _status_groups.items():
             color_wrappers = color_config.get_colors(_group)
             for _wrapper in color_wrappers:
@@ -484,16 +488,16 @@ class TemplateConfig(dict):
                 _replace_color_component = _wrapper.replace_color_component
                 _colors = _wrapper.colors
                 _colors = random.sample(_colors, len(_colors))
-                if _colors_group == _debug_property:
-                    print(_color_properties)
+                if _group.lower().find("highlight") != -1 and _area == "status":
+                    print("B2", _colors_group, _area, _group, _color_properties)
                 for index, _property in enumerate(_color_properties):
-                    if _property.lower().find(_colors_group.lower()) == -1:
+                    if (_property.lower().find(_colors_group.lower()) == -1) and (not re.match(_colors_group.lower(), _property.lower())):
                         continue
                     if _property == _debug_property:
                         print(_color, _group, _replace_color_component, _area, _colors)
                         print("B", ColorComponent.ALPHA in _replace_color_component, _replace_color_component)
                     _color_orig = _colors[index % len(_colors)]
-                    if _property in template_colors:
+                    if _property in template_colors and _property not in _status_changed_properties:
                         _old_color = template_colors[_property]
                         _color = _color_orig
                         _changed = False
@@ -509,6 +513,7 @@ class TemplateConfig(dict):
                         if ColorComponent.BASIC in _replace_color_component:
                             _color = self._append_or_replace_alpha(_old_color if not _changed else _color, _color_orig, ColorComponent.BASIC)    
                         template_colors[_property] = _color
+                        _status_changed_properties.append(_property)
                         if _property == _debug_property:
                             print("changed final: ", template_colors[_property], _color, _old_color, _color_orig, _colors_group)
         self.config["colors"] = template_colors
