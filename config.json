@@ -207,63 +207,6 @@
         },
         {
             "groups": [
-                "tab.activeBackground"
-            ],
-            "color": {
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    56,
-                    57
-                ],
-                "alpha_range": [
-                    "0x79",
-                    "0x89"
-                ]
-            }
-        },
-        {
-            "groups": [
-                "tab.inactiveBackground"
-            ],
-            "color": {
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    56,
-                    57
-                ],
-                "alpha_range": [
-                    "0xe9",
-                    "0xef"
-                ]
-            }
-        },
-        {
-            "groups": [
-                "tab.*inactive.*foreground.*"
-            ],
-            "color": {
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    56,
-                    57
-                ],
-                "alpha_range": [
-                    "0x79",
-                    "0x7f"
-                ]
-            }
-        },
-        {
-            "groups": [
                 "editor",
                 "tab"
             ],
@@ -326,6 +269,25 @@
                     "0x49"
                 ]
             }
+        },
+        {
+            "groups": [
+                "breadcrumb.background"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    45,
+                    46
+                ],
+                "alpha_range": [
+                    "0x79",
+                    "0x89"
+                ]
+            }
         }
     ],
     "foreground": [
@@ -347,8 +309,8 @@
             ],
             "color": {
                 "basic_range": [
-                    1,
-                    2
+                    11,
+                    12
                 ],
                 "light_range": [
                     5,
@@ -412,8 +374,8 @@
                     45
                 ],
                 "alpha_range": [
-                    "0x30",
-                    "0x40"
+                    "0x35",
+                    "0x49"
                 ]
             }
         },
@@ -429,7 +391,7 @@
                 ],
                 "light_range": [
                     59,
-                    60 
+                    60
                 ],
                 "alpha_range": [
                     "0xfe",
@@ -455,6 +417,30 @@
                 "alpha_range": [
                     "0x33",
                     "0x55"
+                ]
+            }
+        },
+        {
+            "comment": "To hide the borders, set the alpha as 0(transparent). These borders properties have no status, so they cannot be configured in 'status' area."
+        },
+        {
+            "groups": [
+                "tab.border",
+                "editorGroupHeader.tabsBorder",
+                "editorGroupHeader.border"
+            ],
+            "color": {
+                "basic_range": [
+                    4,
+                    6
+                ],
+                "light_range": [
+                    40,
+                    45
+                ],
+                "alpha_range": [
+                    "0x0",
+                    "0x1"
                 ]
             }
         },
@@ -539,7 +525,11 @@
                     "0xff"
                 ]
             },
-            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
@@ -570,7 +560,7 @@
             "color": {
                 "basic_range": [
                     1,
-                    2 
+                    2
                 ],
                 "light_range": [
                     17,
@@ -581,7 +571,11 @@
                     "0xe9"
                 ]
             },
-            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
@@ -590,7 +584,7 @@
             "color": {
                 "basic_range": [
                     1,
-                    3 
+                    3
                 ],
                 "light_range": [
                     17,
@@ -605,8 +599,6 @@
         {
             "groups": [
                 "focusBorder",
-                "tab.border",
-                "tabsBorder",
                 "tab.activeBorder",
                 "editor.lineHighlightBorder"
             ],
@@ -663,12 +655,15 @@
                     "0xef"
                 ]
             },
-            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
-                ".*active.*background.*",
-                "breadcrumb.background"
+                ".*active.*background.*"
             ],
             "color": {
                 "basic_range": [
@@ -684,7 +679,11 @@
                     "0x33"
                 ]
             },
-            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
@@ -714,7 +713,7 @@
             "color": {
                 "basic_range": [
                     1,
-                    11 
+                    11
                 ],
                 "light_range": [
                     20,
@@ -725,7 +724,11 @@
                     "0xae"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA",
+                "BASIC"
+            ]
         },
         {
             "groups": [
@@ -734,7 +737,7 @@
             "color": {
                 "basic_range": [
                     1,
-                    11 
+                    11
                 ],
                 "light_range": [
                     20,
@@ -745,7 +748,11 @@
                     "0x63"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA",
+                "BASIC"
+            ]
         },
         {
             "groups": [
@@ -754,7 +761,7 @@
             "color": {
                 "basic_range": [
                     1,
-                    2 
+                    2
                 ],
                 "light_range": [
                     33,
@@ -765,7 +772,11 @@
                     "0x7f"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA",
+                "BASIC"
+            ]
         },
         {
             "groups": [
@@ -775,7 +786,7 @@
             "color": {
                 "basic_range": [
                     1,
-                    2 
+                    2
                 ],
                 "light_range": [
                     33,
@@ -786,7 +797,11 @@
                     "0x3f"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA",
+                "BASIC"
+            ]
         },
         {
             "groups": [
@@ -799,14 +814,17 @@
                 ],
                 "light_range": [
                     27,
-                    37 
+                    37
                 ],
                 "alpha_range": [
                     "0xe1",
                     "0xef"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA"]
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
@@ -819,14 +837,17 @@
                 ],
                 "light_range": [
                     27,
-                    37 
+                    37
                 ],
                 "alpha_range": [
                     "0x21",
                     "0x2f"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA"]
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
@@ -846,7 +867,10 @@
                     "0xff"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA"]
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA"
+            ]
         },
         {
             "groups": [
@@ -868,6 +892,32 @@
                     "0x67"
                 ]
             }
+        },
+        {
+            "comment": "Configuration of 'tab.inactiveBackground' here is the same as 'breadcrumb.background' in 'background' area to make sure they have the same background."
+        },
+        {
+            "groups": [
+                "tab.activeBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    45,
+                    46
+                ],
+                "alpha_range": [
+                    "0x79",
+                    "0x89"
+                ]
+            },
+            "replace_color_component": [
+                "LIGHT",
+                "ALPHA"
+            ]
         }
     ]
 }

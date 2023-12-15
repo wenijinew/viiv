@@ -254,6 +254,9 @@ class ColorConfig(dict):
         area_config = self.config[area]
         color = None
         for config in area_config:
+            # is no groups, it might be used as comments, ignore it.
+            if "groups" not in config:
+                continue
             groups = config["groups"]
             replace_color_component = config.get("replace_color_component")
             if replace_color_component is not None and isinstance(replace_color_component, list):
@@ -441,6 +444,7 @@ class TemplateConfig(dict):
             _color_config_path = f"{os.getcwd()}/config.json"
             color_config = ColorConfig(config_path=_color_config_path)
         _basic_groups = self.get_basic_groups()
+
         print([key for key in _basic_groups.keys() if key.find("editorWarning") != -1])
         _prefix_groups = self.get_prefix_groups()
         _status_groups = self.get_status_groups()
@@ -449,14 +453,14 @@ class TemplateConfig(dict):
         _prefix_groups = dict(sorted(_prefix_groups.items(), key=lambda x: len(x[0]), reverse=True))
         _status_groups = dict(sorted(_status_groups.items(), key=lambda x: len(x[0]), reverse=True))
 
-        _debug_property = "breadcrumb.background"
+        _debug_property = "tab.activeBackground"
+        print(_debug_property, "debug property")
 
         template_colors = {}
         # the priority order: suffix, prefix, status
-        _basic_changed_properties = []
         for _group, _color_properties in _basic_groups.items():
             color_wrappers = color_config.get_colors(_group)
-            if _group.find("editorWarning") != -1:
+            if _group.find(_debug_property) != -1:
                 print(color_wrappers)
             for _wrapper in color_wrappers:
                 _colors = _wrapper.colors
@@ -466,52 +470,49 @@ class TemplateConfig(dict):
                 for index, _property in enumerate(_color_properties):
                     if _area == "basic" and _property == _debug_property:
                         print(_wrapper)
-                    if _property in _basic_changed_properties:
+                    if _property in template_colors:
                         continue
                     if _is_generic_area(_area):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        _basic_changed_properties.append(_property)
                     elif (
                         (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
                     ): 
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        _basic_changed_properties.append(_property)
 
         print("After basic:", template_colors[_debug_property])
 
-        # print status groups if the group contains "error" or "Error"
-        _prefix_changed_properties = []
+        # prefix groups are used to handle the specific color properties
         for _group, _color_properties in _prefix_groups.items():
             color_wrappers = color_config.get_colors(_group)
-            if _group == "editorError":
-                print(color_wrappers)
+            if _group == _debug_property:
+                print([_w.area for _w in color_wrappers])
             for _wrapper in color_wrappers:
                 _colors = _wrapper.colors
                 _area = _wrapper.area
                 _colors_group = _wrapper.group
                 _colors = random.sample(_colors, len(_colors))
                 for index, _property in enumerate(_color_properties):
-                    if _property in _prefix_changed_properties:
-                        continue
-                    if _property in _basic_changed_properties and _area == "basic":
+                    if _property == _debug_property:
+                        print(_wrapper.area)
+                    # if has been processed by basic matching rule, then ignore it
+                    if _property in template_colors.keys() and _area == "default":
                         continue
                     if _is_generic_area(_area):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        _prefix_changed_properties.append(_property)
                     elif (
                         (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
                     ): 
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        _prefix_changed_properties.append(_property)
 
         print("After prefix:", template_colors[_debug_property])
 
+        # status groups are used to handle all color properties for status such as active, inactive, highlight and so forth.
         _status_changed_properties = []
-
+        print([g for g in _status_groups if g.find(_debug_property) != -1])
         for _group, _color_properties in _status_groups.items():
             color_wrappers = color_config.get_colors(_group)
             for _wrapper in color_wrappers:
@@ -530,7 +531,6 @@ class TemplateConfig(dict):
                         continue
                     if _property == _debug_property:
                         print(_color, _group, _replace_color_component, _area, _colors)
-                        print("B", ColorComponent.ALPHA in _replace_color_component, _replace_color_component)
                     _color_orig = _colors[index % len(_colors)]
 
                     # if has been set by basic and prefix groups but not by status yet
