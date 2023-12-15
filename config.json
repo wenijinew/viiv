@@ -30,7 +30,8 @@
         {
             "groups": [
                 "warning",
-                "problemsWarning"
+                "problemsWarning",
+                "editorWarning"
             ],
             "color": {
                 "hex": "#ffcc00",
@@ -67,7 +68,8 @@
         {
             "groups": [
                 "error",
-                "problemsError"
+                "problemsError",
+                "editorError"
             ],
             "color": {
                 "hex": "#ff4d4d",
@@ -125,9 +127,7 @@
         {
             "groups": [
                 "activityBar",
-                "titleBar",
-                "breadcrumb",
-                "tab"
+                "titleBar"
             ],
             "color": {
                 "basic_range": [
@@ -177,8 +177,8 @@
             ],
             "color": {
                 "basic_range": [
-                    6,
-                    9 
+                    1,
+                    2
                 ],
                 "light_range": [
                     15,
@@ -192,7 +192,65 @@
         },
         {
             "groups": [
-                "editor"
+                "tab.activeBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    56,
+                    57
+                ],
+                "alpha_range": [
+                    "0x79",
+                    "0x89"
+                ]
+            }
+        },
+        {
+            "groups": [
+                "tab.inactiveBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    56,
+                    57
+                ],
+                "alpha_range": [
+                    "0xe9",
+                    "0xef"
+                ]
+            }
+        },
+        {
+            "groups": [
+                "tab.*inactive.*foreground.*"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    56,
+                    57
+                ],
+                "alpha_range": [
+                    "0x79",
+                    "0x7f"
+                ]
+            }
+        },
+        {
+            "groups": [
+                "editor",
+                "tab"
             ],
             "color": {
                 "basic_range": [
@@ -237,7 +295,6 @@
         {
             "groups": [
                 "IndentGuide",
-                "scrollbarSlider",
                 "editorBracketMatch"
             ],
             "color": {
@@ -264,14 +321,33 @@
             "color": {
                 "basic_range": [
                     1,
-                    3
+                    2
                 ],
                 "light_range": [
-                    15,
-                    25 
+                    0,
+                    15 
                 ],
                 "alpha_range": [
-                    "0xde",
+                    "0xdf",
+                    "0xe1"
+                ]
+            }
+        },
+        {
+            "groups": [
+                "tab.activeForeground"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    5,
+                    20
+                ],
+                "alpha_range": [
+                    "0xe1",
                     "0xef"
                 ]
             }
@@ -328,8 +404,8 @@
                     45
                 ],
                 "alpha_range": [
-                    "0x50",
-                    "0x90"
+                    "0x30",
+                    "0x40"
                 ]
             }
         },
@@ -439,12 +515,54 @@
     "status": [
         {
             "groups": [
+                "activityBar.activeBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    57,
+                    58
+                ],
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ]
+            },
+            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
+        },
+        {
+            "groups": [
+                "scrollbarSlider.activeBackground",
+                "scrollbarSlider.background",
+                "scrollbarSlider.hoverBackground",
+                "tree.indentGuidesStroke"
+            ],
+            "color": {
+                "basic_range": [
+                    5,
+                    10
+                ],
+                "light_range": [
+                    35,
+                    49
+                ],
+                "alpha_range": [
+                    "0x97",
+                    "0x9f"
+                ]
+            }
+        },
+        {
+            "groups": [
                 "editorLineNumber.activeForeground"
             ],
             "color": {
                 "basic_range": [
                     1,
-                    3
+                    2 
                 ],
                 "light_range": [
                     17,
@@ -455,7 +573,7 @@
                     "0xe9"
                 ]
             },
-            "replace_color_component": ["LIGHT", "ALPHA"]
+            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
         },
         {
             "groups": [
@@ -463,8 +581,8 @@
             ],
             "color": {
                 "basic_range": [
-                    7,
-                    9 
+                    1,
+                    3 
                 ],
                 "light_range": [
                     17,
@@ -478,10 +596,13 @@
         },
         {
             "groups": [
+                "focusBorder",
                 "tab.border",
                 "tabsBorder",
                 "tab.activeBorder",
-                "editor.lineHighlightBorder"
+                "editor.lineHighlightBorder",
+                "editorWarning.background",
+                "editorError.background"
             ],
             "color": {
                 "basic_range": [
@@ -500,7 +621,8 @@
         },
         {
             "groups": [
-                "titleBar.activeBackground"
+                "titleBar.activeBackground",
+                "tab.inactiveBackground"
             ],
             "color": {
                 "basic_range": [
@@ -512,10 +634,51 @@
                     60
                 ],
                 "alpha_range": [
-                    "0xcc",
-                    "0xdd"
+                    "0xfe",
+                    "0xff"
                 ]
             }
+        },
+        {
+            "groups": [
+                ".*select.*foreground.*"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    17,
+                    19
+                ],
+                "alpha_range": [
+                    "0xe1",
+                    "0xef"
+                ]
+            },
+            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
+        },
+        {
+            "groups": [
+                ".*active.*background.*",
+                "breadcrumb.background"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    17,
+                    19
+                ],
+                "alpha_range": [
+                    "0x26",
+                    "0x33"
+                ]
+            },
+            "replace_color_component": ["BASIC", "LIGHT", "ALPHA"]
         },
         {
             "groups": [
@@ -533,10 +696,30 @@
                     60
                 ],
                 "alpha_range": [
-                    "0xee",
-                    "0xff"
+                    "0x7f",
+                    "0x9f"
                 ]
             }
+        },
+        {
+            "groups": [
+                ".*highlightstrong.*"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    11 
+                ],
+                "light_range": [
+                    20,
+                    33
+                ],
+                "alpha_range": [
+                    "0x87",
+                    "0xae"
+                ]
+            },
+            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
         },
         {
             "groups": [
@@ -560,43 +743,104 @@
         },
         {
             "groups": [
-                "selection",
-                "selected"
+                "editor.selectionBackground"
             ],
             "color": {
                 "basic_range": [
-                    7,
-                    8
+                    1,
+                    2 
                 ],
                 "light_range": [
                     33,
                     56
                 ],
                 "alpha_range": [
-                    "0x89",
-                    "0xac"
+                    "0x71",
+                    "0x8f"
                 ]
             },
             "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
         },
         {
             "groups": [
-                "hover"
+                ".*selection.*",
+                ".*selected.*"
             ],
             "color": {
                 "basic_range": [
-                    7,
-                    8
+                    1,
+                    2 
                 ],
                 "light_range": [
                     33,
                     56
                 ],
                 "alpha_range": [
-                    "0xfc",
+                    "0x21",
+                    "0x2f"
+                ]
+            },
+            "replace_color_component": ["LIGHT", "ALPHA", "BASIC"]
+        },
+        {
+            "groups": [
+                ".*hover.*foreground.*"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    27,
+                    37 
+                ],
+                "alpha_range": [
+                    "0xe1",
+                    "0xef"
+                ]
+            },
+            "replace_color_component": ["LIGHT", "ALPHA"]
+        },
+        {
+            "groups": [
+                ".*hover.*background.*"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    27,
+                    37 
+                ],
+                "alpha_range": [
+                    "0x21",
+                    "0x2f"
+                ]
+            },
+            "replace_color_component": ["LIGHT", "ALPHA"]
+        },
+        {
+            "groups": [
+                "editorHoverWidget.background"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    57,
+                    60
+                ],
+                "alpha_range": [
+                    "0xfe",
                     "0xff"
                 ]
-            }
+            },
+            "replace_color_component": ["LIGHT", "ALPHA"]
         },
         {
             "groups": [

@@ -16,7 +16,7 @@ $GENERAL_MIN_COLOR = 20
 $GENERAL_MAX_COLOR = 120 
 $DARK_MIN_COLOR = 0
 $DARK_MAX_COLOR = 10
-$DARK_BASE_COLORS = "['#0d0d0d']"
+$DARK_BASE_COLORS = "['#0d0b12']"
 
 # Generate palette colors
 Function GeneratePaletteColors { 
