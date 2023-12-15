@@ -22,3 +22,25 @@ Might be the most attractive VsCode theme.
 |11|15|Status bar foreground|
 |11|15|Tab activie border top|
 |11|15|Activity bar active border|
+
+
+# Configuration
+
+## Matching rule:
+
+When matching a color property with color property group, the following rules are applied:
+
+* EXACT = 1
+* ENDSWITH = 2
+* STARTSWITH = 3
+* FUZZY = 4
+
+Therefore, to customize the specific color property, use property full value as group value in config.json file.
+```
+{
+    "colors": {
+        "editor.foreground": "#a4ac7f"
+    }
+}```
+
+## Status
