@@ -44,3 +44,12 @@ Therefore, to customize the specific color property, use property full value as 
 }```
 
 ## Status
+
+
+# Usage
+
+To generate new theme, run the command under the directory of the project:
+
+```
+python utils.py -t && pwsh.exe -nop -File viiv.ps1
+```

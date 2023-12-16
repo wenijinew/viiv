@@ -2,7 +2,7 @@
     "default": {
         "basic_range": [
             "1",
-            "12"
+            "11"
         ],
         "light_range": [
             "0",
@@ -736,8 +736,8 @@
                     33
                 ],
                 "alpha_range": [
-                    "0x87",
-                    "0xae"
+                    "0x51",
+                    "0x7f"
                 ]
             },
             "replace_color_component": [
@@ -934,6 +934,43 @@
                 "LIGHT",
                 "ALPHA"
             ]
+        }
+    ],
+    "token": [
+        {
+            "groups": [
+                "default"
+            ],
+            "color": {
+                "basic_range": [
+                    1, 11
+                ],
+                "light_range": [
+                    10, 35
+                ],
+                "alpha_range": [
+                    "0xf1", "0xff"
+                ]
+            }
+        },
+        {
+            "groups": [
+                "comment",
+                "punctuation",
+                "javadoc",
+                "docstring"
+            ],
+            "color": {
+                "basic_range": [
+                    11, 12
+                ],
+                "light_range": [
+                    34, 35
+                ],
+                "alpha_range": [
+                    "0xfe", "0xff"
+                ]
+            }
         }
     ]
 }

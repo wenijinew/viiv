@@ -23,6 +23,7 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
+
 class ColorComponent(Enum):
     """Color component for color range."""
 
@@ -80,12 +81,23 @@ def _random_range(range_values: list[str]) -> list[str]:
 class ColorsWrapper(dict):
     """Wrapper class for color."""
 
-    def __init__(self, colors: list, area:str, group: str, replace_color_component: list(ColorComponent) = [ColorComponent.ALL]):
+    def __init__(
+        self,
+        colors: list,
+        area: str,
+        group: str,
+        replace_color_component: list(ColorComponent) = [ColorComponent.ALL],
+    ):
         self.colors = colors
         self.area = area
         self.group = group
         self.replace_color_component = replace_color_component
-        super().__init__(colors=colors, group=group, area=area, replace_color_component=replace_color_component)
+        super().__init__(
+            colors=colors,
+            group=group,
+            area=area,
+            replace_color_component=replace_color_component,
+        )
 
     def __repr__(self) -> str:
         return super().__repr__()
@@ -127,7 +139,13 @@ class Color(dict):
     }
     """
 
-    def __init__(self, config, area, group, replace_color_component: list(ColorComponent) = [ColorComponent.ALL]):
+    def __init__(
+        self,
+        config,
+        area,
+        group,
+        replace_color_component: list(ColorComponent) = [ColorComponent.ALL],
+    ):
         self.config = config
         self.area = area
         self.group = group
@@ -144,16 +162,29 @@ class Color(dict):
     def create_colors_wrapper(self) -> ColorsWrapper:
         """Generate colors by using hex or basic and light ranges."""
         has_hex = self.hex is not None
-        has_alpha = self.alpha_range is not None and len(self.alpha_range) == 2 and self.alpha_range[0] < self.alpha_range[1]
-        has_basic = self.basic_range is not None and len(self.basic_range) == 2 and self.basic_range[0] < self.basic_range[1]
-        has_light = self.light_range is not None and len(self.light_range) == 2 and self.light_range[0] < self.light_range[1]
+        has_alpha = (
+            self.alpha_range is not None
+            and len(self.alpha_range) == 2
+            and self.alpha_range[0] < self.alpha_range[1]
+        )
+        has_basic = (
+            self.basic_range is not None
+            and len(self.basic_range) == 2
+            and self.basic_range[0] < self.basic_range[1]
+        )
+        has_light = (
+            self.light_range is not None
+            and len(self.light_range) == 2
+            and self.light_range[0] < self.light_range[1]
+        )
 
         if has_hex:
             _head = [self.hex]
         elif has_basic and has_light:
             _head = [
                 "C_" + basic + "_" + light
-                for basic in _random_range(self.basic_range) for light in _random_range(self.light_range)
+                for basic in _random_range(self.basic_range)
+                for light in _random_range(self.light_range)
             ]
         else:
             raise ValueError(f"Invalid config: {self.config}.")
@@ -169,11 +200,10 @@ class Color(dict):
             _tail = [""]
         _colors = [f"{head}{tail}" for head in _head for tail in _tail]
 
-        _wrapper = ColorsWrapper(_colors, self.area, self.group, self.replace_color_component)
+        _wrapper = ColorsWrapper(
+            _colors, self.area, self.group, self.replace_color_component
+        )
         return _wrapper
-
-
-
 
 
 class ColorConfig(dict):
@@ -194,7 +224,7 @@ class ColorConfig(dict):
             config=self.config, areas=self.areas, default_color=self.default_color
         )
 
-    def get_colors(self, target) -> ColorsWrapper:
+    def get_color_wrappers(self, target) -> ColorsWrapper:
         """Go through the config items in the basic groups and set the color by checking if the given 'group' contains the key of the groups.
 
         content example of basic groups:
@@ -248,7 +278,9 @@ class ColorConfig(dict):
                     break
             if color is not None:
                 colors.append(color.create_colors_wrapper())
-        _final_colors = colors if len(colors) > 0 else [self.default_color.create_colors_wrapper()]
+        _final_colors = (
+            colors if len(colors) > 0 else [self.default_color.create_colors_wrapper()]
+        )
 
         # print(target, len(_final_colors), [f.area for f in _final_colors])
         return _final_colors
@@ -262,12 +294,21 @@ class ColorConfig(dict):
                 continue
             groups = config["groups"]
             replace_color_component = config.get("replace_color_component")
-            if replace_color_component is not None and isinstance(replace_color_component, list):
-                replace_color_component = [ColorComponent[_component] for _component in replace_color_component]
+            if replace_color_component is not None and isinstance(
+                replace_color_component, list
+            ):
+                replace_color_component = [
+                    ColorComponent[_component] for _component in replace_color_component
+                ]
             else:
-                replace_color_component = [ColorComponent.ALL] if area != "status" else [ColorComponent.ALPHA]
+                replace_color_component = (
+                    [ColorComponent.ALL] if area != "status" else [ColorComponent.ALPHA]
+                )
             for _group in groups:
-                if match_rule_name == MatchRule.EXACT.name and target_group.lower() == _group.lower():
+                if (
+                    match_rule_name == MatchRule.EXACT.name
+                    and target_group.lower() == _group.lower()
+                ):
                     color = config["color"]
                     break
                 elif (
@@ -303,13 +344,21 @@ class TemplateConfig(dict):
             config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
         self.config_path = config_path
         self.config = _read_config(config_path)
+        print(len(self.config["colors"]))
         self.color_properties = list(self.config["colors"].keys())
         super().__init__(config_path=config_path)
 
     def get_basic_groups(self):
         """Get suffix groups."""
         # these are the basic groups, e.g. background, foreground, etc.
-        basic_groups = ["foreground", "background", "border", "outline", "shadow", "ruler"]
+        basic_groups = [
+            "foreground",
+            "background",
+            "border",
+            "outline",
+            "shadow",
+            "ruler",
+        ]
         _groups = {}
         for _property in self.color_properties:
             _property_splits = _property.split(".")
@@ -345,6 +394,11 @@ class TemplateConfig(dict):
                 _groups[component] = [_property]
             else:
                 _groups[component].append(_property)
+            # use _property as key(group) to make it possible to do customization for specific property
+            if _property not in _groups:
+                _groups[_property] = [_property]
+            else:
+                _groups[_property].append(_property)
         return dict(sorted(_groups.items(), key=lambda x: x[0]))
 
     def get_status_groups(self):
@@ -379,15 +433,14 @@ class TemplateConfig(dict):
                             _groups[_property].append(_property)
         return dict(sorted(_groups.items(), key=lambda x: x[0]))
 
-
     def _get_component(self, color, component):
         if re.match(PLACEHOLDER_REGEX, color):
             if component == ColorComponent.ALPHA:
-                component_value = color.split('_')[2][2:]
+                component_value = color.split("_")[2][2:]
             elif component == ColorComponent.LIGHT:
-                component_value = color.split('_')[2][0:2]
+                component_value = color.split("_")[2][0:2]
             elif component == ColorComponent.BASIC:
-                component_value = color.split('_')[1]
+                component_value = color.split("_")[1]
         elif re.match(RGB_HEX_REGEX, color):
             if component == ColorComponent.ALPHA:
                 if re.match(RGB_HEX_REGEX_WITH_ALPHA, color):
@@ -400,7 +453,6 @@ class TemplateConfig(dict):
                 component_value = color[3:5]
 
         return component_value
-
 
     def _append_or_replace_alpha(self, old_color, new_color, component: ColorComponent):
         if component == ColorComponent.ALPHA:
@@ -420,9 +472,8 @@ class TemplateConfig(dict):
             return color
         if re.match(PLACEHOLDER_REGEX, color):
             _splits = color.split("_")
-            _color = '_'.join([_splits[0], basic_color, _splits[2]])
+            _color = "_".join([_splits[0], basic_color, _splits[2]])
         return _color
-
 
     def _replace_light_color(self, color, light_color):
         if light_color is None or not re.match(r"[0-9a-zA-Z]{2}", light_color):
@@ -430,9 +481,8 @@ class TemplateConfig(dict):
         if re.match(PLACEHOLDER_REGEX, color):
             _splits = color.split("_")
             _alpha = _splits[-1][2:]
-            _color = '_'.join([_splits[0], _splits[1], light_color + _alpha])
+            _color = "_".join([_splits[0], _splits[1], light_color + _alpha])
         return _color
-
 
     def regenerate_template_colors(self, color_config: ColorConfig = None):
         """Generate template with color configuration.
@@ -448,25 +498,32 @@ class TemplateConfig(dict):
             color_config = ColorConfig(config_path=_color_config_path)
         _basic_groups = self.get_basic_groups()
 
-        print([key for key in _basic_groups.keys() if key.find("editorWarning") != -1])
         _prefix_groups = self.get_prefix_groups()
         _status_groups = self.get_status_groups()
         # sort status groups by the length of the color groups - this is to make sure more specific group is handled in higher priority firstly, rather than being overwriten by other groups
-        _basic_groups = dict(sorted(_basic_groups.items(), key=lambda x: len(x[0]), reverse=True))
-        _prefix_groups = dict(sorted(_prefix_groups.items(), key=lambda x: len(x[0]), reverse=True))
-        _status_groups = dict(sorted(_status_groups.items(), key=lambda x: len(x[0]), reverse=True))
+        _basic_groups = dict(
+            sorted(_basic_groups.items(), key=lambda x: len(x[0]), reverse=True)
+        )
+        _prefix_groups = dict(
+            sorted(_prefix_groups.items(), key=lambda x: len(x[0]), reverse=True)
+        )
+        _status_groups = dict(
+            sorted(_status_groups.items(), key=lambda x: len(x[0]), reverse=True)
+        )
 
         _debug_property = "minimap.errorHighlight"
         print(_debug_property, "debug property")
+        print([key for key in _prefix_groups.keys() if key.find("minimap") != -1])
+        print(_prefix_groups["minimap"])
 
         template_colors = {}
         # the priority order: suffix, prefix, status
         # 'basic' area is special to handle those color properties which are better to use well-knonw colors: error use red, warning use yellow or orange.
         _basic_area_processed_properties = []
         for _group, _color_properties in _basic_groups.items():
-            color_wrappers = color_config.get_colors(_group)
+            color_wrappers = color_config.get_color_wrappers(_group)
             if _group.find(_debug_property) != -1:
-                print(color_wrappers)
+                print([w.area for w in color_wrappers])
             for _wrapper in color_wrappers:
                 _colors = _wrapper.colors
                 _area = _wrapper.area
@@ -474,7 +531,7 @@ class TemplateConfig(dict):
                 _colors = random.sample(_colors, len(_colors))
                 for index, _property in enumerate(_color_properties):
                     if _area == "basic" and _property == _debug_property:
-                        print(_wrapper)
+                        print(_wrapper.area)
                     if _property in template_colors:
                         continue
                     if _is_generic_area(_area):
@@ -483,19 +540,20 @@ class TemplateConfig(dict):
                         if _area == "basic":
                             _basic_area_processed_properties.append(_property)
                     elif (
-                        (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
-                    ): 
+                        _property.lower().find(_colors_group.lower()) != -1
+                        or re.match(_colors_group.lower(), _property.lower())
+                    ) and (_property.lower().find(_area.lower()) != -1):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
                         if _area == "basic":
                             _basic_area_processed_properties.append(_property)
 
-        print("After basic:", template_colors[_debug_property])
+        print("After basic:", template_colors.get(_debug_property, "not set"))
 
         # prefix groups are used to handle the specific color properties
         for _group, _color_properties in _prefix_groups.items():
-            color_wrappers = color_config.get_colors(_group)
-            if _group == _debug_property:
+            color_wrappers = color_config.get_color_wrappers(_group)
+            if _group == "minimap":
                 print([_w.area for _w in color_wrappers])
             for _wrapper in color_wrappers:
                 _colors = _wrapper.colors
@@ -511,14 +569,21 @@ class TemplateConfig(dict):
                     # if has been processed by basic matching rule, then ignore it
                     if _property in template_colors.keys() and _area == "default":
                         continue
+                    if _property == _debug_property:
+                        print(_area, _colors_group)
                     if _is_generic_area(_area):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
+                        if _area == "basic":
+                            _basic_area_processed_properties.append(_property)
                     elif (
-                        (_property.lower().find(_colors_group.lower()) != -1 or re.match(_colors_group.lower(), _property.lower())) and (_property.lower().find(_area.lower()) != -1)
-                    ): 
+                        _property.lower().find(_colors_group.lower()) != -1
+                        or re.match(_colors_group.lower(), _property.lower())
+                    ) and (_property.lower().find(_area.lower()) != -1):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
+                        if _area == "basic":
+                            _basic_area_processed_properties.append(_property)
 
         print("After prefix:", template_colors[_debug_property])
 
@@ -526,7 +591,7 @@ class TemplateConfig(dict):
         _status_changed_properties = []
         print([g for g in _status_groups if g.find(_debug_property) != -1])
         for _group, _color_properties in _status_groups.items():
-            color_wrappers = color_config.get_colors(_group)
+            color_wrappers = color_config.get_color_wrappers(_group)
             for _wrapper in color_wrappers:
                 _area = _wrapper.area
                 # only handle "status" area color configuration
@@ -542,37 +607,104 @@ class TemplateConfig(dict):
                     # do not override the processed properties by 'basic' area
                     if _property in _basic_area_processed_properties:
                         continue
-                    if (_property.lower().find(_colors_group.lower()) == -1) and (not re.match(_colors_group.lower(), _property.lower())):
+                    if (_property.lower().find(_colors_group.lower()) == -1) and (
+                        not re.match(_colors_group.lower(), _property.lower())
+                    ):
                         continue
                     if _property == _debug_property:
                         print(_color, _group, _replace_color_component, _area, _colors)
                     _color_orig = _colors[index % len(_colors)]
 
                     # if has been set by basic and prefix groups but not by status yet
-                    if _property in template_colors and _property not in _status_changed_properties:
+                    if (
+                        _property in template_colors
+                        and _property not in _status_changed_properties
+                    ):
                         _old_color = template_colors[_property]
                         _color = _color_orig
                         _changed = False
                         if ColorComponent.ALPHA in _replace_color_component:
-                            _color = self._append_or_replace_alpha(_old_color, _color_orig, ColorComponent.ALPHA)
+                            _color = self._append_or_replace_alpha(
+                                _old_color, _color_orig, ColorComponent.ALPHA
+                            )
                             _changed = True
                         if _property == _debug_property:
-                            print("changed alpha: ", template_colors[_property], _color, _old_color, _color_orig, _colors_group, _property)
+                            print(
+                                "changed alpha: ",
+                                template_colors[_property],
+                                _color,
+                                _old_color,
+                                _color_orig,
+                                _colors_group,
+                                _property,
+                            )
                         if ColorComponent.LIGHT in _replace_color_component:
-                            _color = self._append_or_replace_alpha(_old_color if not _changed else _color, _color_orig, ColorComponent.LIGHT)
+                            _color = self._append_or_replace_alpha(
+                                _old_color if not _changed else _color,
+                                _color_orig,
+                                ColorComponent.LIGHT,
+                            )
                         if _property == _debug_property:
-                            print("changed light: ", template_colors[_property], _color, _old_color, _color_orig, _colors_group, _property)
+                            print(
+                                "changed light: ",
+                                template_colors[_property],
+                                _color,
+                                _old_color,
+                                _color_orig,
+                                _colors_group,
+                                _property,
+                            )
                         if ColorComponent.BASIC in _replace_color_component:
-                            _color = self._append_or_replace_alpha(_old_color if not _changed else _color, _color_orig, ColorComponent.BASIC)    
+                            _color = self._append_or_replace_alpha(
+                                _old_color if not _changed else _color,
+                                _color_orig,
+                                ColorComponent.BASIC,
+                            )
                         template_colors[_property] = _color
                         _status_changed_properties.append(_property)
                         if _property == _debug_property:
-                            print("changed final: ", template_colors[_property], _color, _old_color, _color_orig, _colors_group, _property)
-        
-        
+                            print(
+                                "changed final: ",
+                                template_colors[_property],
+                                _color,
+                                _old_color,
+                                _color_orig,
+                                _colors_group,
+                                _property,
+                            )
+
         print("After status:", template_colors[_debug_property])
-        
+
         self.config["colors"] = template_colors
+        print(len(template_colors))
+        print(set(self.config["colors"].keys()).difference(set(template_colors.keys())))
+        print(
+            (set(template_colors.keys())).difference(set(self.config["colors"].keys()))
+        )
+
+        # token colors
+        token_configs = self.config["tokenColors"]
+        new_token_configs = []
+        token_color_models = color_config.get_color_wrappers("default")[0].colors
+        for token_config in token_configs:
+            token_color_model = token_color_models[random.randint(0, len(token_color_models) - 1)]
+            scope = token_config["scope"]
+            color_wrapper = color_config.get_color_wrappers(scope)[0]
+            _colors = color_wrapper.colors
+            new_color = _colors[random.randint(0, len(_colors) - 1)]
+            # most tokens are using default area colors which light range might be two dark, so replace light range and alpha range
+            if scope == "meta.function-call.arguments.python":
+                print("AAA", scope, color_wrapper.area)
+                print(new_color, token_color_model)
+            new_color = self._append_or_replace_alpha(new_color, token_color_model, ColorComponent.LIGHT)
+            if scope == "meta.function-call.arguments.python":
+                print(new_color, token_color_model)
+            new_color = self._append_or_replace_alpha(new_color, token_color_model, ColorComponent.ALPHA)
+            if scope == "meta.function-call.arguments.python":
+                print(new_color, token_color_model)
+            new_token_configs.append({"scope": scope, "settings": {"foreground": new_color}})
+        self.config["tokenColors"] = new_token_configs
+
         json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
 
 
@@ -1102,7 +1234,7 @@ def define_colors():
             color_range = create_color_range(group_name)
             color_placeholders = create_color_placeholders(color_range)
         else:
-            color_placeholders = color.create_colors()
+            color_placeholders = color
 
         color_group_and_color_placeholders[group_name] = color_placeholders
         color_placeholders = random.sample(
@@ -1286,7 +1418,10 @@ def define_token_colors(
                 if scope.find(_scope_prefix) != -1:
                     # set base color as dark color
                     _foreground = re.sub(r"C_[a-zA-Z0-9]{2}", "C_11", _foreground)
-                    if not re.match(PLACEHOLDER_REGEX_WITH_ALPHA, _foreground) and len(_foreground) == 7:
+                    if (
+                        not re.match(PLACEHOLDER_REGEX_WITH_ALPHA, _foreground)
+                        and len(_foreground) == 7
+                    ):
                         _foreground = f"{_foreground}70"
                     break
 
@@ -1343,13 +1478,15 @@ color_1 = {
 color_2 = {"hex": "#0f6f99", "alpha_range": ["0x99", "0xcc"]}
 
 
-# config_path = f"{os.getcwd()}/config.json"
-# color_config = ColorConfig(config_path)
-# color = color_config.get_color("activeBorder")
-# print(color.create_colors())
-# color = color_config.get_color("error")
-# print(color.create_colors())
+config_path = f"{os.getcwd()}/config.json"
+color_config = ColorConfig(config_path)
+colors = color_config.get_color_wrappers("token")
+print([c.group for c in colors])
+colors = color_config.get_color_wrappers("meta.class.java")
+print([c.group for c in colors])
+colors = color_config.get_color_wrappers("comment.block.javadoc.java")
+print([c.group for c in colors])
 
-#template_config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
-#config = TemplateConfig(template_config_path)
-#config.regenerate_template_colors()
+# template_config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+# config = TemplateConfig(template_config_path)
+# config.regenerate_template_colors()
