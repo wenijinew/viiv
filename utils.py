@@ -59,7 +59,7 @@ def _read_config(config_path):
 
 def _is_generic_area(area):
     """Check if the current theme is a generic area."""
-    return area in ["default", "basic", "status"]
+    return area in ["default", "force", "status"]
 
 
 def _random_range(range_values: list[str]) -> list[str]:
@@ -217,7 +217,7 @@ class ColorConfig(dict):
         self.config_path = config_path
         self.config = _read_config(config_path)
         self.areas = list(
-            list(filter(lambda x: x != "default" and x != "basic", self.config.keys()))
+            list(filter(lambda x: x != "default" and x != "force", self.config.keys()))
         )
         self.default_color = Color(self.config["default"], "default", "default")
         super().__init__(
@@ -263,7 +263,7 @@ class ColorConfig(dict):
         """
         # basic has higher priority
         for match_rule_name in MatchRule._member_names_:
-            color = self._get_color("basic", target, match_rule_name)
+            color = self._get_color("force", target, match_rule_name)
             if color is not None:
                 break
         if color is not None:
@@ -530,14 +530,14 @@ class TemplateConfig(dict):
                 _colors_group = _wrapper.group
                 _colors = random.sample(_colors, len(_colors))
                 for index, _property in enumerate(_color_properties):
-                    if _area == "basic" and _property == _debug_property:
+                    if _area == "force" and _property == _debug_property:
                         print(_wrapper.area)
                     if _property in template_colors:
                         continue
                     if _is_generic_area(_area):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        if _area == "basic":
+                        if _area == "force":
                             _basic_area_processed_properties.append(_property)
                     elif (
                         _property.lower().find(_colors_group.lower()) != -1
@@ -545,7 +545,7 @@ class TemplateConfig(dict):
                     ) and (_property.lower().find(_area.lower()) != -1):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        if _area == "basic":
+                        if _area == "force":
                             _basic_area_processed_properties.append(_property)
 
         print("After basic:", template_colors.get(_debug_property, "not set"))
@@ -574,7 +574,7 @@ class TemplateConfig(dict):
                     if _is_generic_area(_area):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        if _area == "basic":
+                        if _area == "force":
                             _basic_area_processed_properties.append(_property)
                     elif (
                         _property.lower().find(_colors_group.lower()) != -1
@@ -582,7 +582,7 @@ class TemplateConfig(dict):
                     ) and (_property.lower().find(_area.lower()) != -1):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
-                        if _area == "basic":
+                        if _area == "force":
                             _basic_area_processed_properties.append(_property)
 
         print("After prefix:", template_colors[_debug_property])
