@@ -54,6 +54,51 @@ It might need to reset BASIC, LIGHT, ALPHA ranges for some color perperties. For
 
 "status" area in config.json has highest priority and can override any previous configuration.
 
+## Static color
+
+To use static color for property, use the below format:
+
+```
+    {
+        "groups": [
+            ".*foreground.*"
+        ],
+        "color": {
+            "hex": "#b7b7ff",
+            "alpha_range": [
+                "0xdf",
+                "0xe1"
+            ]
+        }
+    }
+```
+
+## Dynamic color
+
+To use dynamic color, use the below format:
+
+```
+{
+    "groups": [
+        ".*editorSuggestWidget.*"
+    ],
+    "color": {
+        "basic_range": [
+            1,
+            11
+        ],
+        "light_range": [
+            10,
+            35
+        ],
+        "alpha_range": [
+            "0x95",
+            "0xa5"
+        ]
+    }
+}
+```
+
 # Usage
 
 To generate new theme, run the command under the directory of the project:
