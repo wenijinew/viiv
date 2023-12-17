@@ -10,10 +10,17 @@ import sys
 from enum import Enum
 from peelee import peelee as pe
 
+
+
+
+  
+
+
+
+
 # reserved
 TOKEN_COLOR_PREFIX = "T_"
 WORKBENCH_COLOR_PREFIX = "W_"
-
 PLACEHOLDER_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2,4}"
 PLACEHOLDER_REGEX_WITHOUT_ALPHA = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}"
 PLACEHOLDER_REGEX_WITH_ALPHA = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
@@ -22,7 +29,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-
+DEBUG_PROPERTY = "editorGutter.addedBackground"
 
 class ColorComponent(Enum):
     """Color component for color range."""
@@ -61,6 +68,14 @@ def _is_generic_area(area):
     """Check if the current theme is a generic area."""
     return area in ["default", "force", "status"]
 
+
+def is_default_area(area):
+    """Check if the current theme is a default area."""
+    return area == "default"
+
+def is_property_area(area):
+    """Check if the current theme is a property area."""
+    return area in ["background", "foreground", "border"]
 
 def _random_range(range_values: list[str]) -> list[str]:
     """Generate random numbers in string format with the given range values.
@@ -144,12 +159,12 @@ class Color(dict):
         config,
         area,
         group,
-        replace_color_component: list(ColorComponent) = [ColorComponent.ALL],
+        replace_color_component: list(ColorComponent) = None,
     ):
         self.config = config
         self.area = area
         self.group = group
-        self.replace_color_component = replace_color_component
+        self.replace_color_component = replace_color_component or [ColorComponent.ALL]
         self.hex = config.get("hex", None)
         self.alpha_range = config.get("alpha_range", None)
         self.basic_range = config.get("basic_range", None)
@@ -202,7 +217,7 @@ class Color(dict):
 
         _wrapper = ColorsWrapper(
             _colors, self.area, self.group, self.replace_color_component
-        )
+        )        
         return _wrapper
 
 
@@ -218,15 +233,14 @@ class ColorConfig(dict):
             config_path = f"{os.getcwd()}/config.json"
         self.config_path = config_path
         self.config = _read_config(config_path)
-        self.areas = list(
-            list(filter(lambda x: x != "default" and x != "force", self.config.keys()))
-        )
-        self.default_color = Color(self.config["default"], "default", "default")
+        self.areas = self.config.keys()
+        default_color_config = list(filter(lambda x: len(x["groups"]) == 1 and x["groups"][0] == "default", self.config["default"]))[0]
+        self.default_color = Color(default_color_config["color"], "default", default_color_config["groups"][0])
         super().__init__(
             config=self.config, areas=self.areas, default_color=self.default_color
         )
 
-    def get_color_wrappers(self, target) -> ColorsWrapper:
+    def get_color_wrappers(self, target_property) -> list:
         """Go through the config items in the basic groups and set the color by checking if the given 'group' contains the key of the groups.
 
         content example of basic groups:
@@ -264,75 +278,66 @@ class ColorConfig(dict):
             If not found, return the default color.
         """
         # basic has higher priority
-        for match_rule_name in MatchRule._member_names_:
-            color = self._get_color("force", target, match_rule_name)
-            if color is not None:
-                break
-        if color is not None:
-            return [color.create_colors_wrapper()]
+        #for match_rule_name in MatchRule._member_names_:
+        #    color = self._get_color("force", target, match_rule_name)
+        #    if color is not None:
+        #        break
+        #if color is not None:
+        #    return [color.create_colors_wrapper()]
 
-        colors = []
+        color_wrappers = []
         for area in self.areas:
+            if is_property_area(area) and target_property.lower().find(area) == -1:
+                continue
             # try to find the configured color in the matching order
             for match_rule_name in MatchRule._member_names_:
-                color = self._get_color(area, target, match_rule_name)
+                color = self._get_color(area, target_property, match_rule_name)
                 if color is not None:
+                    if target_property == DEBUG_PROPERTY:
+                        print(match_rule_name)
                     break
             if color is not None:
-                colors.append(color.create_colors_wrapper())
-        _final_colors = (
-            colors if len(colors) > 0 else [self.default_color.create_colors_wrapper()]
+                color_wrappers.append(color.create_colors_wrapper())
+        color_wrappers = (
+            color_wrappers if len(color_wrappers) > 0 else [self.default_color.create_colors_wrapper()]
         )
 
         # print(target, len(_final_colors), [f.area for f in _final_colors])
-        return _final_colors
+        return color_wrappers
 
-    def _get_color(self, area, target_group, match_rule_name):
+    def _get_color(self, area, target_property, match_rule_name):
         area_config = self.config[area]
         color = None
+        color_instance = None
         for config in area_config:
-            # is no groups, it might be used as comments, ignore it.
-            if "groups" not in config:
-                continue
             groups = config["groups"]
-            replace_color_component = config.get("replace_color_component")
-            if replace_color_component is not None and isinstance(
-                replace_color_component, list
-            ):
-                replace_color_component = [
-                    ColorComponent[_component] for _component in replace_color_component
-                ]
-            else:
-                replace_color_component = (
-                    [ColorComponent.ALL] if area != "status" else [ColorComponent.ALPHA]
-                )
-            for _group in groups:
+            groups.sort(key=lambda x: len(x), reverse=True)
+            for group in groups:
                 if (
-                    match_rule_name == MatchRule.EXACT.name
-                    and target_group.lower() == _group.lower()
+                    match_rule_name == MatchRule.EXACT.name and target_property.lower() == group.lower()
+                    or match_rule_name == MatchRule.ENDSWITH.name and target_property.lower().endswith(f'.{group.lower()}')
+                    or match_rule_name == MatchRule.STARTSWITH.name and target_property.lower().startswith(f'{group.lower()}.')
+                    or match_rule_name == MatchRule.FUZZY.name and re.match(group, target_property, re.IGNORECASE)
                 ):
+                    replace_color_component = config.get("replace_color_component")
+                    if replace_color_component is not None and isinstance(
+                        replace_color_component, list
+                    ):
+                        replace_color_component = [
+                            ColorComponent[_component] for _component in replace_color_component
+                        ]
+                    else:
+                        replace_color_component = (
+                            [ColorComponent.ALL] if area != "status" else [ColorComponent.ALPHA]
+                        )
+                    if target_property == DEBUG_PROPERTY:
+                        print(replace_color_component)
                     color = config["color"]
-                    break
-                elif (
-                    match_rule_name == MatchRule.ENDSWITH.name
-                    and target_group.lower().endswith(_group.lower())
-                ):
-                    color = config["color"]
-                    break
-                elif (
-                    match_rule_name == MatchRule.STARTSWITH.name
-                    and target_group.lower().startswith(_group.lower())
-                ):
-                    color = config["color"]
-                    break
-                elif match_rule_name == MatchRule.FUZZY.name and re.match(
-                    _group, target_group, re.IGNORECASE
-                ):
-                    color = config["color"]
+                    _group = group
                     break
             if color is not None:
-                return Color(color, area, _group, replace_color_component)
-        return None
+                color_instance = Color(color, area, _group, replace_color_component)
+        return color_instance 
 
     def __repr__(self) -> str:
         return super().__repr__()
@@ -485,6 +490,100 @@ class TemplateConfig(dict):
             _color = "_".join([_splits[0], _splits[1], light_color + _alpha])
         return _color
 
+
+
+
+
+
+
+
+    def generate_template(self, color_config: ColorConfig = None):
+        """Generate template with color configuration."""
+        if color_config is None:
+            _color_config_path = f"{os.getcwd()}/config.json"
+            color_config = ColorConfig(config_path=_color_config_path)
+
+        workbench_colors = {}
+        default_processed_properties = []
+        for property in self.color_properties:
+            color_wrappers = color_config.get_color_wrappers(property)
+            if property == DEBUG_PROPERTY:
+                print([w.area for w in color_wrappers])
+            if property in default_processed_properties and "status" not in [w.area for w in color_wrappers]:
+                continue
+            for wrapper in color_wrappers:
+                colors = wrapper.colors
+                replace_color_component = wrapper.replace_color_component
+                group = wrapper.group
+                area = wrapper.area
+                color = colors[random.randint(0, len(colors) - 1)]
+                color_orig = color
+                if property in workbench_colors:
+                    if area != "status":
+                        continue
+                    else:
+                        old_color = workbench_colors[property]
+                        _changed = False
+                        if ColorComponent.BASIC in replace_color_component:
+                            color = self._append_or_replace_alpha(
+                                old_color if not _changed else color,
+                                color_orig,
+                                ColorComponent.BASIC,
+                            )
+                            _changed = True
+                        if ColorComponent.LIGHT in replace_color_component:
+                            color = self._append_or_replace_alpha(
+                                old_color if not _changed else color,
+                                color_orig,
+                                ColorComponent.LIGHT,
+                            )
+                            _changed = True
+                        if ColorComponent.ALPHA in replace_color_component:
+                            color = self._append_or_replace_alpha(
+                                old_color if not _changed else color, color_orig, ColorComponent.ALPHA
+                            )
+                            _changed = True
+                if property == DEBUG_PROPERTY:
+                    print(
+                        f"status: {property} is processed by the area {area} (color matching rule '{group}') - {color} - {replace_color_component} - {[_w.area for _w in color_wrappers]}"
+                    )
+                if area == "default" and group != "default":
+                    default_processed_properties.append(property)                
+                workbench_colors[property] = color
+                if area == "default" and group != "default":
+                    if property == DEBUG_PROPERTY:
+                        print(
+                            f"2 status: {property} is processed by the area {area} (color matching rule '{group}') - {color}"
+                        )
+                    
+        self.config["colors"] = workbench_colors
+
+        # token colors
+        token_configs = self.config["tokenColors"]
+        new_token_configs = []
+        token_color_models = color_config.get_color_wrappers("token_default")[0].colors
+        for token_config in token_configs:
+            token_color_model = token_color_models[
+                random.randint(0, len(token_color_models) - 1)
+            ]
+            scope = token_config["scope"]
+            color_wrapper = color_config.get_color_wrappers(scope)[0]
+            _colors = color_wrapper.colors
+            new_color = _colors[random.randint(0, len(_colors) - 1)]
+            # most tokens are using default area colors which light range might be two dark, so replace light range and alpha range
+            new_color = self._append_or_replace_alpha(
+                new_color, token_color_model, ColorComponent.LIGHT
+            )
+            new_color = self._append_or_replace_alpha(
+                new_color, token_color_model, ColorComponent.ALPHA
+            )
+            new_token_configs.append(
+                {"scope": scope, "settings": {"foreground": new_color}}
+            )
+        self.config["tokenColors"] = new_token_configs
+
+        json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
+
     def regenerate_template_colors(self, color_config: ColorConfig = None):
         """Generate template with color configuration.
 
@@ -532,7 +631,9 @@ class TemplateConfig(dict):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
                         if _property == _debug_property:
-                            print(f"basic: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}")
+                            print(
+                                f"basic: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}"
+                            )
                         if _area == "force":
                             _basic_area_processed_properties.append(_property)
                     elif (
@@ -542,7 +643,9 @@ class TemplateConfig(dict):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
                         if _property == _debug_property:
-                            print(f"basic: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}")
+                            print(
+                                f"basic: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}"
+                            )
                         if _area == "force":
                             _basic_area_processed_properties.append(_property)
 
@@ -565,7 +668,9 @@ class TemplateConfig(dict):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
                         if _property == _debug_property:
-                            print(f"prefix: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}")
+                            print(
+                                f"prefix: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}"
+                            )
                         if _area == "force":
                             _basic_area_processed_properties.append(_property)
                     elif (
@@ -575,7 +680,9 @@ class TemplateConfig(dict):
                         _color = _colors[index % len(_colors)]
                         template_colors[_property] = _color
                         if _property == _debug_property:
-                            print(f"prefix: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}")
+                            print(
+                                f"prefix: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}"
+                            )
                         if _area == "force":
                             _basic_area_processed_properties.append(_property)
 
@@ -631,7 +738,9 @@ class TemplateConfig(dict):
                             )
                         template_colors[_property] = _color
                         if _property == _debug_property:
-                            print(f"status: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}")
+                            print(
+                                f"status: {_property} is processed by the group '{_group}' in the area {_area} (color matching rule '{_colors_group}') - {_color}"
+                            )
                         _status_changed_properties.append(_property)
 
         print("After status:", template_colors[_debug_property])
@@ -643,15 +752,23 @@ class TemplateConfig(dict):
         new_token_configs = []
         token_color_models = color_config.get_color_wrappers("default")[0].colors
         for token_config in token_configs:
-            token_color_model = token_color_models[random.randint(0, len(token_color_models) - 1)]
+            token_color_model = token_color_models[
+                random.randint(0, len(token_color_models) - 1)
+            ]
             scope = token_config["scope"]
             color_wrapper = color_config.get_color_wrappers(scope)[0]
             _colors = color_wrapper.colors
             new_color = _colors[random.randint(0, len(_colors) - 1)]
             # most tokens are using default area colors which light range might be two dark, so replace light range and alpha range
-            new_color = self._append_or_replace_alpha(new_color, token_color_model, ColorComponent.LIGHT)
-            new_color = self._append_or_replace_alpha(new_color, token_color_model, ColorComponent.ALPHA)
-            new_token_configs.append({"scope": scope, "settings": {"foreground": new_color}})
+            new_color = self._append_or_replace_alpha(
+                new_color, token_color_model, ColorComponent.LIGHT
+            )
+            new_color = self._append_or_replace_alpha(
+                new_color, token_color_model, ColorComponent.ALPHA
+            )
+            new_token_configs.append(
+                {"scope": scope, "settings": {"foreground": new_color}}
+            )
         self.config["tokenColors"] = new_token_configs
 
         json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
@@ -1407,7 +1524,8 @@ if __name__ == "__main__":
     for option, value in opts:
         if option in ("-c", "--colors"):
             # define_colors()
-            TemplateConfig().regenerate_template_colors()
+            #TemplateConfig().regenerate_template_colors()
+            TemplateConfig().generate_template()
         elif option in ("-t", "--token_colors"):
             define_token_colors(light_level_range=[0, 60], base_colors_range=[1, 10])
         elif option in ("-p", "--print_colors"):
@@ -1423,4 +1541,4 @@ def test_color_config():
     print(color_config.get_color_wrappers("minimap"))
 
 
-test_color_config()
+#test_color_config()
