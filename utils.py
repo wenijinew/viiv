@@ -22,8 +22,8 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 DEBUG_PROPERTY = [
-    "menu.selectionBackground",
-    "list.focusForeground"
+   "editorSuggestWidget.selectedForeground",
+   "editorSuggestWidget.selectedBackground",
 ]
 
 
@@ -417,16 +417,11 @@ class TemplateConfig(dict):
                             _changed = True
                 if property in DEBUG_PROPERTY:
                     print(
-                        f"status: {property} is processed by the area {area} (color matching rule '{group}') - {color} - {replace_color_component} - {[_w.area for _w in color_wrappers]}"
+                        f">>>: {property} is processed by the area {area} (color matching rule '{group}') - {color} - {replace_color_component} - {[_w.area for _w in color_wrappers]}\n"
                     )
                 if area == "default" and group != "default":
                     default_processed_properties.append(property)
                 workbench_colors[property] = color
-                if area == "default" and group != "default":
-                    if property in DEBUG_PROPERTY:
-                        print(
-                            f"2 status: {property} is processed by the area {area} (color matching rule '{group}') - {color}"
-                        )
 
         self.config["colors"] = workbench_colors
 
@@ -463,9 +458,8 @@ def print_colors(value):
     theme_template_json = json.load(open(theme_template_json_file))
     colors = dynamic_theme_json["colors"]
     for k, v in colors.items():
-        if k.lower().find(value) != -1:
+        if k.lower().find(value) != -1 or re.match(f".*{value}.*", k, re.IGNORECASE):
             print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
-
 
 if __name__ == "__main__":
     opts, _ = getopt.getopt(
