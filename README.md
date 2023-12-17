@@ -46,6 +46,12 @@ Therefore, to customize the specific color property, use property full value as 
 ## Status
 
 
+
+
+The default purpose for 'status' area is to change the ALPHA value of the color for different status like active, inactive, highlight as such.
+
+It might need to reset BASIC, LIGHT, ALPHA ranges for some color perperties. For example, if "editor" is set in 'background' area, then all color properties color of "editor.*Background" will follow the colors defined in 'background' area for 'editor'. So, when it need to set color for "editor.wordHighlightBackground", the basic color will still the same with the editor basic color which is dark color. If we want to use other color, then we need to be allowed to change the basic color. 
+
 # Usage
 
 To generate new theme, run the command under the directory of the project:
@@ -53,3 +59,5 @@ To generate new theme, run the command under the directory of the project:
 ```
 python utils.py -t && pwsh.exe -nop -File viiv.ps1
 ```
+
+
