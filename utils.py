@@ -10,14 +10,6 @@ import sys
 from enum import Enum
 from peelee import peelee as pe
 
-
-
-
-  
-
-
-
-
 # reserved
 TOKEN_COLOR_PREFIX = "T_"
 WORKBENCH_COLOR_PREFIX = "W_"
@@ -687,7 +679,6 @@ class TemplateConfig(dict):
                             _basic_area_processed_properties.append(_property)
 
         print("After prefix:", template_colors[_debug_property])
-
         # status groups are used to handle all color properties for status such as active, inactive, highlight and so forth.
         _status_changed_properties = []
         for _group, _color_properties in _status_groups.items():
