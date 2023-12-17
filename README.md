@@ -52,6 +52,8 @@ The default purpose for 'status' area is to change the ALPHA value of the color 
 
 It might need to reset BASIC, LIGHT, ALPHA ranges for some color perperties. For example, if "editor" is set in 'background' area, then all color properties color of "editor.*Background" will follow the colors defined in 'background' area for 'editor'. So, when it need to set color for "editor.wordHighlightBackground", the basic color will still the same with the editor basic color which is dark color. If we want to use other color, then we need to be allowed to change the basic color. 
 
+"status" area in config.json has highest priority and can override any previous configuration.
+
 # Usage
 
 To generate new theme, run the command under the directory of the project:
