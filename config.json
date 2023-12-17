@@ -341,15 +341,15 @@
             "color": {
                 "basic_range": [
                     1,
-                    2
+                    11 
                 ],
                 "light_range": [
-                    17,
-                    19
+                    5,
+                    25
                 ],
                 "alpha_range": [
-                    "0xe1",
-                    "0xef"
+                    "0xfe",
+                    "0xff"
                 ]
             }
         },
@@ -579,8 +579,8 @@
                     37
                 ],
                 "alpha_range": [
-                    "0x21",
-                    "0x2f"
+                    "0x31",
+                    "0x3f"
                 ]
             }
         },
@@ -778,6 +778,25 @@
                     "0x76"
                 ]
             }
+        },
+        {
+            "groups": [
+                "editorLineNumber.activeForeground"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    17,
+                    19
+                ],
+                "alpha_range": [
+                    "0xd3",
+                    "0xe9"
+                ]
+            }
         }
     ],
     "status": [
@@ -788,24 +807,45 @@
             "color": {
                 "basic_range": [
                     1,
-                    3
+                    11
                 ],
                 "light_range": [
-                    17,
-                    19
+                    5,
+                    25
                 ],
                 "alpha_range": [
-                    "0xd3",
-                    "0xe9"
+                    "0xfe",
+                    "0xff"
+                ]
+            }
+        },
+        {
+            "groups": [
+                ".*select.*foreground.*"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    11 
+                ],
+                "light_range": [
+                    5,
+                    25
+                ],
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
                 ]
             },
-            "replace_color_component":[
-                "ALPHA", "BASIC","LIGHT"
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
             ]
         },
         {
             "groups": [
-                ".*selection.*background.*"
+                ".*select.*background.*"
             ],
             "color": {
                 "basic_range": [
@@ -817,8 +857,8 @@
                     50
                 ],
                 "alpha_range": [
-                    "0x61",
-                    "0x6f"
+                    "0x51",
+                    "0x7f"
                 ]
             },
             "replace_color_component": [
@@ -835,16 +875,16 @@
             ],
             "color": {
                 "basic_range": [
-                    7,
-                    8
+                    1,
+                    11
                 ],
                 "light_range": [
-                    31,
-                    32
+                    50,
+                    55
                 ],
                 "alpha_range": [
-                    "0x71",
-                    "0x9f"
+                    "0x3e",
+                    "0x5f"
                 ]
             },
             "replace_color_component": [
@@ -855,18 +895,18 @@
         },
         {
             "groups": [
-                ".*active.*foreground.*",
-                ".*focus.*foreground.*",
-                ".*fold.*foreground.*"
+                ".*(?!inactive)active.*foreground.*",
+                ".*(?!inactive)focus.*foreground.*",
+                ".*(?!inactive)fold.*foreground.*"
             ],
             "color": {
                 "basic_range": [
-                    7,
-                    8
+                    1,
+                    11
                 ],
                 "light_range": [
-                    31,
-                    32
+                    5,
+                    25
                 ],
                 "alpha_range": [
                     "0xfe",
@@ -927,11 +967,12 @@
         },
         {
             "groups": [
-                "indentGuidesStroke"
+                "indentGuidesStroke",
+                "highlightForeground"
             ],
             "color": {
                 "basic_range": [
-                    9,
+                    1,
                     11
                 ],
                 "light_range": [
@@ -962,8 +1003,32 @@
                     42
                 ],
                 "alpha_range": [
-                    "0x51",
-                    "0x5f"
+                    "0x71",
+                    "0x7f"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                "inactiveForeground"
+            ],
+            "color": {
+                "basic_range": [
+                    7,
+                    8
+                ],
+                "light_range": [
+                    31,
+                    32
+                ],
+                "alpha_range": [
+                    "0x81",
+                    "0x8f"
                 ]
             },
             "replace_color_component": [
@@ -1061,6 +1126,31 @@
                 "alpha_range": [
                     "0x51",
                     "0x6f"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                ".*editor.*select.*foreground.*",
+                ".*editor.*match.*foreground.*"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    11
+                ],
+                "light_range": [
+                    5,
+                    25
+                ],
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
                 ]
             },
             "replace_color_component": [
