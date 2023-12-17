@@ -83,7 +83,7 @@
                 "success",
                 ".*add.*",
                 ".*inserted.*",
-                ".*resolved.*"
+                ".*(?!unresolved)resolved.*"
             ],
             "color": {
                 "hex": "#008000",
@@ -209,7 +209,7 @@
                 "minimap.errorHighlight",
                 ".*delete.*",
                 ".*remove.*",
-                ".*(?!unresolved)resolved.*",
+                ".*unresolved.*",
                 "minimapGutter.deletedBackground"
             ],
             "color": {
@@ -602,7 +602,8 @@
         {
             "groups": [
                 "editorIndentGuide",
-                "lineHighlightBackground"
+                "lineHighlightBackground",
+                "minimapSlider"
             ],
             "color": {
                 "basic_range": [
