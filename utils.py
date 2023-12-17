@@ -23,6 +23,7 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 DEBUG_PROPERTY = [
     "tab.inactiveBackground",
+    "tab.inactiveForeground",
 ]
 
 
@@ -455,6 +456,9 @@ class TemplateConfig(dict):
 
         json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
 
+        for property in DEBUG_PROPERTY:
+            print_colors(property)
+
 
 def print_colors(value):
     dynamic_theme_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
@@ -478,7 +482,6 @@ if __name__ == "__main__":
             TemplateConfig().generate_template()
         elif option in ("-p", "--print_colors"):
             print_colors(value)
-
 
 def test_color_config():
     color_config = ColorConfig()
