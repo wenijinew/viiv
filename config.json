@@ -805,6 +805,30 @@
         },
         {
             "groups": [
+                ".*selection.*background.*"
+            ],
+            "color": {
+                "basic_range": [
+                    1,
+                    12
+                ],
+                "light_range": [
+                    45,
+                    50
+                ],
+                "alpha_range": [
+                    "0x61",
+                    "0x6f"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
                 ".*\\.(?!inactive)active.*",
                 ".*\\.(?!unfocus)focus.*",
                 ".*\\.(?!unfold)fold.*"
@@ -934,8 +958,8 @@
                     2   
                 ],
                 "light_range": [
-                    31,
-                    32
+                    41,
+                    42
                 ],
                 "alpha_range": [
                     "0x51",
@@ -950,7 +974,7 @@
         },
         {
             "groups": [
-                ".*unfocus.*inactive.*"
+                ".*unfocus.*inactive.*background.*"
             ],
             "color": {
                 "basic_range": [
@@ -962,8 +986,32 @@
                     32
                 ],
                 "alpha_range": [
-                    "0x11",
-                    "0x1f"
+                    "0x21",
+                    "0x2f"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                ".*unfocus.*inactive.*foreground.*"
+            ],
+            "color": {
+                "basic_range": [
+                    7,
+                    8
+                ],
+                "light_range": [
+                    31,
+                    32
+                ],
+                "alpha_range": [
+                    "0x91",
+                    "0x9f"
                 ]
             },
             "replace_color_component": [
