@@ -456,10 +456,6 @@ class TemplateConfig(dict):
 
         json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
 
-        for property in DEBUG_PROPERTY:
-            print_colors(property)
-
-
 def print_colors(value):
     dynamic_theme_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
     dynamic_theme_json = json.load(open(dynamic_theme_json_file))
