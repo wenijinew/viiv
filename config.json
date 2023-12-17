@@ -21,26 +21,6 @@
         },
         {
             "groups": [
-                "titleBar.activeBackground",
-                "tab.inactiveBackground"
-            ],
-            "color": {
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    59,
-                    60
-                ],
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ]
-            }
-        },
-        {
-            "groups": [
                 ".*outline.*"
             ],
             "color": {
@@ -60,25 +40,6 @@
         },
         {
             "groups": [
-                "tab.activeBackground"
-            ],
-            "color": {
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    45,
-                    46
-                ],
-                "alpha_range": [
-                    "0x79",
-                    "0x89"
-                ]
-            }
-        },
-        {
-            "groups": [
                 "ansiGreen",
                 "success",
                 ".*add.*",
@@ -86,7 +47,7 @@
                 ".*(?!unresolved)resolved.*"
             ],
             "color": {
-                "hex": "#008000",
+                "hex": "#004d00",
                 "alpha_range": [
                     "0x99",
                     "0xcc"
@@ -110,10 +71,12 @@
         {
             "groups": [
                 "ansiYellow",
-                ".*warning.*"
+                ".*warning.*",
+                "problemsWarningIcon.foreground",
+                "minimap.warningHighlight"
             ],
             "color": {
-                "hex": "#808000",
+                "hex": "#ffb733",
                 "alpha_range": [
                     "0x99",
                     "0xcc"
@@ -123,11 +86,12 @@
         {
             "groups": [
                 "ansiBrightYellow",
-                "problemsWarningIcon.foreground",
-                "minimap.warningHighlight"
+                ".*modified.*",
+                "editorGutter.modifiedBackground",
+                "minimapGutter.modifiedBackground"
             ],
             "color": {
-                "hex": "#b3b300",
+                "hex": "#b37400",
                 "alpha_range": [
                     "0x99",
                     "0xcc"
@@ -136,8 +100,7 @@
         },
         {
             "groups": [
-                "ansiMagenta",
-                ".*modified.*"
+                "ansiMagenta"
             ],
             "color": {
                 "hex": "#670067",
@@ -150,11 +113,12 @@
         {
             "groups": [
                 "ansiBrightMagenta",
-                "editorGutter.modifiedBackground",
-                "minimapGutter.modifiedBackground"
+                "editorGutter.deletedBackground",
+                ".*delete.*",
+                ".*remove.*"
             ],
             "color": {
-                "hex": "#670067",
+                "hex": "#ff00ff",
                 "alpha_range": [
                     "0x99",
                     "0xcc"
@@ -192,10 +156,10 @@
         {
             "groups": [
                 "ansiRed",
-                ".*error.*"
+                ".*error.*(background|border).*"
             ],
             "color": {
-                "hex": "#cd0000",
+                "hex": "#820000",
                 "alpha_range": [
                     "0x99",
                     "0xcc"
@@ -205,15 +169,13 @@
         {
             "groups": [
                 "ansiBrightRed",
-                "editorGutter.deletedBackground",
                 "minimap.errorHighlight",
-                ".*delete.*",
-                ".*remove.*",
+                ".*error.*foreground.*",
                 ".*unresolved.*",
                 "minimapGutter.deletedBackground"
             ],
             "color": {
-                "hex": "#ff1a1a",
+                "hex": "#ff5050",
                 "alpha_range": [
                     "0x99",
                     "0xcc"
@@ -328,26 +290,7 @@
                 ],
                 "alpha_range": [
                     "0xe1",
-                    "0xef"
-                ]
-            }
-        },
-        {
-            "groups": [
-                "activityBar.activeBackground"
-            ],
-            "color": {
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    57,
-                    58
-                ],
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
+                    "0xe2"
                 ]
             }
         },
@@ -607,12 +550,12 @@
             ],
             "color": {
                 "basic_range": [
-                    5,
-                    10
+                    1,
+                    11
                 ],
                 "light_range": [
                     35,
-                    49
+                    50
                 ],
                 "alpha_range": [
                     "0x38",
@@ -649,8 +592,8 @@
                     12
                 ],
                 "light_range": [
-                    45,
-                    46
+                    30,
+                    31
                 ],
                 "alpha_range": [
                     "0x79",
@@ -791,8 +734,8 @@
                     45
                 ],
                 "alpha_range": [
-                    "0x33",
-                    "0x55"
+                    "0x51",
+                    "0x5f"
                 ]
             }
         },
@@ -854,23 +797,26 @@
         {
             "groups": [
                 ".*\\.(?!inactive)active.*",
-                ".*focus.*",
-                ".*fold.*"
+                ".*\\.(?!unfocus)focus.*",
+                ".*\\.(?!unfold)fold.*"
             ],
             "color": {
                 "basic_range": [
                     7,
-                    9
+                    8
                 ],
                 "light_range": [
-                    59,
-                    60
+                    31,
+                    32
                 ],
                 "alpha_range": [
-                    "0x7f",
-                    "0x9f"
+                    "0xc1",
+                    "0xcf"
                 ]
-            }
+            },
+            "replace_color_component": [
+                "ALPHA"
+            ]
         },
         {
             "groups": [
@@ -940,8 +886,63 @@
         {
             "groups": [
                 ".*inactive.*",
+                ".*unfocus.*",
+                ".*unfold.*",
                 ".*disabled.*",
                 ".*offline.*"
+            ],
+            "color": {
+                "basic_range": [
+                    7,
+                    8
+                ],
+                "light_range": [
+                    31,
+                    32
+                ],
+                "alpha_range": [
+                    "0x31",
+                    "0x3f"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                ".*unfocus.*inactive.*"
+            ],
+            "color": {
+                "basic_range": [
+                    7,
+                    8
+                ],
+                "light_range": [
+                    31,
+                    32
+                ],
+                "alpha_range": [
+                    "0x11",
+                    "0x1f"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                "activeSelectionForeground",
+                "inactiveSelectionForeground",
+                "hoverForeground",
+                "selectionForeground",
+                "activeSelectionIconForeground",
+                "inactiveSelectionIconForeground"
             ],
             "color": {
                 "basic_range": [
@@ -953,16 +954,15 @@
                     60
                 ],
                 "alpha_range": [
-                    "0x71",
-                    "0x7f"
+                    "0xf1",
+                    "0xff"
                 ]
             }
         },
         {
             "groups": [
-                ".*selection.*",
-                ".*selected.*",
-                ".*match.*"
+                ".*editor.*select.*",
+                ".*editor.*match.*"
             ],
             "color": {
                 "basic_range": [
@@ -974,8 +974,8 @@
                     56
                 ],
                 "alpha_range": [
-                    "0x21",
-                    "0x3f"
+                    "0x51",
+                    "0x6f"
                 ]
             },
             "replace_color_component": [
@@ -1006,6 +1006,98 @@
                 "BASIC",
                 "LIGHT",
                 "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                "titleBar.activeBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    59,
+                    60
+                ],
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                "tab.inactiveBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    59,
+                    60
+                ],
+                "alpha_range": [
+                    "0x3e",
+                    "0x3f"
+                ]
+            },
+            "replace_color_component": [
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                "activityBar.activeBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    57,
+                    58
+                ],
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ]
+            },
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "groups": [
+                "tab.activeBackground"
+            ],
+            "color": {
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    30,
+                    31
+                ],
+                "alpha_range": [
+                    "0x79",
+                    "0x89"
+                ]
+            },
+            "replace_color_component":[
+                "ALPHA", "BASIC","LIGHT"
             ]
         },
         {
