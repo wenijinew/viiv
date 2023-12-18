@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["terminal.foreground"]
+DEBUG_PROPERTY = ["list.inactiveSelectionIconForeground"]
 
 
 class ColorComponent(Enum):
@@ -529,7 +529,7 @@ def generate_random_theme_file(
     general_min_color=40,
     general_max_color=120,
     dark_color_min=0,
-    dark_color_max=10,
+    dark_color_max=15,
     dark_colors_total=4,
     dark_base_colors=None,
     theme_filename_prefix="dynamic"

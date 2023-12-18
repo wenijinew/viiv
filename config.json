@@ -243,25 +243,6 @@
             "groups": [
                 "editorSuggestWidget"
             ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xd3",
-                    "0xe9"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
-                "editorLineNumber.activeForeground"
-            ]
         }
     ],
     "default": [
@@ -634,16 +615,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xd1",
-                    "0xd7"
+                    "0xb1",
+                    "0xb7"
                 ],
                 "basic_range": [
-                    1,
-                    8
+                    8,
+                    12
                 ],
                 "light_range": [
-                    15,
-                    30
+                    25,
+                    45
                 ]
             },
             "groups": [
@@ -673,16 +654,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xd7",
-                    "0xdf"
+                    "0xb7",
+                    "0xbf"
                 ],
                 "basic_range": [
-                    1,
-                    8
+                    8,
+                    12
                 ],
                 "light_range": [
-                    35,
-                    49
+                    25,
+                    45
                 ]
             },
             "groups": [
@@ -1047,7 +1028,7 @@
                 ],
                 "light_range": [
                     1,
-                    60
+                    30
                 ]
             },
             "groups": [
@@ -1331,7 +1312,9 @@
                 "contrastActiveBorder",
                 "contrastBorder",
                 "sideBarSectionHeader.background",
-                ".*shadow.*"
+                "scrollbar.shadow",
+                "activityBar.border",
+                "titleBar.border"
             ]
         }
     ],
@@ -1339,8 +1322,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xce",
-                    "0xcf"
+                    "0xde",
+                    "0xdf"
                 ],
                 "basic_range": [
                     1,
@@ -1459,8 +1442,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xb1",
-                    "0xbf"
+                    "0xbc",
+                    "0xbd"
                 ],
                 "basic_range": [
                     1,
