@@ -36,7 +36,9 @@
             },
             "groups": [
                 "activityBar",
-                "titleBar"
+                "titleBar",
+                "menu",
+                "editorSuggestWidget"
             ]
         },
         {
@@ -66,7 +68,7 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    8,
+                    11,
                     12
                 ],
                 "light_range": [
@@ -77,7 +79,7 @@
             "groups": [
                 "sideBar",
                 "panel",
-                "terminal",
+                "tab",
                 "commandCenter",
                 "editorGroup",
                 "editorGroupHeader",
@@ -104,7 +106,7 @@
             "groups": [
                 "editorGutter",
                 "editor",
-                "tab"
+                "terminal"
             ]
         },
         {
@@ -1390,6 +1392,10 @@
                 "basic_range": [
                     8,
                     12
+                ],
+                "light_range": [
+                    59,
+                    60
                 ]
             },
             "groups": [
@@ -1403,6 +1409,9 @@
                 "focusBorder",
                 "tab.activeBorder",
                 "editor.lineHighlightBorder",
+                "contrastActiveBorder",
+                "contrastBorder",
+                "sideBarSectionHeader.background",
                 ".*shadow.*"
             ]
         }
