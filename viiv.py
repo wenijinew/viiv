@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["scrollbarSlider.background", "scrollbarSlider.hoverBackground", "scrollbarSlider.activeBackground"]
+DEBUG_PROPERTY = ["terminal.foreground"]
 
 
 class ColorComponent(Enum):
@@ -394,7 +394,6 @@ class TemplateConfig(dict):
         workbench_colors = {}
         default_processed_properties = []
         customized_properties = []
-        print(len(self.color_properties), len(set(self.color_properties)))
         for property in self.color_properties:
             color_wrappers = color_config.get_color_wrappers(property)
             if color_wrappers is None or not isinstance(color_wrappers, list):
@@ -467,7 +466,9 @@ class TemplateConfig(dict):
         for token_config in token_configs:
             scope = token_config["scope"]
             color_wrappers = color_config.get_color_wrappers(scope, target_area="token")
-            assert len(color_wrappers) == 1, f"how can we get multiple color wrappers for token ({scope})?"
+            assert (
+                len(color_wrappers) == 1
+            ), f"how can we get multiple color wrappers for token ({scope})?"
             color_wrapper = color_wrappers[0]
             _colors = color_wrapper.colors
             new_color = _colors[random.randint(0, len(_colors) - 1)]
@@ -477,7 +478,9 @@ class TemplateConfig(dict):
             group = color_wrapper.group
             area = color_wrapper.area
             if scope in DEBUG_PROPERTY:
-                print(f"{scope} is processed by the token color {group} in the area {area}")
+                print(
+                    f"{scope} is processed by the token color {group} in the area {area}"
+                )
         self.config["tokenColors"] = new_token_configs
         json.dump(
             self.config,
@@ -505,68 +508,93 @@ def print_palette():
         print(pe.bg(v, f"{k}: {v}"))
 
 
+DEFAULT_THEMES_MAP = {
+    "black": "#0c0c0c",
+    "blue": "#00000a",
+    "green": "#000a04",
+    "cyan": "#000405",
+    "violet": "#0d0b12",
+    "yellow": "#050504",
+}
+
+def generate_default_themes():
+    for theme, color in DEFAULT_THEMES_MAP.items():
+        generate_random_theme_file(dark_base_colors=[color], theme_filename_prefix=f"viiv-dark-{theme}")
+
+
+def generate_random_theme_file(
+    colors_total=7,
+    gradations_total=60,
+    dark_color_gradations_total=60,
+    general_min_color=40,
+    general_max_color=120,
+    dark_color_min=0,
+    dark_color_max=10,
+    dark_colors_total=4,
+    dark_base_colors=None,
+    theme_filename_prefix="dynamic"
+):
+    """Generate random theme file."""
+    template_config = TemplateConfig()
+    template_config.generate_template()
+    template_config_data = template_config.config
+    palette_data = pe.Palette(
+        colors_total=colors_total,
+        gradations_total=gradations_total,
+        dark_color_gradations_total=dark_color_gradations_total,
+        color_min=general_min_color,
+        color_max=general_max_color,
+        dark_color_min=dark_color_min,
+        dark_color_max=dark_color_max,
+        dark_colors_total=dark_colors_total,
+        dark_colors=dark_base_colors,
+    ).generate_palette()
+
+    for property, color in template_config_data["colors"].items():
+        color = template_config_data["colors"][property]
+        color_placeholder = color[0:7]
+        alpha = color[7:9]
+        if color_placeholder in palette_data:
+            template_config_data["colors"][property] = (
+                palette_data[color_placeholder] + alpha
+            )
+    for token_color in template_config_data["tokenColors"]:
+        foreground = token_color["settings"]["foreground"]
+        color_placeholder = foreground[0:7]
+        alpha = foreground[7:9]
+        token_color["settings"]["foreground"] = palette_data[color_placeholder] + alpha
+    palette_file_path = f"{os.getcwd()}/themes/dynamic-palette.json"
+    dynamic_theme_path = f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
+    json.dump(
+        palette_data,
+        open(palette_file_path, "w"),
+        indent=4,
+        sort_keys=True,
+    )
+    json.dump(
+        template_config_data,
+        open(dynamic_theme_path, "w"),
+        indent=4,
+        sort_keys=True,
+    )
+
+
 if __name__ == "__main__":
     opts, _ = getopt.getopt(
         sys.argv[1:],
-        "cg:tp:P",
-        ["--colors", "--token_colors", "--print_colors=", "--print_palette",  "--group_name="],
+        "dgp:P",
+        [
+            "--dynamic_theme",
+            "--generate",
+            "--print_colors=",
+            "--print_palette",
+        ],
     )
     for option, value in opts:
-        if option in ("-c", "--colors"):
-            template_config = TemplateConfig()
-            template_config.generate_template()
-            template_config_data = template_config.config
-            colors_total = 7
-            gradations_total = 60
-            dark_color_gradations_total = 60
-            general_min_color = 40
-            general_max_color = 120
-            dark_color_min = 0
-            dark_color_max = 10
-            dark_colors_total = 4
-            dark_base_colors = None
-            palette_data = pe.Palette(
-                colors_total=colors_total,
-                gradations_total=gradations_total,
-                dark_color_gradations_total=dark_color_gradations_total,
-                color_min=general_min_color,
-                color_max=general_max_color,
-                dark_color_min=dark_color_min,
-                dark_color_max=dark_color_max,
-                dark_colors_total=dark_colors_total,
-                dark_colors=dark_base_colors,
-            ).generate_palette()
-
-            for property, color in template_config_data["colors"].items():
-                color = template_config_data["colors"][property]
-                color_placeholder = color[0:7]
-                alpha = color[7:9]
-                if color_placeholder in palette_data:
-                    template_config_data["colors"][property] = (
-                        palette_data[color_placeholder] + alpha
-                    )
-            for token_color in template_config_data["tokenColors"]:
-                foreground = token_color["settings"]["foreground"]
-                color_placeholder = foreground[0:7]
-                alpha = foreground[7:9]
-                token_color["settings"]["foreground"] = (
-                    palette_data[color_placeholder] + alpha
-                )
-            palette_file_path = f"{os.getcwd()}/themes/dynamic-palette.json"
-            dynamic_theme_path = f"{os.getcwd()}/themes/dynamic-color-theme.json"
-            json.dump(
-                palette_data,
-                open(palette_file_path, "w"),
-                indent=4,
-                sort_keys=True,
-            )
-            json.dump(
-                template_config_data,
-                open(dynamic_theme_path, "w"),
-                indent=4,
-                sort_keys=True,
-            )
-
+        if option in ("-g", "--generate_default_themes"):
+            generate_default_themes()
+        if option in ("-d", "--dynamic_theme"):
+            generate_random_theme_file()
         elif option in ("-p", "--print_colors"):
             print_colors(value)
         elif option in ("-P", "--print_palette"):
