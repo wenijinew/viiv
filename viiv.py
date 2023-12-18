@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["editorGutter.addedBackground"]
+DEBUG_PROPERTY = ["editor.wordHighlightStrongBorder"]
 
 
 class ColorComponent(Enum):
@@ -412,7 +412,7 @@ class TemplateConfig(dict):
                                 ColorComponent.ALPHA,
                             )
                             _changed = True
-                        if ColorComponent.ALL in replace_color_component:
+                        if ColorComponent.ALL in replace_color_component or property == group:
                             color = color_orig
                 if property in DEBUG_PROPERTY:
                     print(
