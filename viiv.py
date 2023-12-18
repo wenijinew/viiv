@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["editorSuggestWidget.selectedBackground"]
+DEBUG_PROPERTY = ["tab.activeBorder"]
 
 
 class ColorComponent(Enum):
@@ -491,19 +491,25 @@ if __name__ == "__main__":
                 dark_colors_total=dark_colors_total,
                 dark_colors=dark_base_colors,
             ).generate_palette()
-            print(palette_data)
 
             for property, color in template_config_data["colors"].items():
                 color_placeholder = template_config_data["colors"][property][0:7]
+                alpha = template_config_data["colors"][property][7:9]
                 if color_placeholder in palette_data:
                     template_config_data["colors"][property] = palette_data[color_placeholder
-                ]
-                print(property, template_config_data["colors"][property])
+                ]+alpha
             for token_color in template_config_data["tokenColors"]:
                 token_color["settings"]["foreground"] = palette_data[
                     token_color["settings"]["foreground"][0:7]
                 ]
+            palette_file_path = f"{os.getcwd()}/themes/dynamic-palette.json"
             dynamic_theme_path = f"{os.getcwd()}/themes/dynamic-color-theme.json"
+            json.dump(
+                palette_data,
+                open(palette_file_path, "w"),
+                indent=4,
+                sort_keys=True,
+            )
             json.dump(
                 template_config_data,
                 open(dynamic_theme_path, "w"),
@@ -546,4 +552,4 @@ def test_color_config():
     )
 
 
-test_color_config()
+#test_color_config()
