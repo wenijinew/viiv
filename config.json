@@ -36,7 +36,6 @@
             },
             "groups": [
                 "activityBar",
-                "titleBar",
                 "menu",
                 "editorSuggestWidget"
             ]
@@ -85,7 +84,9 @@
                 "editorGroupHeader",
                 "editorSuggestWidget",
                 "editorHoverWidget",
-                "breadcrumbPicker.background"
+                "breadcrumbPicker",
+                "quickInput",
+                "quickInputList"
             ]
         },
         {
@@ -563,7 +564,24 @@
                 "hex": "#cecece"
             },
             "groups": [
-                "ansiWhite"
+                "ansiWhite",
+                "editorOverviewRuler.currentContentForeground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "hex": "#3ffc3c"
+            },
+            "groups": [
+                "ansiBrightLimeGreen",
+                "editorOverviewRuler.currentContentForeground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -756,25 +774,6 @@
                 ],
                 "basic_range": [
                     1,
-                    11
-                ],
-                "light_range": [
-                    5,
-                    25
-                ]
-            },
-            "groups": [
-                "tab.activeBorderTop"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    1,
                     8
                 ],
                 "light_range": [
@@ -844,7 +843,7 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
+                    "0xf1",
                     "0xff"
                 ],
                 "basic_range": [
@@ -870,8 +869,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xe1",
-                    "0xef"
+                    "0xfe",
+                    "0xff"
                 ],
                 "basic_range": [
                     1,
@@ -977,7 +976,7 @@
                 ]
             },
             "groups": [
-                ".*(inactive|disabled).*foreground.*"
+                ".*(unfocus|inactive|disabled).*foreground.*"
             ],
             "replace_color_component": [
                 "BASIC",
@@ -1208,7 +1207,7 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    8,
+                    11,
                     12
                 ],
                 "light_range": [
@@ -1265,12 +1264,37 @@
                 ]
             },
             "groups": [
-                "lineHighlightBackground"
+                "lineHighlightBackground",
+                "menubar.selectionBackground"
             ],
             "replace_color_component": [
                 "ALPHA",
                 "BASIC",
                 "LIGHT"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xf1",
+                    "0xfa"
+                ],
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    10,
+                    20
+                ]
+            },
+            "groups": [
+                "titleBar.activeForeground",
+                "activityBar.foreground",
+                "activityBar.activeBorder",
+                "tab.activeBorderTop",
+                "menu.foreground",
+                "quickInput.foreground"
             ]
         },
         {
@@ -1413,8 +1437,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    1,
-                    2
+                    8,
+                    12
                 ],
                 "light_range": [
                     59,
@@ -1431,16 +1455,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xf1",
-                    "0xff"
+                    "0xb1",
+                    "0xbf"
                 ],
                 "basic_range": [
                     1,
-                    11
+                    8 
                 ],
                 "light_range": [
                     5,
-                    25
+                    55
                 ]
             },
             "groups": [
@@ -1450,12 +1474,12 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
-                    "0xff"
+                    "0x6e",
+                    "0x6f"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    1,
+                    2 
                 ],
                 "light_range": [
                     34,

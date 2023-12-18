@@ -61,6 +61,9 @@ It might need to reset BASIC, LIGHT, ALPHA ranges for some color perperties. For
 
 "default" area in config.json has highest priority and can override any previous configuration.
 
+Note:
+If any property need customization, it's better to do it in 'default' area, especially when it contains 'status' keywords like 'active', 'focus' as such.
+
 ## Static color
 
 To use static color for property, use the below format:

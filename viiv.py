@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["editor.foldBackground"]
+DEBUG_PROPERTY = ["activityBar.activeBackground"]
 
 
 class ColorComponent(Enum):
@@ -61,6 +61,7 @@ def _read_config(config_path):
 def is_property_area(area):
     """Check if the current theme is a property area."""
     return area in ["background", "foreground", "border"]
+
 
 def _random_range(range_values: list[str]) -> list[str]:
     """Generate random numbers in string format with the given range values.
@@ -225,11 +226,25 @@ class ColorConfig(dict):
                 self.config["default"],
             )
         )[0]
+        default_token_color_config = list(
+            filter(
+                lambda x: len(x["groups"]) == 1 and x["groups"][0] == "token_default",
+                self.config["token"],
+            )
+        )[0]
         self.default_color = Color(
             default_color_config["color"], "default", default_color_config["groups"][0]
         )
+        self.default_token_color = Color(
+            default_token_color_config["color"],
+            "token",
+            default_token_color_config["groups"][0],
+        )
         super().__init__(
-            config=self.config, areas=self.areas, default_color=self.default_color
+            config=self.config,
+            areas=self.areas,
+            default_color=self.default_color,
+            default_token_color=self.default_token_color,
         )
 
     def get_color_wrappers(self, target_property, target_area=None) -> list:
@@ -290,13 +305,15 @@ class ColorConfig(dict):
                     break
             if color is not None:
                 color_wrappers.append(color.create_colors_wrapper())
-        color_wrappers = (
-            color_wrappers
-            if len(color_wrappers) > 0
-            else [self.default_color.create_colors_wrapper()]
-        )
-
-        # print(target, len(_final_colors), [f.area for f in _final_colors])
+        if len(color_wrappers) > 0:
+            return color_wrappers
+        if target_area is None or target_area != "token":
+            color_wrappers.append(self.default_color.create_colors_wrapper())
+        else:
+            color_wrappers.append(self.default_token_color.create_colors_wrapper())
+        assert (
+            len(color_wrappers) > 0
+        ), f"no color found ({target_property} - {target_area})"
         return color_wrappers
 
     def _get_color(self, area, target_property, match_rule_name):
@@ -376,10 +393,17 @@ class TemplateConfig(dict):
 
         workbench_colors = {}
         default_processed_properties = []
+        customized_properties = []
         for property in self.color_properties:
             color_wrappers = color_config.get_color_wrappers(property)
+            if color_wrappers is None or not isinstance(color_wrappers, list):
+                print(property, type(color_wrappers))
+                continue
             color_wrappers_areas = [w.area for w in color_wrappers]
-            if property in default_processed_properties and "default" not in color_wrappers_areas:
+            if (
+                property in default_processed_properties
+                and "default" not in color_wrappers_areas
+            ):
                 continue
             for wrapper in color_wrappers:
                 colors = wrapper.colors
@@ -389,7 +413,9 @@ class TemplateConfig(dict):
                 color = colors[random.randint(0, len(colors) - 1)]
                 color_orig = color
                 if property in workbench_colors:
-                    if area != "default":
+                    if property in customized_properties:
+                        continue
+                    if area not in ["default", "token"]:
                         continue
                     else:
                         old_color = workbench_colors[property]
@@ -415,7 +441,10 @@ class TemplateConfig(dict):
                                 ColorComponent.ALPHA,
                             )
                             _changed = True
-                        if ColorComponent.ALL in replace_color_component or property == group:
+                        if (
+                            ColorComponent.ALL in replace_color_component
+                            or property == group
+                        ):
                             color = color_orig
                 if property in DEBUG_PROPERTY:
                     print(
@@ -423,6 +452,8 @@ class TemplateConfig(dict):
                     )
                 if area == "default" and group != "default":
                     default_processed_properties.append(property)
+                if group == property:
+                    customized_properties.append(property)
                 workbench_colors[property] = color
 
         self.config["colors"] = workbench_colors
@@ -430,26 +461,27 @@ class TemplateConfig(dict):
         # token colors
         token_configs = self.config["tokenColors"]
         new_token_configs = []
-        token_color_models = color_config.get_color_wrappers("token_default", target_area="token")[0].colors
         for token_config in token_configs:
-            token_color_model = token_color_models[
-                random.randint(0, len(token_color_models) - 1)
-            ]
             scope = token_config["scope"]
-            color_wrapper = color_config.get_color_wrappers(scope, target_area="token")[0]
+            color_wrappers = color_config.get_color_wrappers(scope, target_area="token")
+            assert len(color_wrappers) == 1, f"how can we get multiple color wrappers for token ({scope})?"
+            color_wrapper = color_wrappers[0]
             _colors = color_wrapper.colors
             new_color = _colors[random.randint(0, len(_colors) - 1)]
-            # most tokens are using default area colors which light range might be two dark, so replace light range and alpha range
-            new_color = self._append_or_replace_alpha(
-                new_color, token_color_model, ColorComponent.LIGHT
-            )
-            new_color = self._append_or_replace_alpha(
-                new_color, token_color_model, ColorComponent.ALPHA
-            )
             new_token_configs.append(
                 {"scope": scope, "settings": {"foreground": new_color}}
             )
+            group = color_wrapper.group
+            area = color_wrapper.area
+            if scope in DEBUG_PROPERTY:
+                print(f"{scope} is processed by the token color {group} in the area {area}")
         self.config["tokenColors"] = new_token_configs
+        json.dump(
+            self.config,
+            open(self.config_path, "w"),
+            indent=4,
+            sort_keys=True,
+        )
 
 
 def print_colors(value):
@@ -463,11 +495,18 @@ def print_colors(value):
             print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
 
 
+def print_palette():
+    dynamic_palette_json_file = f"{os.getcwd()}/themes/dynamic-palette.json"
+    dynamic_palette_json = json.load(open(dynamic_palette_json_file))
+    for k, v in dynamic_palette_json.items():
+        print(pe.bg(v, f"{k}: {v}"))
+
+
 if __name__ == "__main__":
     opts, _ = getopt.getopt(
         sys.argv[1:],
-        "cg:tp:",
-        ["--colors", "--token_colors", "--print_colors=", "--group_name="],
+        "cg:tp:P",
+        ["--colors", "--token_colors", "--print_colors=", "--print_palette",  "--group_name="],
     )
     for option, value in opts:
         if option in ("-c", "--colors"):
@@ -496,15 +535,20 @@ if __name__ == "__main__":
             ).generate_palette()
 
             for property, color in template_config_data["colors"].items():
-                color_placeholder = template_config_data["colors"][property][0:7]
-                alpha = template_config_data["colors"][property][7:9]
+                color = template_config_data["colors"][property]
+                color_placeholder = color[0:7]
+                alpha = color[7:9]
                 if color_placeholder in palette_data:
-                    template_config_data["colors"][property] = palette_data[color_placeholder
-                ]+alpha
+                    template_config_data["colors"][property] = (
+                        palette_data[color_placeholder] + alpha
+                    )
             for token_color in template_config_data["tokenColors"]:
-                token_color["settings"]["foreground"] = palette_data[
-                    token_color["settings"]["foreground"][0:7]
-                ]
+                foreground = token_color["settings"]["foreground"]
+                color_placeholder = foreground[0:7]
+                alpha = foreground[7:9]
+                token_color["settings"]["foreground"] = (
+                    palette_data[color_placeholder] + alpha
+                )
             palette_file_path = f"{os.getcwd()}/themes/dynamic-palette.json"
             dynamic_theme_path = f"{os.getcwd()}/themes/dynamic-color-theme.json"
             json.dump(
@@ -522,6 +566,8 @@ if __name__ == "__main__":
 
         elif option in ("-p", "--print_colors"):
             print_colors(value)
+        elif option in ("-P", "--print_palette"):
+            print_palette()
 
 
 def test_color_config():
@@ -553,6 +599,3 @@ def test_color_config():
         indent=4,
         sort_keys=True,
     )
-
-
-#test_color_config()
