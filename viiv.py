@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["tab.activeBorder"]
+DEBUG_PROPERTY = ["editorGutter.addedBackground"]
 
 
 class ColorComponent(Enum):
@@ -60,7 +60,6 @@ def _read_config(config_path):
 def is_property_area(area):
     """Check if the current theme is a property area."""
     return area in ["background", "foreground", "border"]
-
 
 def _random_range(range_values: list[str]) -> list[str]:
     """Generate random numbers in string format with the given range values.
@@ -328,7 +327,7 @@ class ColorConfig(dict):
                     else:
                         replace_color_component = (
                             [ColorComponent.ALL]
-                            if area != "status"
+                            if area != "default"
                             else [ColorComponent.ALPHA]
                         )
                     color = config["color"]
@@ -376,9 +375,8 @@ class TemplateConfig(dict):
         default_processed_properties = []
         for property in self.color_properties:
             color_wrappers = color_config.get_color_wrappers(property)
-            if property in default_processed_properties and "status" not in [
-                w.area for w in color_wrappers
-            ]:
+            color_wrappers_areas = [w.area for w in color_wrappers]
+            if property in default_processed_properties and "default" not in color_wrappers_areas:
                 continue
             for wrapper in color_wrappers:
                 colors = wrapper.colors
@@ -388,7 +386,7 @@ class TemplateConfig(dict):
                 color = colors[random.randint(0, len(colors) - 1)]
                 color_orig = color
                 if property in workbench_colors:
-                    if area != "status":
+                    if area != "default":
                         continue
                     else:
                         old_color = workbench_colors[property]
@@ -414,6 +412,8 @@ class TemplateConfig(dict):
                                 ColorComponent.ALPHA,
                             )
                             _changed = True
+                        if ColorComponent.ALL in replace_color_component:
+                            color = color_orig
                 if property in DEBUG_PROPERTY:
                     print(
                         f">>>: {property} is processed by the area {area} (color matching rule '{group}') - {color} - {replace_color_component} - {[_w.area for _w in color_wrappers]}\n"
