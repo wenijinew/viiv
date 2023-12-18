@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["debugIcon.breakpointUnverifiedForeground"]
+DEBUG_PROPERTY = ["editor.foldBackground"]
 
 
 class ColorComponent(Enum):
@@ -477,7 +477,7 @@ if __name__ == "__main__":
             colors_total = 7
             gradations_total = 60
             dark_color_gradations_total = 60
-            general_min_color = 20
+            general_min_color = 40
             general_max_color = 120
             dark_color_min = 0
             dark_color_max = 10
