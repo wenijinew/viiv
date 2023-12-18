@@ -37,22 +37,23 @@
             "groups": [
                 "activityBar",
                 "menu",
-                "editorSuggestWidget"
+                "editorSuggestWidget",
+                "editorOverviewRuler"
             ]
         },
         {
             "color": {
                 "alpha_range": [
-                    "0xf9",
-                    "0xff"
+                    "0xb6",
+                    "0xb8"
                 ],
                 "basic_range": [
-                    7,
-                    8
+                    1,
+                    2
                 ],
                 "light_range": [
-                    15,
-                    30
+                    10,
+                    20
                 ]
             },
             "groups": [
@@ -86,7 +87,12 @@
                 "editorHoverWidget",
                 "breadcrumbPicker",
                 "quickInput",
-                "quickInputList"
+                "quickInputList",
+                "minimap",
+                "checkboxBackground",
+                "dropdownBackground",
+                "numberInputBackground",
+                "textInputBackground"
             ]
         },
         {
@@ -141,12 +147,12 @@
                     "0x39"
                 ],
                 "basic_range": [
-                    8,
-                    12
+                    1,
+                    8
                 ],
                 "light_range": [
-                    35,
-                    50
+                    50,
+                    60
                 ]
             },
             "groups": [
@@ -176,16 +182,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x51",
-                    "0x5f"
+                    "0x41",
+                    "0x4f"
                 ],
                 "basic_range": [
-                    8,
-                    9
+                    1,
+                    2
                 ],
                 "light_range": [
-                    20,
-                    30
+                    55,
+                    60
                 ]
             },
             "groups": [
@@ -201,8 +207,8 @@
                     "0x5f"
                 ],
                 "basic_range": [
-                    1,
-                    2
+                    11,
+                    12
                 ],
                 "light_range": [
                     40,
@@ -232,8 +238,8 @@
                     "0x76"
                 ],
                 "basic_range": [
-                    4,
-                    6
+                    1,
+                    8 
                 ],
                 "light_range": [
                     40,
@@ -315,7 +321,8 @@
             "groups": [
                 "ansiBrightGreen",
                 "editorGutter.addedBackground",
-                "minimapGutter.addedBackground"
+                "minimapGutter.addedBackground",
+                "gitDecoration.addedResourceForeground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -366,6 +373,8 @@
                 "ansiBrightYellow",
                 ".*warning.*background.*",
                 ".*modified.*",
+                "gitDecoration.modifiedResourceForeground",
+                "gitDecoration.stageModifiedResourceForeground",
                 "editorGutter.modifiedBackground",
                 "minimapGutter.modifiedBackground"
             ],
@@ -382,7 +391,8 @@
                 "hex": "#670067"
             },
             "groups": [
-                "ansiMagenta"
+                "ansiMagenta",
+                "gitDecoration.renamedResourceForeground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -403,6 +413,8 @@
             "groups": [
                 "ansiBrightMagenta",
                 "editorGutter.deletedBackground",
+                "gitDecoration.deletedResourceForeground",
+                "gitDecoration.stageDeletedResourceForeground",
                 ".*delete.*",
                 ".*remove.*"
             ],
@@ -529,7 +541,8 @@
             "groups": [
                 "ansiBrightCyan",
                 "minimap.findMatchHighlight",
-                "editorOverviewRuler.findMatchForeground"
+                "editorOverviewRuler.findMatchForeground",
+                "gitDecoration.untrackedResourceForeground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -676,8 +689,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xd3",
-                    "0xe9"
+                    "0xca",
+                    "0xcb"
                 ],
                 "basic_range": [
                     1,
@@ -795,9 +808,51 @@
                 ]
             },
             "groups": [
-                ".*\\.(?!inactive)active.*",
-                ".*\\.(?!unfocus)focus.*",
                 ".*\\.(?!unfold)fold.*"
+            ],
+            "replace_color_component": [
+                "BASIC",
+                "LIGHT",
+                "ALPHA"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x78",
+                    "0x79"
+                ],
+                "basic_range": [
+                    8,
+                    11
+                ],
+                "light_range": [
+                    30,
+                    45
+                ]
+            },
+            "groups": [
+                "editorIndentGuide.activeBackground"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x38",
+                    "0x39"
+                ],
+                "basic_range": [
+                    8,
+                    11
+                ],
+                "light_range": [
+                    30,
+                    45
+                ]
+            },
+            "groups": [
+                ".*\\.(?!inactive)active.*",
+                ".*\\.(?!unfocus)focus.*"
             ],
             "replace_color_component": [
                 "BASIC",
@@ -880,8 +935,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xf1",
-                    "0xff"
+                    "0xa1",
+                    "0xaf"
                 ],
                 "basic_range": [
                     1,
@@ -893,7 +948,6 @@
                 ]
             },
             "groups": [
-                "indentGuidesStroke",
                 "highlightForeground"
             ]
         },
@@ -1000,19 +1054,20 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x71",
-                    "0x7f"
+                    "0x5d",
+                    "0x5f"
                 ],
                 "basic_range": [
                     1,
                     8
                 ],
                 "light_range": [
-                    1,
+                    30,
                     60
                 ]
             },
             "groups": [
+                "indentGuidesStroke",
                 "activityBar.inactiveForeground"
             ]
         },
@@ -1145,7 +1200,7 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    8,
+                    11,
                     12
                 ],
                 "light_range": [
@@ -1211,16 +1266,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x51",
-                    "0x5f"
+                    "0x41",
+                    "0x4f"
                 ],
                 "basic_range": [
-                    8,
-                    9
+                    1,
+                    2 
                 ],
                 "light_range": [
-                    20,
-                    30
+                    55,
+                    60
                 ]
             },
             "groups": [
@@ -1260,8 +1315,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xf1",
-                    "0xfa"
+                    "0xb6",
+                    "0xb8"
                 ],
                 "basic_range": [
                     1,
@@ -1312,7 +1367,7 @@
                 "contrastActiveBorder",
                 "contrastBorder",
                 "sideBarSectionHeader.background",
-                "scrollbar.shadow",
+                ".*shadow.*",
                 "activityBar.border",
                 "titleBar.border"
             ]
@@ -1322,16 +1377,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xde",
-                    "0xdf"
+                    "0xb1",
+                    "0xbf"
                 ],
                 "basic_range": [
-                    1,
-                    8
+                    8,
+                    12
                 ],
                 "light_range": [
-                    1,
-                    60
+                    5,
+                    15
                 ]
             },
             "groups": [
@@ -1420,6 +1475,25 @@
         {
             "color": {
                 "alpha_range": [
+                    "0xbe",
+                    "0xbf"
+                ],
+                "basic_range": [
+                    8,
+                    12
+                ],
+                "light_range": [
+                    5,
+                    10
+                ]
+            },
+            "groups": [
+                "terminal"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
                     "0xfe",
                     "0xff"
                 ],
@@ -1442,16 +1516,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xbc",
-                    "0xbd"
+                    "0xc6",
+                    "0xc8"
                 ],
                 "basic_range": [
                     1,
                     8 
                 ],
                 "light_range": [
-                    5,
-                    55
+                    1,
+                    60
                 ]
             },
             "groups": [
