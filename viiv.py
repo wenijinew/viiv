@@ -39,7 +39,8 @@ class MatchRule(Enum):
     EXACT = 1
     ENDSWITH = 2
     STARTSWITH = 3
-    FUZZY = 4
+    CONTAINS = 4
+    FUZZY = 5
 
 
 def _to_int(value: str) -> int:
@@ -313,6 +314,8 @@ class ColorConfig(dict):
                     and target_property.lower().endswith(f".{group.lower()}")
                     or match_rule_name == MatchRule.STARTSWITH.name
                     and target_property.lower().startswith(f"{group.lower()}.")
+                    or match_rule_name == MatchRule.CONTAINS.name
+                    and target_property.lower().find(group.lower()) != -1
                     or match_rule_name == MatchRule.FUZZY.name
                     and re.match(group, target_property, re.IGNORECASE)
                 ):
