@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["breadcrumb.background", "breadcrumb.foreground"]
+DEBUG_PROPERTY = ["scrollbarSlider.background", "scrollbarSlider.hoverBackground", "scrollbarSlider.activeBackground"]
 
 
 class ColorComponent(Enum):
@@ -450,7 +450,7 @@ class TemplateConfig(dict):
                             color = color_orig
                 if property in DEBUG_PROPERTY:
                     print(
-                        f">>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]} ({counter})\n"
+                        f" ({counter}) >>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
                     )
                     counter += 1
                 if area == "default" and group != "default":
