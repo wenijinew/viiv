@@ -750,8 +750,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x71",
-                    "0x7f"
+                    "0x81",
+                    "0x8f"
                 ],
                 "basic_range": [
                     8,
@@ -763,7 +763,8 @@
                 ]
             },
             "groups": [
-                "editor.selectionBackground"
+                "editor.selectionBackground",
+                "terminal.selectionBackground"
             ]
         },
         {
@@ -1294,6 +1295,7 @@
                 "activityBar.activeBorder",
                 "tab.activeBorderTop",
                 "menu.foreground",
+                "breadcrumb.foreground",
                 "quickInput.foreground"
             ]
         },
