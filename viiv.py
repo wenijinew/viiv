@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 """Functions to help quickly generate customized token colors in VsCode theme file."""
 
+import time
 import getopt
 import json
 import os
@@ -21,7 +22,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["list.inactiveSelectionIconForeground"]
+DEBUG_PROPERTY = ["editorIndentGuide.activeBackground1","editorIndentGuide.background1"]
 
 
 class ColorComponent(Enum):
@@ -519,16 +520,17 @@ DEFAULT_THEMES_MAP = {
 
 def generate_default_themes():
     for theme, color in DEFAULT_THEMES_MAP.items():
-        generate_random_theme_file(dark_base_colors=[color], theme_filename_prefix=f"viiv-dark-{theme}")
+        generate_random_theme_file(dark_base_colors=[color], theme_filename_prefix=f"{theme}")
+        time.sleep(5)
 
 
 def generate_random_theme_file(
     colors_total=7,
     gradations_total=60,
     dark_color_gradations_total=60,
-    general_min_color=40,
-    general_max_color=120,
-    dark_color_min=0,
+    general_min_color=30,
+    general_max_color=200,
+    dark_color_min=5,
     dark_color_max=15,
     dark_colors_total=4,
     dark_base_colors=None,
