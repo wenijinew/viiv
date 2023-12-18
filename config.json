@@ -818,16 +818,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x3e",
-                    "0x5f"
+                    "0x81",
+                    "0x8f"
                 ],
                 "basic_range": [
-                    1,
+                    8,
                     11
                 ],
                 "light_range": [
-                    50,
-                    55
+                    30,
+                    45
                 ]
             },
             "groups": [
@@ -936,8 +936,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x71",
-                    "0x7f"
+                    "0x21",
+                    "0x2f"
                 ],
                 "basic_range": [
                     1,
@@ -964,8 +964,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x81",
-                    "0x8f"
+                    "0x91",
+                    "0x9f"
                 ],
                 "basic_range": [
                     1,
@@ -977,7 +977,7 @@
                 ]
             },
             "groups": [
-                "inactiveForeground"
+                ".*(inactive|disabled).*foreground.*"
             ],
             "replace_color_component": [
                 "BASIC",
@@ -1036,7 +1036,7 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xf1",
+                    "0xfe",
                     "0xff"
                 ],
                 "basic_range": [
@@ -1232,7 +1232,7 @@
                     "0x89"
                 ],
                 "basic_range": [
-                    8,
+                    11,
                     12
                 ],
                 "light_range": [
@@ -1298,6 +1298,7 @@
                 "editorGroupHeader.border",
                 "focusBorder",
                 "tab.activeBorder",
+                "tab.unfocusedActiveBorder",
                 "editor.lineHighlightBorder",
                 "contrastActiveBorder",
                 "contrastBorder",
@@ -1310,7 +1311,7 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xf1",
+                    "0xfe",
                     "0xff"
                 ],
                 "basic_range": [
@@ -1367,7 +1368,7 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x51",
+                    "0x41",
                     "0x5f"
                 ],
                 "basic_range": [
@@ -1381,7 +1382,8 @@
             },
             "groups": [
                 ".*linenumber.*",
-                "editorBracketMatch"
+                "editorBracketMatch",
+                "editorCodeLens"
             ]
         },
         {
