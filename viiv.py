@@ -21,7 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["breadcrumb.foreground"]
+DEBUG_PROPERTY = ["breadcrumb.background", "breadcrumb.foreground"]
 
 
 class ColorComponent(Enum):
@@ -394,6 +394,7 @@ class TemplateConfig(dict):
         workbench_colors = {}
         default_processed_properties = []
         customized_properties = []
+        print(len(self.color_properties), len(set(self.color_properties)))
         for property in self.color_properties:
             color_wrappers = color_config.get_color_wrappers(property)
             if color_wrappers is None or not isinstance(color_wrappers, list):
@@ -405,6 +406,7 @@ class TemplateConfig(dict):
                 and "default" not in color_wrappers_areas
             ):
                 continue
+            counter = 0
             for wrapper in color_wrappers:
                 colors = wrapper.colors
                 replace_color_component = wrapper.replace_color_component
@@ -448,8 +450,9 @@ class TemplateConfig(dict):
                             color = color_orig
                 if property in DEBUG_PROPERTY:
                     print(
-                        f">>>: {property} is processed by the area {area} (color matching rule '{group}') - {color} - {replace_color_component} - {[_w.area for _w in color_wrappers]}\n"
+                        f">>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]} ({counter})\n"
                     )
+                    counter += 1
                 if area == "default" and group != "default":
                     default_processed_properties.append(property)
                 if group == property:
