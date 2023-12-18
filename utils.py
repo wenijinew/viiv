@@ -21,9 +21,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = [
-    "editorSuggestWidget.selectedBackground"
-]
+DEBUG_PROPERTY = ["editorSuggestWidget.selectedBackground"]
 
 
 class ColorComponent(Enum):
@@ -234,7 +232,7 @@ class ColorConfig(dict):
             config=self.config, areas=self.areas, default_color=self.default_color
         )
 
-    def get_color_wrappers(self, target_property) -> list:
+    def get_color_wrappers(self, target_property, target_area=None) -> list:
         """Go through the config items in the basic groups and set the color by checking if the given 'group' contains the key of the groups.
 
         content example of basic groups:
@@ -281,6 +279,8 @@ class ColorConfig(dict):
 
         color_wrappers = []
         for area in self.areas:
+            if target_area and area != target_area:
+                continue
             if is_property_area(area) and target_property.lower().find(area) == -1:
                 continue
             # try to find the configured color in the matching order
@@ -427,13 +427,13 @@ class TemplateConfig(dict):
         # token colors
         token_configs = self.config["tokenColors"]
         new_token_configs = []
-        token_color_models = color_config.get_color_wrappers("token_default")[0].colors
+        token_color_models = color_config.get_color_wrappers("token_default", target_area="token")[0].colors
         for token_config in token_configs:
             token_color_model = token_color_models[
                 random.randint(0, len(token_color_models) - 1)
             ]
             scope = token_config["scope"]
-            color_wrapper = color_config.get_color_wrappers(scope)[0]
+            color_wrapper = color_config.get_color_wrappers(scope, target_area="token")[0]
             _colors = color_wrapper.colors
             new_color = _colors[random.randint(0, len(_colors) - 1)]
             # most tokens are using default area colors which light range might be two dark, so replace light range and alpha range
@@ -448,7 +448,6 @@ class TemplateConfig(dict):
             )
         self.config["tokenColors"] = new_token_configs
 
-        json.dump(self.config, open(self.config_path, "w"), indent=4, sort_keys=True)
 
 def print_colors(value):
     dynamic_theme_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
@@ -460,6 +459,7 @@ def print_colors(value):
         if k.lower().find(value) != -1 or re.match(f".*{value}.*", k, re.IGNORECASE):
             print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
 
+
 if __name__ == "__main__":
     opts, _ = getopt.getopt(
         sys.argv[1:],
@@ -468,13 +468,82 @@ if __name__ == "__main__":
     )
     for option, value in opts:
         if option in ("-c", "--colors"):
-            TemplateConfig().generate_template()
+            template_config = TemplateConfig()
+            template_config.generate_template()
+            template_config_data = template_config.config
+            colors_total = 7
+            gradations_total = 60
+            dark_color_gradations_total = 60
+            general_min_color = 20
+            general_max_color = 120
+            dark_color_min = 0
+            dark_color_max = 10
+            dark_colors_total = 4
+            dark_base_colors = None
+            palette_data = pe.Palette(
+                colors_total=colors_total,
+                gradations_total=gradations_total,
+                dark_color_gradations_total=dark_color_gradations_total,
+                color_min=general_min_color,
+                color_max=general_max_color,
+                dark_color_min=dark_color_min,
+                dark_color_max=dark_color_max,
+                dark_colors_total=dark_colors_total,
+                dark_colors=dark_base_colors,
+            ).generate_palette()
+            print(palette_data)
+
+            for property, color in template_config_data["colors"].items():
+                color_placeholder = template_config_data["colors"][property][0:7]
+                if color_placeholder in palette_data:
+                    template_config_data["colors"][property] = palette_data[color_placeholder
+                ]
+                print(property, template_config_data["colors"][property])
+            for token_color in template_config_data["tokenColors"]:
+                token_color["settings"]["foreground"] = palette_data[
+                    token_color["settings"]["foreground"][0:7]
+                ]
+            dynamic_theme_path = f"{os.getcwd()}/themes/dynamic-color-theme.json"
+            json.dump(
+                template_config_data,
+                open(dynamic_theme_path, "w"),
+                indent=4,
+                sort_keys=True,
+            )
+
         elif option in ("-p", "--print_colors"):
             print_colors(value)
 
+
 def test_color_config():
     color_config = ColorConfig()
-    print(color_config.get_color_wrappers("minimap"))
+    for area, area_config in color_config.config.items():
+        print(area)
+        for config in area_config:
+            groups = config["groups"]
+            color = config["color"]
+            print(groups, json.dumps(color, indent=4, sort_keys=True))
+            has_background = (
+                len(list(filter(lambda x: x.lower().find("background") != -1, groups)))
+                > 0
+            )
+            has_foreground = (
+                len(list(filter(lambda x: x.lower().find("foreground") != -1, groups)))
+                > 0
+            )
+            if has_background:
+                color["basic_range"] = [8, 12]
+            if has_foreground:
+                color["basic_range"] = [1, 8]
+                color["light_range"] = [1, 60]
+            print("new", json.dumps(color, indent=4, sort_keys=True))
+
+    json.dump(
+        color_config.config,
+        open(color_config.config_path, "w"),
+        indent=4,
+        sort_keys=True,
+    )
 
 
-# test_color_config()
+test_color_config()
