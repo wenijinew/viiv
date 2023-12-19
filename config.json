@@ -44,26 +44,6 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xb6",
-                    "0xb8"
-                ],
-                "basic_range": [
-                    1,
-                    2
-                ],
-                "light_range": [
-                    10,
-                    20
-                ]
-            },
-            "groups": [
-                ".*badge.*",
-                "activityBarBadge"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
                     "0xfe",
                     "0xff"
                 ],
@@ -135,7 +115,6 @@
                 "defualt",
                 "checkbox",
                 "drop",
-                "empty",
                 "header",
                 "separator"
             ]
@@ -302,8 +281,7 @@
                 "ansiGreen",
                 "editorGutter.addedBackground",
                 "minimapGutter.addedBackground",
-                ".*(add|inserted|success).*background.*",
-                ".*(?!unresolved)resolved.*background.*"
+                ".*(add|inserted|success).*background.*"
             ]
         },
         {
@@ -348,6 +326,7 @@
                 "ansiYellow",
                 ".*warning.*foreground.*",
                 ".*unnecessary.*",
+                ".*badge.*background.*",
                 "wordHighlightStrongBorder",
                 "problemsWarningIcon.foreground",
                 "editorOverviewRuler.modifiedForeground",
@@ -508,7 +487,6 @@
                 "minimap.errorHighlight",
                 ".*error.*foreground.*",
                 ".*unresolved.*",
-                "problemsInfoIcon",
                 "editorOverviewRuler.deletedForeground"
             ],
             "replace_color_component": [
@@ -685,58 +663,11 @@
                 "scrollbarSlider.hoverBackground",
                 "minimapSlider.activeBackground",
                 "minimapSlider.hoverBackground",
-                "selectionBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
-                ".*select.*foreground.*"
-            ],
-            "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x81",
-                    "0x8f"
-                ],
-                "basic_range": [
-                    8,
-                    11
-                ],
-                "light_range": [
-                    30,
-                    45
-                ]
-            },
-            "groups": [
+                ".*(?!in)selectionBackground.*",
                 ".*\\.(?!unfold)fold.*"
             ],
             "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
+                "ALL"
             ]
         },
         {
@@ -801,8 +732,6 @@
             "groups": [
                 ".*inactive.*",
                 ".*unfocus.*",
-                ".*unfold.*",
-                ".*disabled.*",
                 ".*offline.*"
             ],
             "replace_color_component": [
@@ -814,8 +743,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x91",
-                    "0x9f"
+                    "0xf1",
+                    "0xff"
                 ],
                 "basic_range": [
                     8,
@@ -899,12 +828,7 @@
                 ]
             },
             "groups": [
-                "activeSelectionForeground",
-                "inactiveSelectionForeground",
-                "hoverForeground",
-                "selectionForeground",
-                "activeSelectionIconForeground",
-                "inactiveSelectionIconForeground"
+                "hoverForeground"
             ]
         },
         {
@@ -914,7 +838,7 @@
                     "0x7f"
                 ],
                 "basic_range": [
-                    7,
+                    8,
                     11
                 ],
                 "light_range": [
@@ -923,7 +847,6 @@
                 ]
             },
             "groups": [
-                ".*editor.*select.*",
                 ".*editor.*match.*"
             ],
             "replace_color_component": [
@@ -948,7 +871,6 @@
                 ]
             },
             "groups": [
-                ".*editor.*select.*foreground.*",
                 ".*editor.*match.*foreground.*"
             ],
             "replace_color_component": [
@@ -1287,28 +1209,7 @@
             },
             "groups": [
                 ".*linenumber.*",
-                "editorCodeLens",
-                "activityBar.inactiveForeground"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfa",
-                    "0xff"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "hex": "#808000",
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
-                "warningForeground"
+                "editorCodeLens"
             ]
         },
         {

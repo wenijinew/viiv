@@ -22,7 +22,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["list.inactiveSelectionBackground"]
+DEBUG_PROPERTY = ["tree.indentGuidesStroke", "tree.inactiveIndentGuidesStroke"]
 DEBUG_GROUP = ["warningForeground"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -403,7 +403,7 @@ class TemplateConfig(dict):
         customized_properties = []
 
         # workbench colors
-        used_groups = []        
+        used_groups = []
         for property in self.color_properties:
             color_wrappers = color_config.get_color_wrappers(property)
             if color_wrappers is None or not isinstance(color_wrappers, list):
@@ -497,24 +497,44 @@ class TemplateConfig(dict):
                 {"scope": scope, "settings": {"foreground": new_color}}
             )
             group = color_wrapper.group
+            if group not in used_groups:
+                used_groups.append(group)
             area = color_wrapper.area
             if scope in DEBUG_PROPERTY:
                 print(
                     f"{scope} is processed by the token color {group} in the area {area}"
                 )
         self.config["tokenColors"] = new_token_configs
-        json.dump(
-            self.config,
-            open(self.config_path, "w"),
-            indent=4
+        json.dump(self.config, open(self.config_path, "w"), indent=4)
+        _dump_json_file("used_groups.json", used_groups)
+
+        # clever code?!
+        all_groups = sorted(
+            list(
+                set(
+                    [
+                        c
+                        for v in color_config.config.values()
+                        for g in v
+                        for c in g["groups"]
+                    ]
+                )
+            )
         )
+        _dump_json_file("all_groups.json", all_groups)
+
+        # good auto-completion
+        _dump_json_file("not_used_groups.json", [x for x in all_groups if x not in used_groups])
 
 
 def _dump_json_file(json_file_path, json_data):
     if not os.path.exists(os.path.dirname(json_file_path)):
-        json_file_path = os.getcwd + os.path.sep + json_file_path
+        json_file_path = (
+            os.getcwd() + os.path.sep + "output" + os.path.sep + json_file_path
+        )
     with open(json_file_path, "w") as f:
         json.dump(json_data, f, indent=4)
+
 
 def print_colors(value):
     dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-dynamic-color-theme.json"
@@ -553,9 +573,12 @@ DEFAULT_THEMES_MAP = {
     "yellow": "#050504",
 }
 
+
 def generate_default_themes():
     for theme, color in DEFAULT_THEMES_MAP.items():
-        generate_random_theme_file(dark_base_colors=[color], theme_filename_prefix=f"viiv-{theme}")
+        generate_random_theme_file(
+            dark_base_colors=[color], theme_filename_prefix=f"viiv-{theme}"
+        )
         time.sleep(5)
 
 
@@ -569,7 +592,7 @@ def generate_random_theme_file(
     dark_color_max=15,
     dark_colors_total=4,
     dark_base_colors=None,
-    theme_filename_prefix="viiv-dynamic"
+    theme_filename_prefix="viiv-dynamic",
 ):
     """Generate random theme file."""
     template_config = TemplateConfig()
@@ -597,7 +620,7 @@ def generate_random_theme_file(
             color_replacement = palette_data[color_placeholder] + alpha
             template_config_data["colors"][property] = color_replacement
             selected_ui_color[color_placeholder] = color_replacement
-            
+
     for token_color in template_config_data["tokenColors"]:
         foreground = token_color["settings"]["foreground"]
         color_placeholder = foreground[0:7]
@@ -606,8 +629,9 @@ def generate_random_theme_file(
         token_color["settings"]["foreground"] = color_replacement
         selected_token_color[color_placeholder] = color_replacement
 
-
-    DYNAMIC_THEME_PATH = f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
+    DYNAMIC_THEME_PATH = (
+        f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
+    )
     json.dump(
         palette_data,
         open(PALETTE_FILE_PATH, "w"),
