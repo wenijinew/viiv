@@ -23,7 +23,7 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 DEBUG_PROPERTY = ["activityBarBadge.background"]
-DEBUG_GROUP = [".*inactive.*"]
+DEBUG_GROUP = ["warningForeground"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
@@ -400,6 +400,8 @@ class TemplateConfig(dict):
         workbench_colors = {}
         default_processed_properties = []
         customized_properties = []
+
+        used_groups = []        
         for property in self.color_properties:
             color_wrappers = color_config.get_color_wrappers(property)
             if color_wrappers is None or not isinstance(color_wrappers, list):
@@ -468,6 +470,8 @@ class TemplateConfig(dict):
                     default_processed_properties.append(property)
                 if group == property:
                     customized_properties.append(property)
+                if group not in used_groups:
+                    used_groups.append(group)
                 workbench_colors[property] = color
 
         self.config["colors"] = workbench_colors
@@ -501,8 +505,14 @@ class TemplateConfig(dict):
         )
 
 
+def _dump_json_file(json_file_path, json_data):
+    if not os.path.exists(os.path.dirname(json_file_path)):
+        json_file_path = os.getcwd + os.path.sep + json_file_path
+    with open(json_file_path, "w") as f:
+        json.dump(json_data, f, indent=4)
+
 def print_colors(value):
-    dynamic_theme_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
+    dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-dynamic-color-theme.json"
     dynamic_theme_json = json.load(open(dynamic_theme_json_file))
     theme_template_json = json.load(open(THEME_TEMPLATE_JSON_FILE))
     colors = dynamic_theme_json["colors"]
@@ -513,11 +523,11 @@ def print_colors(value):
 
 def print_palette():
     print("Dynamic palette:")
-    dynamic_palette_json_file = f"{os.getcwd()}/themes/dynamic-palette.json"
+    dynamic_palette_json_file = f"{os.getcwd()}/output/dynamic-palette.json"
     dynamic_palette_json = json.load(open(dynamic_palette_json_file))
     for k, v in dynamic_palette_json.items():
         print(pe.bg(v, f"{k}: {v}"))
-    
+
     print("Selected UI palette:")
     selected_ui_palette_json = json.load(open(SELECTED_UI_COLOR_FILE_PATH))
     for k, v in selected_ui_palette_json.items():
@@ -549,7 +559,7 @@ def generate_random_theme_file(
     gradations_total=60,
     dark_color_gradations_total=60,
     general_min_color=50,
-    general_max_color=150,
+    general_max_color=200,
     dark_color_min=5,
     dark_color_max=15,
     dark_colors_total=4,
