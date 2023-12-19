@@ -25,9 +25,10 @@ HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 DEBUG_PROPERTY = ["activityBarBadge.background"]
 DEBUG_GROUP = [".*inactive.*"]
 
-PALETTE_FILE_PATH = f"{os.getcwd()}/themes/dynamic-palette.json"
-SELECTED_UI_COLOR_FILE_PATH = f"{os.getcwd()}/themes/selected-ui-palette.json"
-SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/themes/selected-token-palette.json"
+THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
+PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
+SELECTED_UI_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-ui-palette.json"
+SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-token-palette.json"
 
 class ColorComponent(Enum):
     """Color component for color range."""
@@ -371,7 +372,7 @@ class TemplateConfig(dict):
 
     def __init__(self, config_path=None):
         if config_path is None:
-            config_path = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
+            config_path = THEME_TEMPLATE_JSON_FILE
         self.config_path = config_path
         self.config = _read_config(config_path)
         self.color_properties = list(self.config["colors"].keys())
@@ -503,8 +504,7 @@ class TemplateConfig(dict):
 def print_colors(value):
     dynamic_theme_json_file = f"{os.getcwd()}/themes/dynamic-color-theme.json"
     dynamic_theme_json = json.load(open(dynamic_theme_json_file))
-    theme_template_json_file = f"{os.getcwd()}/themes/viiv-color-theme.template.json"
-    theme_template_json = json.load(open(theme_template_json_file))
+    theme_template_json = json.load(open(THEME_TEMPLATE_JSON_FILE))
     colors = dynamic_theme_json["colors"]
     for k, v in colors.items():
         if k.lower().find(value) != -1 or re.match(f".*{value}.*", k, re.IGNORECASE):
@@ -540,7 +540,7 @@ DEFAULT_THEMES_MAP = {
 
 def generate_default_themes():
     for theme, color in DEFAULT_THEMES_MAP.items():
-        generate_random_theme_file(dark_base_colors=[color], theme_filename_prefix=f"{theme}")
+        generate_random_theme_file(dark_base_colors=[color], theme_filename_prefix=f"viiv-{theme}")
         time.sleep(5)
 
 
@@ -554,7 +554,7 @@ def generate_random_theme_file(
     dark_color_max=15,
     dark_colors_total=4,
     dark_base_colors=None,
-    theme_filename_prefix="dynamic"
+    theme_filename_prefix="viiv-dynamic"
 ):
     """Generate random theme file."""
     template_config = TemplateConfig()
