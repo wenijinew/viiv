@@ -22,13 +22,14 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["activityBarBadge.background"]
+DEBUG_PROPERTY = ["list.inactiveSelectionBackground"]
 DEBUG_GROUP = ["warningForeground"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
 SELECTED_UI_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-ui-palette.json"
 SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-token-palette.json"
+
 
 class ColorComponent(Enum):
     """Color component for color range."""
@@ -401,6 +402,7 @@ class TemplateConfig(dict):
         default_processed_properties = []
         customized_properties = []
 
+        # workbench colors
         used_groups = []        
         for property in self.color_properties:
             color_wrappers = color_config.get_color_wrappers(property)
@@ -420,6 +422,9 @@ class TemplateConfig(dict):
                 replace_color_component = wrapper.replace_color_component
                 group = wrapper.group
                 area = wrapper.area
+                # we are not processing the token color here
+                if area == "token":
+                    continue
                 color = colors[random.randint(0, len(colors) - 1)]
                 color_orig = color
                 if property in workbench_colors:

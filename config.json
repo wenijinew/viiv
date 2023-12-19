@@ -320,8 +320,8 @@
             },
             "groups": [
                 "ansiBrightGreen",
-                ".*(add|inserted|success).*foreground.*",
-                ".*(?!unresolved)resolved.*foreground.*",
+                ".*(add|inserted|success).*(foreground|icon).*",
+                ".*(?!unresolved)resolved.*(foreground|icon).*",
                 "gitDecoration.addedResourceForeground"
             ],
             "replace_color_component": [
@@ -628,67 +628,6 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xb1",
-                    "0xb7"
-                ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "light_range": [
-                    25,
-                    45
-                ]
-            },
-            "groups": [
-                "scrollbarSlider.background",
-                "minimapSlider.background"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xe1",
-                    "0xe2"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
-                "tab.activeForeground"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xb7",
-                    "0xbf"
-                ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "light_range": [
-                    25,
-                    45
-                ]
-            },
-            "groups": [
-                "scrollbarSlider.activeBackground",
-                "scrollbarSlider.hoverBackground",
-                "minimapSlider.activeBackground",
-                "minimapSlider.hoverBackground"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
                     "0xca",
                     "0xcb"
                 ],
@@ -742,6 +681,10 @@
                 ]
             },
             "groups": [
+                "scrollbarSlider.activeBackground",
+                "scrollbarSlider.hoverBackground",
+                "minimapSlider.activeBackground",
+                "minimapSlider.hoverBackground",
                 "selectionBackground"
             ],
             "replace_color_component": [
@@ -1225,7 +1168,11 @@
                 "activityBar.activeBorder",
                 "tab.activeBorderTop",
                 "menu.foreground",
-                "quickInput.foreground"
+                "quickInput.foreground",
+                "icon.foreground",
+                "button.border",
+                "scrollbarSlider.background",
+                "minimapSlider.background"
             ]
         },
         {
@@ -1292,7 +1239,7 @@
                 ],
                 "basic_range": [
                     1,
-                    11
+                    8 
                 ],
                 "light_range": [
                     10,
