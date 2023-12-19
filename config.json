@@ -182,16 +182,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x41",
-                    "0x4f"
+                    "0x61",
+                    "0x6f"
                 ],
                 "basic_range": [
-                    1,
-                    2
+                    8,
+                    9
                 ],
                 "light_range": [
-                    55,
-                    60
+                    35,
+                    36
                 ]
             },
             "groups": [
@@ -300,10 +300,10 @@
             },
             "groups": [
                 "ansiGreen",
-                "success",
-                ".*add.*",
-                ".*inserted.*",
-                ".*(?!unresolved)resolved.*"
+                "editorGutter.addedBackground",
+                "minimapGutter.addedBackground",
+                ".*(add|inserted|success).*background.*",
+                ".*(?!unresolved)resolved.*background.*"
             ]
         },
         {
@@ -320,8 +320,8 @@
             },
             "groups": [
                 "ansiBrightGreen",
-                "editorGutter.addedBackground",
-                "minimapGutter.addedBackground",
+                ".*(add|inserted|success).*foreground.*",
+                ".*(?!unresolved)resolved.*foreground.*",
                 "gitDecoration.addedResourceForeground"
             ],
             "replace_color_component": [
@@ -392,7 +392,9 @@
             },
             "groups": [
                 "ansiMagenta",
-                "gitDecoration.renamedResourceForeground"
+                "editorGutter.deletedBackground",
+                ".*delete.*background.*",
+                ".*remove.*background.*"
             ],
             "replace_color_component": [
                 "ALL"
@@ -412,11 +414,10 @@
             },
             "groups": [
                 "ansiBrightMagenta",
-                "editorGutter.deletedBackground",
+                ".*(delete|remove).*foreground.*",
+                "gitDecoration.renamedResourceForeground",
                 "gitDecoration.deletedResourceForeground",
-                "gitDecoration.stageDeletedResourceForeground",
-                ".*delete.*",
-                ".*remove.*"
+                "gitDecoration.stageDeletedResourceForeground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -702,6 +703,8 @@
                 ]
             },
             "groups": [
+                ".*hover.*foreground.*",
+                "highlightForeground",
                 "editorLineNumber.activeForeground"
             ]
         },
@@ -740,8 +743,10 @@
                 ]
             },
             "groups": [
-                "editor.selectionBackground",
-                "terminal.selectionBackground"
+                "selectionBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
             ]
         },
         {
@@ -761,30 +766,6 @@
             },
             "groups": [
                 ".*select.*foreground.*"
-            ],
-            "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x51",
-                    "0x7f"
-                ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "light_range": [
-                    45,
-                    50
-                ]
-            },
-            "groups": [
-                ".*select.*background.*"
             ],
             "replace_color_component": [
                 "BASIC",
@@ -851,104 +832,13 @@
                 ]
             },
             "groups": [
-                ".*\\.(?!inactive)active.*",
-                ".*\\.(?!unfocus)focus.*"
+                ".*\\.(?!inactive)active.*background.*",
+                ".*\\.(?!unfocus)focus.*background.*"
             ],
             "replace_color_component": [
                 "BASIC",
                 "LIGHT",
                 "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xf1",
-                    "0xff"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
-                ".*(?!inactive)active.*foreground.*",
-                ".*(?!inactive)focus.*foreground.*",
-                ".*(?!inactive)fold.*foreground.*"
-            ],
-            "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
-                ".*hover.*foreground.*"
-            ],
-            "replace_color_component": [
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "light_range": [
-                    57,
-                    60
-                ]
-            },
-            "groups": [
-                "editorHoverWidget.background"
-            ],
-            "replace_color_component": [
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xa1",
-                    "0xaf"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
-                "highlightForeground"
             ]
         },
         {
@@ -986,12 +876,12 @@
                     "0x9f"
                 ],
                 "basic_range": [
-                    1,
-                    8
+                    8,
+                    12
                 ],
                 "light_range": [
-                    1,
-                    60
+                    35,
+                    40
                 ]
             },
             "groups": [
@@ -1049,26 +939,6 @@
                 "BASIC",
                 "LIGHT",
                 "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x5d",
-                    "0x5f"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    30,
-                    60
-                ]
-            },
-            "groups": [
-                "indentGuidesStroke",
-                "activityBar.inactiveForeground"
             ]
         },
         {
@@ -1242,6 +1112,28 @@
         {
             "color": {
                 "alpha_range": [
+                    "0x41",
+                    "0x4f"
+                ],
+                "basic_range": [
+                    8,
+                    9
+                ],
+                "light_range": [
+                    50,
+                    51
+                ]
+            },
+            "groups": [
+                "tab.inactiveBackground"
+            ],
+            "replace_color_component": [
+                "ALPHA"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
                     "0xfe",
                     "0xff"
                 ],
@@ -1266,16 +1158,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x41",
-                    "0x4f"
+                    "0x61",
+                    "0x6f"
                 ],
                 "basic_range": [
-                    1,
-                    2 
+                    8,
+                    9 
                 ],
                 "light_range": [
-                    55,
-                    60
+                    35,
+                    36
                 ]
             },
             "groups": [
@@ -1333,7 +1225,6 @@
                 "activityBar.activeBorder",
                 "tab.activeBorderTop",
                 "menu.foreground",
-                "breadcrumb.foreground",
                 "quickInput.foreground"
             ]
         },
@@ -1434,22 +1325,22 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x41",
-                    "0x5f"
+                    "0x71",
+                    "0x7f"
                 ],
                 "basic_range": [
-                    1,
-                    3
+                    8,
+                    12
                 ],
                 "light_range": [
-                    40,
+                    15,
                     45
                 ]
             },
             "groups": [
                 ".*linenumber.*",
-                "editorBracketMatch",
-                "editorCodeLens"
+                "editorCodeLens",
+                "activityBar.inactiveForeground"
             ]
         },
         {
@@ -1488,6 +1379,7 @@
                 ]
             },
             "groups": [
+                "breadcrumb.foreground",
                 "terminal"
             ]
         },
@@ -1516,16 +1408,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xc6",
-                    "0xc8"
+                    "0xd6",
+                    "0xd8"
                 ],
                 "basic_range": [
                     1,
                     8 
                 ],
                 "light_range": [
-                    1,
-                    60
+                    25,
+                    50
                 ]
             },
             "groups": [

@@ -22,8 +22,12 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["editorIndentGuide.activeBackground1","editorIndentGuide.background1"]
+DEBUG_PROPERTY = ["activityBarBadge.background"]
+DEBUG_GROUP = [".*inactive.*"]
 
+PALETTE_FILE_PATH = f"{os.getcwd()}/themes/dynamic-palette.json"
+SELECTED_UI_COLOR_FILE_PATH = f"{os.getcwd()}/themes/selected-ui-palette.json"
+SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/themes/selected-token-palette.json"
 
 class ColorComponent(Enum):
     """Color component for color range."""
@@ -406,7 +410,8 @@ class TemplateConfig(dict):
                 and "default" not in color_wrappers_areas
             ):
                 continue
-            counter = 0
+            debug_property_counter = 0
+            debug_group_counter = 0
             for wrapper in color_wrappers:
                 colors = wrapper.colors
                 replace_color_component = wrapper.replace_color_component
@@ -448,11 +453,16 @@ class TemplateConfig(dict):
                             or property == group
                         ):
                             color = color_orig
+                if group in DEBUG_GROUP:
+                    print(
+                        f" (G {debug_group_counter}) >>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
+                    )
+                    debug_group_counter += 1
                 if property in DEBUG_PROPERTY:
                     print(
-                        f" ({counter}) >>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
+                        f" (P {debug_property_counter}) >>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
                     )
-                    counter += 1
+                    debug_property_counter += 1
                 if area == "default" and group != "default":
                     default_processed_properties.append(property)
                 if group == property:
@@ -486,8 +496,7 @@ class TemplateConfig(dict):
         json.dump(
             self.config,
             open(self.config_path, "w"),
-            indent=4,
-            sort_keys=True,
+            indent=4
         )
 
 
@@ -503,9 +512,20 @@ def print_colors(value):
 
 
 def print_palette():
+    print("Dynamic palette:")
     dynamic_palette_json_file = f"{os.getcwd()}/themes/dynamic-palette.json"
     dynamic_palette_json = json.load(open(dynamic_palette_json_file))
     for k, v in dynamic_palette_json.items():
+        print(pe.bg(v, f"{k}: {v}"))
+    
+    print("Selected UI palette:")
+    selected_ui_palette_json = json.load(open(SELECTED_UI_COLOR_FILE_PATH))
+    for k, v in selected_ui_palette_json.items():
+        print(pe.bg(v, f"{k}: {v}"))
+
+    print("Selected Token palette:")
+    selected_token_palette_json = json.load(open(SELECTED_TOKEN_COLOR_FILE_PATH))
+    for k, v in selected_token_palette_json.items():
         print(pe.bg(v, f"{k}: {v}"))
 
 
@@ -528,8 +548,8 @@ def generate_random_theme_file(
     colors_total=7,
     gradations_total=60,
     dark_color_gradations_total=60,
-    general_min_color=30,
-    general_max_color=200,
+    general_min_color=50,
+    general_max_color=150,
     dark_color_min=5,
     dark_color_max=15,
     dark_colors_total=4,
@@ -552,30 +572,48 @@ def generate_random_theme_file(
         dark_colors=dark_base_colors,
     ).generate_palette()
 
+    selected_ui_color = {}
+    selected_token_color = {}
     for property, color in template_config_data["colors"].items():
         color = template_config_data["colors"][property]
         color_placeholder = color[0:7]
         alpha = color[7:9]
         if color_placeholder in palette_data:
-            template_config_data["colors"][property] = (
-                palette_data[color_placeholder] + alpha
-            )
+            color_replacement = palette_data[color_placeholder] + alpha
+            template_config_data["colors"][property] = color_replacement
+            selected_ui_color[color_placeholder] = color_replacement
+            
     for token_color in template_config_data["tokenColors"]:
         foreground = token_color["settings"]["foreground"]
         color_placeholder = foreground[0:7]
         alpha = foreground[7:9]
-        token_color["settings"]["foreground"] = palette_data[color_placeholder] + alpha
-    palette_file_path = f"{os.getcwd()}/themes/dynamic-palette.json"
-    dynamic_theme_path = f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
+        color_replacement = palette_data[color_placeholder] + alpha
+        token_color["settings"]["foreground"] = color_replacement
+        selected_token_color[color_placeholder] = color_replacement
+
+
+    DYNAMIC_THEME_PATH = f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
     json.dump(
         palette_data,
-        open(palette_file_path, "w"),
+        open(PALETTE_FILE_PATH, "w"),
         indent=4,
         sort_keys=True,
     )
     json.dump(
         template_config_data,
-        open(dynamic_theme_path, "w"),
+        open(DYNAMIC_THEME_PATH, "w"),
+        indent=4,
+        sort_keys=True,
+    )
+    json.dump(
+        selected_ui_color,
+        open(SELECTED_UI_COLOR_FILE_PATH, "w"),
+        indent=4,
+        sort_keys=True,
+    )
+    json.dump(
+        selected_token_color,
+        open(SELECTED_TOKEN_COLOR_FILE_PATH, "w"),
         indent=4,
         sort_keys=True,
     )
