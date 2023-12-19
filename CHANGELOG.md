@@ -6,7 +6,7 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- [0.0.7] - 2023-12-31
+- [0.2.7] - 2023-12-31
 
 ### Added
 
@@ -15,6 +15,11 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 ### Changed
 
 ### Removed
+
+## [0.2.6] - 2023-12-19
+
+Applied peelee v0.2.1 solution for random base color generation, the theme token color is stable, elegant, vivid, and comfortable for human eyes.
+It's a great improvement!
 
 ## [0.1.4] - 2023-12-09
 
