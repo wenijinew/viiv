@@ -393,8 +393,7 @@
             "groups": [
                 "ansiMagenta",
                 "editorGutter.deletedBackground",
-                ".*delete.*background.*",
-                ".*remove.*background.*"
+                ".*(delete|remove|debug).*background.*"
             ],
             "replace_color_component": [
                 "ALL"
@@ -1196,7 +1195,8 @@
             },
             "groups": [
                 "lineHighlightBackground",
-                "menubar.selectionBackground"
+                "menubar.selectionBackground",
+                "menu.separatorBackground"
             ],
             "replace_color_component": [
                 "ALPHA",
@@ -1268,8 +1268,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xb1",
-                    "0xbf"
+                    "0xe1",
+                    "0xef"
                 ],
                 "basic_range": [
                     8,
@@ -1300,7 +1300,8 @@
                 ]
             },
             "groups": [
-                ".*editorSuggestWidget.*"
+                ".*editorSuggestWidget.*",
+                ".*icon.*foreground.*"
             ]
         },
         {
