@@ -24,7 +24,7 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = ["editorOverviewRuler.currentContentForeground"]
+DEBUG_PROPERTY = ["editorHoverWidget.background"]
 DEBUG_GROUP = [".*inactive.*"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
