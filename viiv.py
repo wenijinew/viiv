@@ -22,7 +22,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["tree.indentGuidesStroke", "tree.inactiveIndentGuidesStroke"]
+DEBUG_PROPERTY = ["diffEditor.insertedLineBackground"]
 DEBUG_GROUP = ["warningForeground"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -335,9 +335,9 @@ class ColorConfig(dict):
                     match_rule_name == MatchRule.EXACT.name
                     and target_property.lower() == group.lower()
                     or match_rule_name == MatchRule.ENDSWITH.name
-                    and target_property.lower().endswith(f".{group.lower()}")
+                    and target_property.lower().endswith(f"\.{group.lower()}")
                     or match_rule_name == MatchRule.STARTSWITH.name
-                    and target_property.lower().startswith(f"{group.lower()}.")
+                    and target_property.lower().startswith(f"{group.lower()}\.")
                     or match_rule_name == MatchRule.CONTAINS.name
                     and target_property.lower().find(group.lower()) != -1
                     or match_rule_name == MatchRule.FUZZY.name
@@ -565,19 +565,19 @@ def print_palette():
 
 
 DEFAULT_THEMES_MAP = {
-    "black": "#0c0c0c",
-    "blue": "#00000a",
-    "green": "#000a04",
-    "cyan": "#000405",
-    "violet": "#0d0b12",
-    "yellow": "#050504",
+    "black": ["#0c0c0c", "#0d0d0d", "#0e0e0e", "#0f0f0f"],
+    "blue": ["#00003c", "#00004d", "#00005e", "#00006f"],
+    "green": ["#001800", "#002000", "#002800", "#003000"],
+    "cyan": ["#000c0a", "#000d0b", "#000e0c", "#000f0d"],
+    "violet": ["#170022", "#180022", "#190022", "#1a0022"],
+    "yellow": ["#1b1b00", "#1c1c00", "#1d1d00", "#1e1e00"],
 }
 
 
 def generate_default_themes():
-    for theme, color in DEFAULT_THEMES_MAP.items():
+    for theme, colors in DEFAULT_THEMES_MAP.items():
         generate_random_theme_file(
-            dark_base_colors=[color], theme_filename_prefix=f"viiv-{theme}"
+            dark_base_colors=colors, theme_filename_prefix=f"viiv-{theme}"
         )
         time.sleep(5)
 
@@ -587,7 +587,7 @@ def generate_random_theme_file(
     gradations_total=60,
     dark_color_gradations_total=60,
     general_min_color=50,
-    general_max_color=200,
+    general_max_color=160,
     dark_color_min=5,
     dark_color_max=15,
     dark_colors_total=4,
