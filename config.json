@@ -1078,6 +1078,28 @@
         {
             "color": {
                 "alpha_range": [
+                    "0xcc",
+                    "0xcf"
+                ],
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    10,
+                    20
+                ]
+            },
+            "groups": [
+                "activityBar.foreground",
+                "activityBar.activeBorder",
+                "panelTitle.activeForeground",
+                "tab.activeBorderTop"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
                     "0xb6",
                     "0xb8"
                 ],
@@ -1092,10 +1114,6 @@
             },
             "groups": [
                 "titleBar.activeForeground",
-                "activityBar.foreground",
-                "activityBar.activeBorder",
-                "panelTitle.activeForeground",
-                "tab.activeBorderTop",
                 "menu.foreground",
                 "quickInput.foreground",
                 "icon.foreground",
