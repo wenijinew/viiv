@@ -23,27 +23,6 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xdd",
-                    "0xff"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    59,
-                    60
-                ]
-            },
-            "groups": [
-                "activityBar",
-                "menu",
-                "editorOverviewRuler"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
                     "0xfe",
                     "0xff"
                 ],
@@ -61,46 +40,6 @@
                 "editor",
                 "terminal",
                 "editorGhostText"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x81",
-                    "0x88"
-                ],
-                "basic_range": [
-                    8,
-                    9
-                ],
-                "light_range": [
-                    35,
-                    36
-                ]
-            },
-            "groups": [
-                "breadcrumb"
-            ]
-        }
-    ],
-    "border": [
-        {
-            "color": {
-                "alpha_range": [
-                    "0x51",
-                    "0x5f"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    40,
-                    45
-                ]
-            },
-            "groups": [
-                ".*border.*"
             ]
         }
     ],
@@ -127,94 +66,15 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x95",
-                    "0xa5"
-                ],
-                "basic_range": [
-                    1,
-                    8 
-                ],
-                "light_range": [
-                    10,
-                    35
-                ]
-            },
-            "groups": [
-                ".*editorSuggestWidget.*foreground.*",
-                ".*icon.*foreground.*"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x38",
-                    "0x39"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    50,
-                    60
-                ]
-            },
-            "groups": [
-                "editor.*(highlight|selection).*background",
-                ".*list.*hover.*background.*"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x35",
-                    "0x55"
-                ],
-                "basic_range": [
-                    1,
-                    3
-                ],
-                "light_range": [
-                    40,
-                    45
-                ]
-            },
-            "groups": [
-                ".*ruler.*foreground.*"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xef",
-                    "0xff"
-                ],
-                "basic_range": [
-                    7,
-                    10
-                ],
-                "light_range": [
-                    45,
-                    50
-                ]
-            },
-            "groups": [
-                ".*outline.*"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
                     "0x99",
                     "0xcc"
                 ],
-                "hex": "#004d00"
+                "hex": "#004000"
             },
             "groups": [
                 "ansiGreen",
                 "editorGutter.addedBackground",
-                "minimapGutter.addedBackground",
-                ".*(add|insert|success).*background.*"
+                "minimapGutter.addedBackground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -226,16 +86,13 @@
                     "0x99",
                     "0xcc"
                 ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "hex": "#009a00"
+                "hex": "#00e600"
             },
             "groups": [
                 "ansiBrightGreen",
                 ".*(add|inserted|success).*(foreground|icon).*",
                 ".*(?!unresolved)resolved.*(foreground|icon).*",
+                ".*(add|insert|success).*background.*",
                 "gitDecoration.addedResourceForeground"
             ],
             "replace_color_component": [
@@ -248,15 +105,7 @@
                     "0x99",
                     "0xcc"
                 ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "hex": "#ffc966",
-                "light_range": [
-                    1,
-                    60
-                ]
+                "hex": "#ffc966"
             },
             "groups": [
                 "ansiYellow",
@@ -281,10 +130,6 @@
                     "0x99",
                     "0xcc"
                 ],
-                "basic_range": [
-                    8,
-                    12
-                ],
                 "hex": "#9a6300"
             },
             "groups": [
@@ -308,8 +153,7 @@
             },
             "groups": [
                 "ansiMagenta",
-                "editorGutter.deletedBackground",
-                ".*(delete|remove|debug).*background.*"
+                "editorGutter.deletedBackground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -321,15 +165,12 @@
                     "0x99",
                     "0xcc"
                 ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "hex": "#ff00ff"
+                "hex": "#be60f9"
             },
             "groups": [
                 "ansiBrightMagenta",
                 ".*(delete|remove).*foreground.*",
+                ".*(delete|remove|debug).*background.*",
                 "gitDecoration.renamedResourceForeground",
                 "gitDecoration.deletedResourceForeground",
                 "gitDecoration.stageDeletedResourceForeground"
@@ -344,15 +185,7 @@
                     "0x99",
                     "0xcc"
                 ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "hex": "#92b4f2",
-                "light_range": [
-                    1,
-                    60
-                ]
+                "hex": "#92b4f2"
             },
             "groups": [
                 "ansiBlue",
@@ -389,10 +222,6 @@
                     "0x99",
                     "0xcc"
                 ],
-                "basic_range": [
-                    8,
-                    12
-                ],
                 "hex": "#820000"
             },
             "groups": [
@@ -410,15 +239,7 @@
                     "0x99",
                     "0xcc"
                 ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "hex": "#ff8383",
-                "light_range": [
-                    1,
-                    60
-                ]
+                "hex": "#ff8383"
             },
             "groups": [
                 "ansiBrightRed",
@@ -483,29 +304,15 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "hex": "#3ffc3c"
-            },
-            "groups": [
-                "ansiBrightLimeGreen",
-                "editorOverviewRuler.currentContentForeground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x99",
-                    "0xcc"
+                    "0xbe",
+                    "0xbf"
                 ],
                 "hex": "#f4f4f4"
             },
             "groups": [
-                "ansiBrightWhite"
+                "ansiBrightWhite",
+                "breadcrumb.foreground",
+                "terminal.foreground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -557,26 +364,9 @@
                 ]
             },
             "groups": [
+                ".*cursor.foreground",
                 "highlightForeground",
-                "editorLineNumber.activeForeground"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    1,
-                    8
-                ],
-                "light_range": [
-                    1,
-                    60
-                ]
-            },
-            "groups": [
+                "editorLineNumber.activeForeground",
                 ".*select.*foreground.*"
             ]
         },
@@ -584,7 +374,7 @@
             "color": {
                 "alpha_range": [
                     "0x41",
-                    "0x4f"
+                    "0x42"
                 ],
                 "basic_range": [
                     1,
@@ -601,35 +391,21 @@
                 "minimapSlider.activeBackground",
                 "minimapSlider.hoverBackground",
                 ".*(?!in)selectionBackground.*",
-                ".*\\.(?!unfold)fold.*"
+                ".*highlight.*",
+                ".*outline.*",
+                "tree.inactiveIndentGuidesStroke",
+                "editorIndentGuide.background.*",
+                ".*\\.(?!unfold)fold.*",
+                ".*\\.(?!inactive)(active|selected).*background.*",
+                ".*\\.(?!unfocus)focus.*background.*",
+                "lineHighlightBackground",
+                ".*editor.*match.*",
+                "editor.*(highlight|selection).*background",
+                ".*list.*hover.*background.*",
+                ".*ruler.*foreground.*"
             ],
             "replace_color_component": [
                 "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x38",
-                    "0x39"
-                ],
-                "basic_range": [
-                    8,
-                    11
-                ],
-                "light_range": [
-                    30,
-                    45
-                ]
-            },
-            "groups": [
-                ".*\\.(?!inactive)(active|selected).*background.*",
-                ".*\\.(?!unfocus)focus.*background.*"
-            ],
-            "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
             ]
         },
         {
@@ -648,59 +424,10 @@
                 ]
             },
             "groups": [
-                ".*(inactive|unfocus|disabled).*background.*"
+                ".*(inactive|unfocus|disabled).*(background|border).*"
             ],
             "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x81",
-                    "0x88"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    41,
-                    42
-                ]
-            },
-            "groups": [
-            ],
-            "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x51",
-                    "0x7f"
-                ],
-                "basic_range": [
-                    8,
-                    11
-                ],
-                "light_range": [
-                    40,
-                    50
-                ]
-            },
-            "groups": [
-                ".*editor.*match.*"
-            ],
-            "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
+                "ALL"
             ]
         },
         {
@@ -719,38 +446,13 @@
                 ]
             },
             "groups": [
+                ".*editorSuggestWidget.*foreground.*",
+                ".*icon.*foreground.*",
                 ".*hover.*foreground.*",
                 "focusHighlightForeground"
             ],
             "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x41",
-                    "0x45"
-                ],
-                "basic_range": [
-                    1,
-                    11
-                ],
-                "light_range": [
-                    20,
-                    33
-                ]
-            },
-            "groups": [
-                ".*highlight.*",
-                "editorIndentGuide.background.*"
-            ],
-            "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
+                "ALL"
             ]
         },
         {
@@ -770,12 +472,12 @@
             },
             "groups": [
                 "titleBar.activeBackground",
-                ".*badge.*foreground.*"
+                "(activityBar|menu).background",
+                ".*badge.*foreground.*",
+                "editorOverviewRuler"
             ],
             "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
+                "ALL"
             ]
         },
         {
@@ -794,6 +496,8 @@
                 ]
             },
             "groups": [
+                ".*border.*",
+                "tab.unfocusedActiveBorderTop",
                 "tab.inactiveBackground"
             ],
             "replace_color_component": [
@@ -820,9 +524,7 @@
                 "editor(Suggest|Hover)Widget.background"
             ],
             "replace_color_component": [
-                "BASIC",
-                "LIGHT",
-                "ALPHA"
+                "ALL"
             ]
         },
         {
@@ -842,45 +544,18 @@
             },
             "groups": [
                 "tab.activeBackground",
+                "breadcrumb.background",
                 ".*(inactive|unfocus|disabled).*foreground.*"
             ],
             "replace_color_component": [
-                "ALPHA",
-                "BASIC",
-                "LIGHT"
+                "ALL"
             ]
         },
         {
             "color": {
                 "alpha_range": [
-                    "0x38",
-                    "0x39"
-                ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "light_range": [
-                    35,
-                    50
-                ]
-            },
-            "groups": [
-                "lineHighlightBackground",
-                "menubar.selectionBackground",
-                "menu.separatorBackground"
-            ],
-            "replace_color_component": [
-                "ALPHA",
-                "BASIC",
-                "LIGHT"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xcc",
-                    "0xcf"
+                    "0xde",
+                    "0xdf"
                 ],
                 "basic_range": [
                     1,
@@ -915,7 +590,9 @@
             },
             "groups": [
                 "titleBar.activeForeground",
+                "tab.activeForeground",
                 "menu.foreground",
+                "menu.separatorBackground",
                 "quickInput.foreground",
                 "icon.foreground",
                 "button.border",
@@ -923,6 +600,68 @@
                 "editorIndentGuide.activeBackground",
                 "indentGuidesStroke",
                 "minimapSlider.background"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x21",
+                    "0x22"
+                ],
+                "hex": "#dcaafc"
+            },
+            "groups": [
+                "diffEditor.removedLineBackground"              
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x21",
+                    "0x22"
+                ],
+                "hex": "#adf6b8"
+            },
+            "groups": [
+                "diffEditor.insertedLineBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "hex": "#380838"
+            },
+            "groups": [
+                "diffEditor.removedTextBackground",
+                "diffEditorGutter.removedLineBackground"           
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "hex": "#004000"
+            },
+            "groups": [
+                "diffEditor.insertedTextBackground",
+                "diffEditorGutter.insertedLineBackground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -961,7 +700,12 @@
                 ".*shadow.*",
                 "activityBar.border",
                 "titleBar.border",
-                "editorGhostText.border"
+                "editorGhostText.border",
+                "diffEditor.border",
+                "diffEditor.insertedTextBorder",
+                "diffEditor.move.border",
+                "diffEditor.moveActive.border",
+                "diffEditor.removedTextBorder"
             ]
         }
     ],
@@ -1004,26 +748,6 @@
                 "editorLinenumber",
                 "editorCodeLens",
                 "editorGhostText"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xbe",
-                    "0xbf"
-                ],
-                "basic_range": [
-                    8,
-                    12
-                ],
-                "light_range": [
-                    5,
-                    10
-                ]
-            },
-            "groups": [
-                "breadcrumb.foreground",
-                "terminal"
             ]
         }
     ],

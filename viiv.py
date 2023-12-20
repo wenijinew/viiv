@@ -24,8 +24,8 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = ["editorHoverWidget.background"]
-DEBUG_GROUP = [".*inactive.*"]
+DEBUG_PROPERTY = ["diffEditor.border"]
+DEBUG_GROUP = [""]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
@@ -69,7 +69,7 @@ def _read_config(config_path):
 
 def is_property_area(area):
     """Check if the current theme is a property area."""
-    return area in ["background", "foreground", "border"]
+    return area in ["background", "foreground"]
 
 
 def _random_range(range_values: list[str]) -> list[str]:
@@ -231,7 +231,7 @@ class Config(dict):
         self.areas = self.config.keys()
         default_color_config = list(
             filter(
-                lambda x: len(x["groups"]) == 1 and x["groups"][0] == "default",
+                lambda x: 'default' in x["groups"],
                 self.config["default"],
             )
         )[0]
@@ -273,17 +273,6 @@ class Config(dict):
                 ]
             }
         }
-
-        colors config are divided by areas
-        basic, background, foreground, border, outline, shadow
-
-        basic: fuzzy matching
-
-        background, foreground, border, outline, shadow: need 3 different matching rules.
-        1. endswith '[group]background'
-        2. startswith '[group]background'
-        3. contains '[group]'
-
 
         Parameters:
             target (str): target group or target color perperty
@@ -432,7 +421,7 @@ class Config(dict):
 
         
         if not _matches:
-            return None 
+            return {}
 
         _most_matched_config = min(_matches, key=lambda x: x["match_rule"].value)
         color = _most_matched_config["color"]
@@ -812,3 +801,13 @@ def test_color_config():
         indent=4,
         sort_keys=True,
     )
+
+
+
+def test_config():
+    config = Config()
+    print(len(config.config.keys()))
+    for area in config.areas:
+        print(area)
+        print(len(config.config[area]))
+
