@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 """Functions to help quickly generate customized token colors in VsCode theme file."""
 
-import time
 import getopt
 import json
 import os
 import random
 import re
 import sys
+import time
 from enum import Enum
+
 from peelee import peelee as pe
 
 # reserved
@@ -55,7 +56,7 @@ class MatchRule(Enum):
 
 def _to_int(value: str) -> int:
     """Convert string to int."""
-        if isinstance(value, int):
+    if isinstance(value, int):
         return value
     elif isinstance(value, str) and (HEX_NUMBER_STR_PATTERN.match(value)):
         return int(value, 16)
@@ -71,7 +72,6 @@ def _read_config(config_path):
 def is_property_area(area):
     """Check if the current theme is a property area."""
     return area in ["background", "foreground"]
-
 
 
 def _random_range(range_values: list[str]) -> list[str]:
@@ -653,7 +653,6 @@ DEFAULT_THEMES_MAP = {
     "cyan": ["#000c0c", "#000d0d", "#000e0e", "#000f0f"],
     "blue": ["#00000c", "#00000d", "#00000e", "#00000f"],
     "violet": ["#0c000c", "#0d000d", "#0e000e", "#0f000f"],
-    "pink": ["#0c0c00", "#0d0d00", "#0e0e00", "#0f0f00"],
 }
 
 
