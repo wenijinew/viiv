@@ -22,7 +22,7 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["diffEditor.insertedLineBackground"]
+DEBUG_PROPERTY = ["editorSuggestWidget.background", "editorSuggestWidget.foreground"]
 DEBUG_GROUP = ["warningForeground"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -306,11 +306,15 @@ class ColorConfig(dict):
             if is_property_area(area) and target_property.lower().find(area) == -1:
                 continue
             # try to find the configured color in the matching order
-            for match_rule_name in MatchRule._member_names_:
-                color = self._get_color(area, target_property, match_rule_name)
+            matched_colors = []
+            for match_rule in MatchRule:
+                color = self._get_color(area, target_property, match_rule)
                 if color is not None:
-                    break
-            if color is not None:
+                    matched_colors.append({"match_rule": match_rule, "color": color})
+            if target_property in DEBUG_PROPERTY:
+                print(matched_colors)
+            if matched_colors:
+                color = min(matched_colors, key=lambda x: x["match_rule"].value)["color"]
                 color_wrappers.append(color.create_colors_wrapper())
         if len(color_wrappers) > 0:
             return color_wrappers
@@ -323,24 +327,27 @@ class ColorConfig(dict):
         ), f"no color found ({target_property} - {target_area})"
         return color_wrappers
 
-    def _get_color(self, area, target_property, match_rule_name):
+    def _get_color(self, area, target_property, match_rule):
         area_config = self.config[area]
         color = None
         color_instance = None
         for config in area_config:
             groups = config["groups"]
             groups.sort(key=lambda x: len(x), reverse=True)
+            matched_group = None
             for group in groups:
+                if target_property in DEBUG_PROPERTY:
+                    print(group)
                 if (
-                    match_rule_name == MatchRule.EXACT.name
+                    match_rule == MatchRule.EXACT
                     and target_property.lower() == group.lower()
-                    or match_rule_name == MatchRule.ENDSWITH.name
+                    or match_rule == MatchRule.ENDSWITH
                     and target_property.lower().endswith(f"\.{group.lower()}")
-                    or match_rule_name == MatchRule.STARTSWITH.name
+                    or match_rule == MatchRule.STARTSWITH
                     and target_property.lower().startswith(f"{group.lower()}\.")
-                    or match_rule_name == MatchRule.CONTAINS.name
+                    or match_rule == MatchRule.CONTAINS
                     and target_property.lower().find(group.lower()) != -1
-                    or match_rule_name == MatchRule.FUZZY.name
+                    or match_rule == MatchRule.FUZZY
                     and re.match(group, target_property, re.IGNORECASE)
                 ):
                     replace_color_component = config.get("replace_color_component")
@@ -357,11 +364,10 @@ class ColorConfig(dict):
                             if area != "default"
                             else [ColorComponent.ALPHA]
                         )
+                    matched_group = group
                     color = config["color"]
-                    _group = group
-                    break
             if color is not None:
-                color_instance = Color(color, area, _group, replace_color_component)
+                color_instance = Color(color, area, matched_group, replace_color_component)
         return color_instance
 
     def __repr__(self) -> str:
@@ -536,8 +542,8 @@ def _dump_json_file(json_file_path, json_data):
         json.dump(json_data, f, indent=4)
 
 
-def print_colors(value):
-    dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-dynamic-color-theme.json"
+def print_colors(value, theme="dynamic"):
+    dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
     dynamic_theme_json = json.load(open(dynamic_theme_json_file))
     theme_template_json = json.load(open(THEME_TEMPLATE_JSON_FILE))
     colors = dynamic_theme_json["colors"]
@@ -566,16 +572,25 @@ def print_palette():
 
 DEFAULT_THEMES_MAP = {
     "black": ["#0c0c0c", "#0d0d0d", "#0e0e0e", "#0f0f0f"],
-    "blue": ["#00003c", "#00004d", "#00005e", "#00006f"],
-    "green": ["#001800", "#002000", "#002800", "#003000"],
-    "cyan": ["#000c0a", "#000d0b", "#000e0c", "#000f0d"],
-    "violet": ["#170022", "#180022", "#190022", "#1a0022"],
-    "yellow": ["#1b1b00", "#1c1c00", "#1d1d00", "#1e1e00"],
+    "red": ["#020000", "#040000", "#060000", "#080000"],
+    "orange": ["#020100","#040200", "#080400", "#090400" ],
+    "yellow": ["#0c0c00", "#0d0d00", "#0e0e00", "#0f0f00"],
+    "green": ["#000c00", "#000d00", "#000e00", "#000f00"],
+    "cyan": ["#000c0c", "#000d0d", "#000e0e", "#000f0f"],
+    "blue": ["#00000c", "#00000d", "#00000e", "#00000f"],
+    "violet": ["#0c000c", "#0d000d", "#0e000e", "#0f000f"],
+    "pink": ["#0c0c00", "#0d0d00", "#0e0e00", "#0f0f00"],
 }
 
 
-def generate_default_themes():
+def pirnt_default_themes():
     for theme, colors in DEFAULT_THEMES_MAP.items():
+        print(pe.bg(colors, f"{theme}"))
+
+def generate_default_themes(target_theme="black"):
+    for theme, colors in DEFAULT_THEMES_MAP.items():
+        if target_theme and theme != target_theme:
+            continue
         generate_random_theme_file(
             dark_base_colors=colors, theme_filename_prefix=f"viiv-{theme}"
         )
@@ -657,28 +672,40 @@ def generate_random_theme_file(
         sort_keys=True,
     )
 
-
 if __name__ == "__main__":
     opts, _ = getopt.getopt(
         sys.argv[1:],
-        "dgp:P",
+        "dgp:t:P",
         [
             "--dynamic_theme",
             "--generate",
             "--print_colors=",
+            "--theme=",
             "--print_palette",
         ],
     )
+    to_generate_default_themes = False
+    to_print_colors = False
+    print_colors_filter = None
+    target_theme = None
     for option, value in opts:
         if option in ("-g", "--generate_default_themes"):
-            generate_default_themes()
+            to_generate_default_themes = True
         if option in ("-d", "--dynamic_theme"):
             generate_random_theme_file()
+        if option in ("-t", "--theme"):
+            target_theme = value
         elif option in ("-p", "--print_colors"):
-            print_colors(value)
+            to_print_colors = True
+            print_colors_filter = value
         elif option in ("-P", "--print_palette"):
             print_palette()
 
+    if to_generate_default_themes:
+        generate_default_themes(target_theme)
+
+    if to_print_colors:
+        print_colors(print_colors_filter, target_theme)
 
 def test_color_config():
     color_config = ColorConfig()
