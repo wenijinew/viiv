@@ -38,7 +38,8 @@
                 "activityBar",
                 "menu",
                 "editorSuggestWidget",
-                "editorOverviewRuler"
+                "editorOverviewRuler",
+                "breadcrumbPicker.background"
             ]
         },
         {
@@ -93,7 +94,8 @@
             "groups": [
                 "editorGutter",
                 "editor",
-                "terminal"
+                "terminal",
+                "editorGhostText"
             ]
         },
         {
@@ -281,7 +283,10 @@
                 "ansiGreen",
                 "editorGutter.addedBackground",
                 "minimapGutter.addedBackground",
-                ".*(add|inserted|success).*background.*"
+                ".*(add|insert|success).*background.*"
+            ],
+            "replace_color_component": [
+                "ALL"
             ]
         },
         {
@@ -330,7 +335,8 @@
                 "wordHighlightStrongBorder",
                 "problemsWarningIcon.foreground",
                 "editorOverviewRuler.modifiedForeground",
-                "minimap.warningHighlight"
+                "minimap.warningHighlight",
+                ".*Link.activeForeground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -439,7 +445,8 @@
             },
             "groups": [
                 "ansiBrightBlue",
-                "minimap.selectionOccurrenceHighlight"
+                "minimap.selectionOccurrenceHighlight",
+                "textLink.foreground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -619,7 +626,6 @@
                 ]
             },
             "groups": [
-                ".*hover.*foreground.*",
                 "highlightForeground",
                 "editorLineNumber.activeForeground"
             ]
@@ -1088,6 +1094,7 @@
                 "titleBar.activeForeground",
                 "activityBar.foreground",
                 "activityBar.activeBorder",
+                "panelTitle.activeForeground",
                 "tab.activeBorderTop",
                 "menu.foreground",
                 "quickInput.foreground",
@@ -1129,7 +1136,8 @@
                 "sideBarSectionHeader.background",
                 ".*shadow.*",
                 "activityBar.border",
-                "titleBar.border"
+                "titleBar.border",
+                "editorGhostText.border"
             ]
         }
     ],
@@ -1137,8 +1145,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xe1",
-                    "0xef"
+                    "0xc1",
+                    "0xc8"
                 ],
                 "basic_range": [
                     8,
@@ -1209,7 +1217,9 @@
             },
             "groups": [
                 ".*linenumber.*",
-                "editorCodeLens"
+                ".*hover.*foreground.*",
+                "editorCodeLens",
+                "editorGhostText"
             ]
         },
         {
@@ -1280,8 +1290,8 @@
                     "0x6f"
                 ],
                 "basic_range": [
-                    1,
-                    2 
+                    8,
+                    12 
                 ],
                 "light_range": [
                     34,
