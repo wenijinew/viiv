@@ -5,7 +5,7 @@
 # They are provided by a third-party and are governed by
 # separate terms of service, privacy policy, and support
 # documentation.
-
+---
 name: Build and Publish
 
 on:
@@ -22,8 +22,8 @@ jobs:
       - uses: actions/checkout@v3
       - run: npm install
       - uses: actions/setup-python@v3
-      with:
-        python-version: "3.11"
+        with:
+          python-version: "3.11"
       - name: generate default themes
         run: |
           python -m pip install --upgrade pip
