@@ -22,8 +22,10 @@ RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
-DEBUG_PROPERTY = ["editorSuggestWidget.background", "editorSuggestWidget.foreground"]
-DEBUG_GROUP = ["warningForeground"]
+
+# debug
+DEBUG_PROPERTY = ["editorOverviewRuler.currentContentForeground"]
+DEBUG_GROUP = [".*inactive.*"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
@@ -111,7 +113,7 @@ class ColorsWrapper(dict):
         return super().__repr__()
 
 
-class Color(dict):
+class ColorConfig(dict):
     """Wrapper class for color.
 
     One color consists of hex, color ranges for basic, light, and alpha.
@@ -214,7 +216,7 @@ class Color(dict):
         return _wrapper
 
 
-class ColorConfig(dict):
+class Config(dict):
     """Wrapper class for color config
 
     Read and parse config.json file located in the current directory.
@@ -239,10 +241,10 @@ class ColorConfig(dict):
                 self.config["token"],
             )
         )[0]
-        self.default_color = Color(
+        self.default_color_config = ColorConfig(
             default_color_config["color"], "default", default_color_config["groups"][0]
         )
-        self.default_token_color = Color(
+        self.default_token_color_config = ColorConfig(
             default_token_color_config["color"],
             "token",
             default_token_color_config["groups"][0],
@@ -250,8 +252,8 @@ class ColorConfig(dict):
         super().__init__(
             config=self.config,
             areas=self.areas,
-            default_color=self.default_color,
-            default_token_color=self.default_token_color,
+            default_color=self.default_color_config,
+            default_token_color=self.default_token_color_config,
         )
 
     def get_color_wrappers(self, target_property, target_area=None) -> list:
@@ -291,84 +293,158 @@ class ColorConfig(dict):
             Color object include area info, only those color perperty belong to that area can use that color. Color for backkground cannot be used by foreground color perperty.
             If not found, return the default color.
         """
-        # basic has higher priority
-        # for match_rule_name in MatchRule._member_names_:
-        #    color = self._get_color("force", target, match_rule_name)
-        #    if color is not None:
-        #        break
-        # if color is not None:
-        #    return [color.create_colors_wrapper()]
-
-        color_wrappers = []
+        _matched_color_configs = []
         for area in self.areas:
             if target_area and area != target_area:
                 continue
             if is_property_area(area) and target_property.lower().find(area) == -1:
                 continue
             # try to find the configured color in the matching order
-            matched_colors = []
-            for match_rule in MatchRule:
-                color = self._get_color(area, target_property, match_rule)
-                if color is not None:
-                    matched_colors.append({"match_rule": match_rule, "color": color})
+            _matched_color_config_dict = self._get_color(area, target_property)
+            if _matched_color_config_dict and _matched_color_config_dict not in _matched_color_configs:
+                _matched_color_configs.append(_matched_color_config_dict)
+
+        color_wrappers = []
+        if _matched_color_configs:
             if target_property in DEBUG_PROPERTY:
-                print(matched_colors)
-            if matched_colors:
-                color = min(matched_colors, key=lambda x: x["match_rule"].value)["color"]
-                color_wrappers.append(color.create_colors_wrapper())
+                print(_matched_color_configs)
+            
+            default_area_matched_color_configs = list(filter(lambda x: x["area"] == "default", _matched_color_configs))
+            if default_area_matched_color_configs:
+                _matched_color_configs = default_area_matched_color_configs
+            most_matched_color_config = min([c for c in list(filter(lambda c: c["color_config"] is not None, _matched_color_configs))], key=lambda x: x["match_rule"].value)
+
+            if most_matched_color_config:
+                color_wrappers.append(most_matched_color_config["color_config"].create_colors_wrapper())
+
         if len(color_wrappers) > 0:
+            if target_property in DEBUG_PROPERTY:
+                print([c.area for c in color_wrappers])
             return color_wrappers
         if target_area is None or target_area != "token":
-            color_wrappers.append(self.default_color.create_colors_wrapper())
+            color_wrappers.append(self.default_color_config.create_colors_wrapper())
         else:
-            color_wrappers.append(self.default_token_color.create_colors_wrapper())
+            color_wrappers.append(self.default_token_color_config.create_colors_wrapper())
         assert (
             len(color_wrappers) > 0
         ), f"no color found ({target_property} - {target_area})"
         return color_wrappers
 
-    def _get_color(self, area, target_property, match_rule):
-        area_config = self.config[area]
-        color = None
-        color_instance = None
-        for config in area_config:
-            groups = config["groups"]
-            groups.sort(key=lambda x: len(x), reverse=True)
-            matched_group = None
+
+    def _match(self, groups, target_property):
+        """Match the target property with the group.
+        
+        By using all MatchRules to check if the target property matches any group in the groups.
+        If multiple groups matched the target property, then pick up the one using match rule having the least value(which means highest priority).
+
+        Parameters:
+            group (str): group name
+            target_property (str): target property
+            
+        Returns:
+            dict: the matched group and the matched rule
+
+            Example of the return value:
+                {
+                    "match_rule": MatchRule.FUZZY,
+                    "group": "success"
+                }
+        """
+        matched_groups = []
+        for match_rule in MatchRule:
             for group in groups:
-                if target_property in DEBUG_PROPERTY:
-                    print(group)
                 if (
                     match_rule == MatchRule.EXACT
                     and target_property.lower() == group.lower()
                     or match_rule == MatchRule.ENDSWITH
-                    and target_property.lower().endswith(f"\.{group.lower()}")
+                    and target_property.lower().endswith(f".{group.lower()}")
                     or match_rule == MatchRule.STARTSWITH
-                    and target_property.lower().startswith(f"{group.lower()}\.")
+                    and target_property.lower().startswith(f"{group.lower()}.")
                     or match_rule == MatchRule.CONTAINS
                     and target_property.lower().find(group.lower()) != -1
                     or match_rule == MatchRule.FUZZY
                     and re.match(group, target_property, re.IGNORECASE)
                 ):
-                    replace_color_component = config.get("replace_color_component")
-                    if replace_color_component is not None and isinstance(
-                        replace_color_component, list
-                    ):
-                        replace_color_component = [
-                            ColorComponent[_component]
-                            for _component in replace_color_component
-                        ]
-                    else:
-                        replace_color_component = (
-                            [ColorComponent.ALL]
-                            if area != "default"
-                            else [ColorComponent.ALPHA]
-                        )
-                    matched_group = group
-                    color = config["color"]
-            if color is not None:
-                color_instance = Color(color, area, matched_group, replace_color_component)
-        return color_instance
+                    matched_groups.append({
+                        "match_rule": match_rule,
+                        "group": group
+                    })
+        if not matched_groups:
+            return None 
+
+        if target_property in DEBUG_PROPERTY:
+            print(matched_groups)
+
+        return min(matched_groups, key=lambda x: x["match_rule"].value)
+
+    def _get_replace_color_component(self, area, groups_config):
+        """Get the replace color component.
+        
+        replace_color_component is a list of ColorComponent. it's an optional property of the groups config. by default, for all areas except for 'default', it's set to [ColorComponent.ALL] and for 'default' area, it's set to [ColorComponent.ALPHA].
+        """
+        replace_color_component = groups_config.get("replace_color_component")
+        if replace_color_component is not None and isinstance(
+            replace_color_component, list
+        ):
+            replace_color_component = [
+                ColorComponent[_component]
+                for _component in replace_color_component
+            ]
+        else:
+            replace_color_component = (
+                [ColorComponent.ALL]
+                if area != "default"
+                else [ColorComponent.ALPHA])
+        return replace_color_component
+
+
+
+    def _get_color(self, area, target_property) -> dict:
+        """Get the color config.
+
+        Each area has many color configurations for different groups. each group could match one or many different color properties.
+        By going through all color configurations in the given area, and then check if any group in each color configuration matched the target property by using different matching rules.
+        Finally, if multiple groups matched the target property, then pick up the one using match rule having the least matching rule value(which means highest priority).
+        If no any group matched the target property, then return None which means there is no color config matching the targe property in this area. For example, 'background' area cannot have any color config to match 'activityBar.foreground'.
+
+        Matching rule will be returned also. Then if many areas have matched color config for the target property, then pick up the one with the least matching rule. If the same, then print warning for duplicated configuration and pickup the first one.
+
+        Parameters:
+
+            area (str): area name
+            target_property (str): target property
+        
+        Returns:
+            dict: the matched group and the matched rule
+        """
+        area_config = self.config[area]
+        _matches = []
+        for groups_config in area_config:
+            groups = groups_config["groups"]
+            groups.sort(key=lambda x: len(x), reverse=True)
+            _match = self._match(groups, target_property)
+            if _match:
+                color = groups_config["color"]
+                replace_color_component = self._get_replace_color_component(area, groups_config)
+                _match["color"] = color
+                _match["replace_color_component"] = replace_color_component
+                _matches.append(_match)
+
+        
+        if not _matches:
+            return None 
+
+        _most_matched_config = min(_matches, key=lambda x: x["match_rule"].value)
+        color = _most_matched_config["color"]
+        group = _most_matched_config["group"]
+        replace_color_component = _most_matched_config["replace_color_component"]
+        color_config = ColorConfig(
+            color,
+            area,
+            group,
+            replace_color_component
+        )
+        return {"color_config":color_config, "match_rule":_most_matched_config["match_rule"], "area":area}
 
     def __repr__(self) -> str:
         return super().__repr__()
@@ -398,11 +474,11 @@ class TemplateConfig(dict):
 
         return _color
 
-    def generate_template(self, color_config: ColorConfig = None):
+    def generate_template(self, config: Config = None):
         """Generate template with color configuration."""
-        if color_config is None:
+        if config is None:
             _color_config_path = f"{os.getcwd()}/config.json"
-            color_config = ColorConfig(config_path=_color_config_path)
+            config = Config(config_path=_color_config_path)
 
         workbench_colors = {}
         default_processed_properties = []
@@ -411,7 +487,7 @@ class TemplateConfig(dict):
         # workbench colors
         used_groups = []
         for property in self.color_properties:
-            color_wrappers = color_config.get_color_wrappers(property)
+            color_wrappers = config.get_color_wrappers(property)
             if color_wrappers is None or not isinstance(color_wrappers, list):
                 print(property, type(color_wrappers))
                 continue
@@ -492,7 +568,7 @@ class TemplateConfig(dict):
         new_token_configs = []
         for token_config in token_configs:
             scope = token_config["scope"]
-            color_wrappers = color_config.get_color_wrappers(scope, target_area="token")
+            color_wrappers = config.get_color_wrappers(scope, target_area="token")
             assert (
                 len(color_wrappers) == 1
             ), f"how can we get multiple color wrappers for token ({scope})?"
@@ -520,7 +596,7 @@ class TemplateConfig(dict):
                 set(
                     [
                         c
-                        for v in color_config.config.values()
+                        for v in config.config.values()
                         for g in v
                         for c in g["groups"]
                     ]
@@ -708,8 +784,8 @@ if __name__ == "__main__":
         print_colors(print_colors_filter, target_theme)
 
 def test_color_config():
-    color_config = ColorConfig()
-    for area, area_config in color_config.config.items():
+    config = Config()
+    for area, area_config in config.config.items():
         print(area)
         for config in area_config:
             groups = config["groups"]
@@ -731,8 +807,8 @@ def test_color_config():
             print("new", json.dumps(color, indent=4, sort_keys=True))
 
     json.dump(
-        color_config.config,
-        open(color_config.config_path, "w"),
+        config.config,
+        open(config.config_path, "w"),
         indent=4,
         sort_keys=True,
     )
