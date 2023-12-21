@@ -26,8 +26,8 @@ HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 
 # debug
-DEBUG_PROPERTY = ["quickInput.background"]
-DEBUG_GROUP = [""]
+DEBUG_PROPERTY = ["list.inactiveSelectionBackground"]
+DEBUG_GROUP = [".*\\.(?!unfocus)focus.*background.*"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
@@ -675,10 +675,10 @@ def generate_random_theme_file(
     colors_total=7,
     gradations_total=60,
     dark_color_gradations_total=60,
-    general_min_color=50,
-    general_max_color=160,
-    dark_color_min=5,
-    dark_color_max=15,
+    general_min_color=60,
+    general_max_color=180,
+    dark_color_min=10,
+    dark_color_max=20,
     dark_colors_total=4,
     dark_base_colors=None,
     theme_filename_prefix="viiv-dynamic",

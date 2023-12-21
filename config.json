@@ -43,6 +43,30 @@
             ]
         }
     ],
+    "border": [
+        {
+            "color": {
+                "alpha_range": [
+                    "0x41",
+                    "0x48"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    30,
+                    31
+                ]
+            },
+            "groups": [
+                ".*border.*"
+            ],
+            "replace_color_component": [
+                "ALPHA"
+            ]
+        }
+    ],
     "default": [
         {
             "color": {
@@ -353,6 +377,68 @@
         {
             "color": {
                 "alpha_range": [
+                    "0x21",
+                    "0x22"
+                ],
+                "hex": "#dcaafc"
+            },
+            "groups": [
+                "diffEditor.removedLineBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x21",
+                    "0x22"
+                ],
+                "hex": "#adf6b8"
+            },
+            "groups": [
+                "diffEditor.insertedLineBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "hex": "#380838"
+            },
+            "groups": [
+                "diffEditor.removedTextBackground",
+                "diffEditorGutter.removedLineBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "hex": "#004000"
+            },
+            "groups": [
+                "diffEditor.insertedTextBackground",
+                "diffEditorGutter.insertedLineBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
                     "0xca",
                     "0xcb"
                 ],
@@ -383,8 +469,8 @@
                     8
                 ],
                 "light_range": [
-                    33,
-                    56
+                    25,
+                    35
                 ]
             },
             "groups": [
@@ -399,12 +485,34 @@
                 "editorIndentGuide.background.*",
                 ".*\\.(?!unfold)fold.*",
                 ".*\\.(?!inactive)(active|selected).*background.*",
-                ".*\\.(?!unfocus)focus.*background.*",
                 "lineHighlightBackground",
                 ".*editor.*match.*",
                 "editor.*(highlight|selection).*background",
                 ".*list.*hover.*background.*",
+                "tab.unfocusedActiveBorderTop",
                 ".*ruler.*foreground.*"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x41",
+                    "0x48"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    41,
+                    42
+                ]
+            },
+            "groups": [
+                "tab.inactiveBackground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -476,34 +584,12 @@
                 "titleBar.activeBackground",
                 "(activityBar|menu).background",
                 ".*badge.*foreground.*",
-                "editorOverviewRuler"
+                "list.inactiveSelectionBackground",
+                "editorOverviewRuler",
+                "notebook.*focus.*background.*"
             ],
             "replace_color_component": [
                 "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x41",
-                    "0x48"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    30,
-                    31
-                ]
-            },
-            "groups": [
-                ".*border.*",
-                "tab.unfocusedActiveBorderTop",
-                "tab.inactiveBackground"
-            ],
-            "replace_color_component": [
-                "ALPHA"
             ]
         },
         {
@@ -573,7 +659,8 @@
                 "activityBar.foreground",
                 "activityBar.activeBorder",
                 "panelTitle.activeForeground",
-                "tab.activeBorderTop"
+                "tab.activeBorderTop",
+                "notebook.focusedCellBorder"
             ]
         },
         {
@@ -603,68 +690,6 @@
                 "editorIndentGuide.activeBackground",
                 "indentGuidesStroke",
                 "minimapSlider.background"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x21",
-                    "0x22"
-                ],
-                "hex": "#dcaafc"
-            },
-            "groups": [
-                "diffEditor.removedLineBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x21",
-                    "0x22"
-                ],
-                "hex": "#adf6b8"
-            },
-            "groups": [
-                "diffEditor.insertedLineBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "hex": "#380838"
-            },
-            "groups": [
-                "diffEditor.removedTextBackground",
-                "diffEditorGutter.removedLineBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "hex": "#004000"
-            },
-            "groups": [
-                "diffEditor.insertedTextBackground",
-                "diffEditorGutter.insertedLineBackground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -758,8 +783,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xd6",
-                    "0xd8"
+                    "0xe6",
+                    "0xe8"
                 ],
                 "basic_range": [
                     1,
@@ -777,8 +802,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x6e",
-                    "0x6f"
+                    "0x9e",
+                    "0x9f"
                 ],
                 "basic_range": [
                     8,
@@ -792,7 +817,6 @@
             "groups": [
                 ".*comment.*",
                 ".*punctuation.*",
-                ".*javadoc.*",
                 ".*docstring.*"
             ]
         }
