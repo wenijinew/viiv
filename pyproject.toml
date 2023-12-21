@@ -1,0 +1,16 @@
+[tool.poetry]
+name = "viiv"
+version = "0.2.13"
+description = "A python library to create vscode themes."
+authors = ["Bruce Wen <wenijinew@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "viiv"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+peelee = "^0.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

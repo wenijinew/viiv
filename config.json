@@ -387,6 +387,7 @@
                 "hex": "#dcaafc"
             },
             "groups": [
+                "merge.incomingContentBackground",
                 "diffEditor.removedLineBackground"
             ],
             "replace_color_component": [
@@ -402,6 +403,7 @@
                 "hex": "#adf6b8"
             },
             "groups": [
+                "merge.currentContentBackground",
                 "diffEditor.insertedLineBackground"
             ],
             "replace_color_component": [
@@ -417,6 +419,7 @@
                 "hex": "#380838"
             },
             "groups": [
+                "merge.incomingHeaderBackground",
                 "diffEditor.removedTextBackground",
                 "diffEditorGutter.removedLineBackground"
             ],
@@ -433,6 +436,7 @@
                 "hex": "#004000"
             },
             "groups": [
+                "merge.currentHeaderBackground",
                 "diffEditor.insertedTextBackground",
                 "diffEditorGutter.insertedLineBackground"
             ],
@@ -590,7 +594,7 @@
                 ".*badge.*foreground.*",
                 "list.inactiveSelectionBackground",
                 "editorOverviewRuler",
-                "notebook.*focus.*background.*"
+                "notebook.focusedCellBackground"
             ],
             "replace_color_component": [
                 "ALL"
