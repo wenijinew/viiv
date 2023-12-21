@@ -26,7 +26,7 @@ HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 
 # debug
-DEBUG_PROPERTY = ["list.inactiveSelectionBackground"]
+DEBUG_PROPERTY = ["list.focusBackground"]
 DEBUG_GROUP = [".*\\.(?!unfocus)focus.*background.*"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
