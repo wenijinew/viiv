@@ -26,7 +26,7 @@ HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 
 # debug
-DEBUG_PROPERTY = ["testing.runAction"]
+DEBUG_PROPERTY = ["quickInput.background"]
 DEBUG_GROUP = [""]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
