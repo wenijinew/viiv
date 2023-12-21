@@ -308,6 +308,8 @@ class Config(dict):
             )
             if default_area_matched_color_configs:
                 _matched_color_configs = default_area_matched_color_configs
+
+            # clever cost?
             most_matched_color_config = min(
                 [
                     c
