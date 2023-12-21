@@ -114,6 +114,7 @@
             },
             "groups": [
                 "ansiBrightGreen",
+                "editorLightBulbAutoFix.foreground",
                 "testing.runAction",
                 ".*(add|inserted|success).*(foreground|icon).*",
                 ".*(?!unresolved)resolved.*(foreground|icon).*",
@@ -159,6 +160,7 @@
             },
             "groups": [
                 "ansiBrightYellow",
+                "editorLightBulb.foreground",
                 ".*warning.*background.*",
                 ".*modified.*",
                 "editorGutter.modifiedBackground",
@@ -195,6 +197,7 @@
             },
             "groups": [
                 "ansiBrightMagenta",
+                "editorInfo.foreground",
                 ".*(delete|remove).*foreground.*",
                 "gitDecoration.renamedResourceForeground",
                 "gitDecoration.deletedResourceForeground",
@@ -210,11 +213,12 @@
                     "0x99",
                     "0xcc"
                 ],
-                "hex": "#92b4f2"
+                "hex": "#4e85ea"
             },
             "groups": [
                 "ansiBlue",
                 ".*info.*",
+                "editorHint.foreground",
                 "problemsInfoIcon.foreground",
                 "editorOverviewRuler.infoForeground",
                 "editorOverviewRuler.selectionHighlightForeground",
@@ -484,7 +488,7 @@
                 "tree.inactiveIndentGuidesStroke",
                 "editorIndentGuide.background.*",
                 ".*\\.(?!unfold)fold.*",
-                ".*\\.(?!inactive)(active|selected).*background.*",
+                ".*\\.(?!inactive)(active|selected|focus).*background.*",
                 "lineHighlightBackground",
                 ".*editor.*match.*",
                 "editor.*(highlight|selection).*background",
@@ -731,6 +735,7 @@
                 "activityBar.border",
                 "titleBar.border",
                 "editorGhostText.border",
+                "editorHint.border",
                 "diffEditor.border",
                 "diffEditor.insertedTextBorder",
                 "diffEditor.move.border",
