@@ -311,7 +311,7 @@ class Config(dict):
 
             # clever cost?
             most_matched_color_config = min(
-                [
+                (
                     c
                     for c in list(
                         filter(
@@ -319,7 +319,7 @@ class Config(dict):
                             _matched_color_configs,
                         )
                     )
-                ],
+                ),
                 key=lambda x: x["match_rule"].value,
             )
 
@@ -598,7 +598,7 @@ class TemplateConfig(dict):
         # clever code?!
         all_groups = sorted(
             list(
-                set([c for v in config.config.values() for g in v for c in g["groups"]])
+                set((c for v in config.config.values() for g in v for c in g["groups"]))
             )
         )
         _dump_json_file("all_groups.json", all_groups)

@@ -178,7 +178,7 @@
             },
             "groups": [
                 "ansiMagenta",
-                "debugToolBar.background",
+                ".*(delete|remove|debug).*background.*",
                 "editorGutter.deletedBackground"
             ],
             "replace_color_component": [
@@ -196,7 +196,6 @@
             "groups": [
                 "ansiBrightMagenta",
                 ".*(delete|remove).*foreground.*",
-                ".*(delete|remove|debug).*background.*",
                 "gitDecoration.renamedResourceForeground",
                 "gitDecoration.deletedResourceForeground",
                 "gitDecoration.stageDeletedResourceForeground"
