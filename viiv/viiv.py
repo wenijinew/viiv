@@ -26,10 +26,8 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = [
-    "editorLightBulb.foreground",
-]
-DEBUG_GROUP = [".*\\.(?!unfocus)focus.*background.*"]
+DEBUG_PROPERTY = [".*icon.*foreground.*"]
+DEBUG_GROUP = [".*icon.*foreground.*"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
@@ -88,7 +86,7 @@ def is_property_area(area):
     return area in ["background", "foreground"]
 
 
-def _random_range(range_values: list[str]) -> list[str]:
+def normalize_range(range_values: list[str]) -> list[str]:
     """Generate random numbers in string format with the given range values.
     if the random number is less than 10, then add a 0 before the number.
 
@@ -209,15 +207,15 @@ class ColorConfig(dict):
         elif has_basic and has_light:
             _head = [
                 "C_" + basic + "_" + light
-                for basic in _random_range(self.basic_range)
-                for light in _random_range(self.light_range)
+                for basic in normalize_range(self.basic_range)
+                for light in normalize_range(self.light_range)
             ]
         else:
             _head = ["#000000"]
 
         if has_alpha:
             _tail = []
-            for alpha in _random_range(self.alpha_range):
+            for alpha in normalize_range(self.alpha_range):
                 alpha = format(int(alpha), "x")
                 if len(alpha) == 1:
                     alpha = "0" + alpha
