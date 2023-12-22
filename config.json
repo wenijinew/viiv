@@ -90,61 +90,65 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
+                    "0xcb",
                     "0xcc"
                 ],
                 "hex": "#004000"
             },
             "groups": [
                 "ansiGreen",
-                "editorGutter.addedBackground",
-                "minimapGutter.addedBackground"
+                "merge.incomingHeaderBackground",
+                "merge.currentHeaderBackground",
+                "diffEditor.insertedTextBackground",
+                "diffEditorGutter.insertedLineBackground",
+                "charts.green"
             ],
             "replace_color_component": [
-                "ALL"
+                "ALPHA"
             ]
         },
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
+                    "0xcb",
                     "0xcc"
                 ],
-                "hex": "#00e600"
+                "hex": "#00cc00"
             },
             "groups": [
                 "ansiBrightGreen",
+                "merge.incomingContentBackground",
+                "editorOverviewRuler.incomingContentForeground",
+                "editorGutter.addedBackground",
+                "minimapGutter.addedBackground",
                 "editorLightBulbAutoFix.foreground",
                 "testing.runAction",
+                "editorOverviewRuler.addedForeground",
                 ".*(add|inserted|success).*(foreground|icon).*",
                 ".*(?!unresolved)resolved.*(foreground|icon).*",
                 ".*(add|insert|success).*background.*",
                 "gitDecoration.addedResourceForeground"
             ],
             "replace_color_component": [
-                "ALL"
+                "ALPHA"
             ]
         },
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
-                    "0xcc"
+                    "0xfe",
+                    "0xff"
                 ],
-                "hex": "#ffc966"
+                "hex": "#d56600"
             },
             "groups": [
                 "ansiYellow",
-                ".*warning.*foreground.*",
-                "editorLightBulb.foreground",
+                "charts.yellow",
                 ".*unnecessary.*",
-                ".*badge.*background.*",
+                ".*warning.*background.*",
                 "wordHighlightStrongBorder",
                 "problemsWarningIcon.foreground",
-                "editorOverviewRuler.modifiedForeground",
-                "gitDecoration.modifiedResourceForeground",
                 "gitDecoration.stageModifiedResourceForeground",
-                "minimap.warningHighlight",
                 ".*Link.activeForeground"
             ],
             "replace_color_component": [
@@ -154,15 +158,21 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
-                    "0xcc"
+                    "0xfe",
+                    "0xff"
                 ],
-                "hex": "#ffa500"
+                "hex": "#ffba22"
             },
             "groups": [
                 "ansiBrightYellow",
-                ".*warning.*background.*",
+                "charts.orange",
+                ".*warning.*foreground.*",
+                "editorLightBulb.foreground",
                 ".*modified.*",
+                "minimap.warningHighlight",
+                ".*badge.*background.*",
+                "editorOverviewRuler.modifiedForeground",
+                "gitDecoration.modifiedResourceForeground",
                 "editorGutter.modifiedBackground",
                 "minimapGutter.modifiedBackground"
             ],
@@ -180,8 +190,9 @@
             },
             "groups": [
                 "ansiMagenta",
-                ".*(delete|remove|debug).*background.*",
-                "editorGutter.deletedBackground"
+                ".*debug.*background.*",
+                "charts.purple",
+                ".*error.*(background|border).*"
             ],
             "replace_color_component": [
                 "ALL"
@@ -190,18 +201,17 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
-                    "0xcc"
+                    "0xfe",
+                    "0xff"
                 ],
-                "hex": "#be60f9"
+                "hex": "#cc00ff"
             },
             "groups": [
                 "ansiBrightMagenta",
-                "editorInfo.foreground",
-                ".*(delete|remove).*foreground.*",
-                "gitDecoration.renamedResourceForeground",
-                "gitDecoration.deletedResourceForeground",
-                "gitDecoration.stageDeletedResourceForeground"
+                "editorOverviewRuler.errorForeground",
+                "minimap.errorHighlight",
+                ".*error.*foreground.*",
+                "problemsErrorIcon.foreground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -213,10 +223,12 @@
                     "0x99",
                     "0xcc"
                 ],
-                "hex": "#4e85ea"
+                "hex": "#195ad3"
             },
             "groups": [
                 "ansiBlue",
+                "charts.blue",
+                "editorInfo.foreground",
                 ".*info.*",
                 "editorHint.foreground",
                 "problemsInfoIcon.foreground",
@@ -238,6 +250,7 @@
             },
             "groups": [
                 "ansiBrightBlue",
+                "gitDecoration.renamedResourceForeground",
                 "minimap.selectionOccurrenceHighlight",
                 "textLink.foreground"
             ],
@@ -248,15 +261,18 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
+                    "0xcb",
                     "0xcc"
                 ],
-                "hex": "#820000"
+                "hex": "#400000"
             },
             "groups": [
                 "ansiRed",
-                "minimapGutter.deletedBackground",
-                ".*error.*(background|border).*"
+                ".*(delete|remove).*background.*",
+                "diffEditor.removedTextBackground",
+                "diffEditorGutter.removedLineBackground",
+                "charts.red",
+                "minimapGutter.deletedBackground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -265,17 +281,18 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
+                    "0xcb",
                     "0xcc"
                 ],
-                "hex": "#ff8383"
+                "hex": "#ff5050"
             },
             "groups": [
                 "ansiBrightRed",
-                "minimap.errorHighlight",
-                ".*error.*foreground.*",
+                "editorGutter.deletedBackground",
+                ".*(delete|remove).*foreground.*",
                 ".*unresolved.*",
-                "problemsErrorIcon.foreground",
+                "gitDecoration.deletedResourceForeground",
+                "gitDecoration.stageDeletedResourceForeground",
                 "editorOverviewRuler.deletedForeground"
             ],
             "replace_color_component": [
@@ -382,13 +399,12 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x11",
-                    "0x12"
+                    "0x21",
+                    "0x22"
                 ],
                 "hex": "#ff9a9a"
             },
             "groups": [
-                "merge.incomingContentBackground",
                 "diffEditor.removedLineBackground"
             ],
             "replace_color_component": [
@@ -398,48 +414,14 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x11",
-                    "0x12"
+                    "0x21",
+                    "0x22"
                 ],
                 "hex": "#9aff9a"
             },
             "groups": [
                 "merge.currentContentBackground",
                 "diffEditor.insertedLineBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "hex": "#820000"
-            },
-            "groups": [
-                "merge.incomingHeaderBackground",
-                "diffEditor.removedTextBackground",
-                "diffEditorGutter.removedLineBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "hex": "#004000"
-            },
-            "groups": [
-                "merge.currentHeaderBackground",
-                "diffEditor.insertedTextBackground",
-                "diffEditorGutter.insertedLineBackground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -786,6 +768,7 @@
             },
             "groups": [
                 "editorLinenumber",
+                "editorOverviewRuler.commentForeground",
                 "editorCodeLens",
                 "editorGhostText"
             ]

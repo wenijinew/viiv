@@ -25,9 +25,10 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
-
 # debug
-DEBUG_PROPERTY = ["list.inactiveSelectionIconForeground"]
+DEBUG_PROPERTY = [
+    "editorLightBulb.foreground",
+]
 DEBUG_GROUP = [".*\\.(?!unfocus)focus.*background.*"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -37,7 +38,20 @@ SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-token-palette.j
 
 
 class ColorComponent(Enum):
-    """Color component for color ranges."""
+    """
+    Enum representing different components of a color.
+
+    The enum includes the following values:
+        - BASIC: Represents the basic color components (red, green, blue).
+        - LIGHT: Represents the components of a lighter version of the color (light red, light green, light blue).
+        - ALPHA: Represents the alpha component of the color.
+        - ALL: Represents all components of the color.
+
+    Example usage:
+        If you want to access the basic color component of a color object:
+            color = (255, 128, 0, 255)  # represents a fully opaque orange color
+            red_component = color[ColorComponent.BASIC.value]  # returns 255, the value of the red component
+    """
 
     BASIC = 1
     LIGHT = 2
@@ -65,7 +79,6 @@ def _to_int(value: str) -> int:
 
 
 def _read_config(config_path):
-    """Read config.json file and return the content."""
     with open(config_path, "r") as f:
         return json.load(f)
 
