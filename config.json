@@ -136,6 +136,7 @@
             "groups": [
                 "ansiYellow",
                 ".*warning.*foreground.*",
+                "editorLightBulb.foreground",
                 ".*unnecessary.*",
                 ".*badge.*background.*",
                 "wordHighlightStrongBorder",
@@ -156,11 +157,10 @@
                     "0x99",
                     "0xcc"
                 ],
-                "hex": "#9a6300"
+                "hex": "#ffa500"
             },
             "groups": [
                 "ansiBrightYellow",
-                "editorLightBulb.foreground",
                 ".*warning.*background.*",
                 ".*modified.*",
                 "editorGutter.modifiedBackground",
@@ -275,6 +275,7 @@
                 "minimap.errorHighlight",
                 ".*error.*foreground.*",
                 ".*unresolved.*",
+                "problemsErrorIcon.foreground",
                 "editorOverviewRuler.deletedForeground"
             ],
             "replace_color_component": [
@@ -381,8 +382,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x21",
-                    "0x22"
+                    "0x81",
+                    "0x82"
                 ],
                 "hex": "#dcaafc"
             },
