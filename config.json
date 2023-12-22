@@ -140,16 +140,30 @@
                     "0xfe",
                     "0xff"
                 ],
-                "hex": "#d56600"
+                "hex": "#7a7a00"
             },
             "groups": [
                 "ansiYellow",
+                ".*warning.*background.*"
+            ],
+            "replace_color_component": [
+                "ALPHA"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xce",
+                    "0xcf"
+                ],
+                "hex": "#e6e600"
+            },
+            "groups": [
+                "ansiBrightYellow",
                 "charts.yellow",
-                ".*unnecessary.*",
-                ".*warning.*background.*",
-                "wordHighlightStrongBorder",
-                "problemsWarningIcon.foreground",
-                ".*Link.activeForeground"
+                ".*warning.*foreground.*",
+                "minimap.warningHighlight",
+                "problemsWarningIcon.foreground"
             ],
             "replace_color_component": [
                 "ALL"
@@ -161,15 +175,31 @@
                     "0xfe",
                     "0xff"
                 ],
+                "hex": "#bc5a00"
+            },
+            "groups": [
+                "ansiOrange",
+                ".*unnecessary.*",
+                "wordHighlightStrongBorder",
+                ".*Link.activeForeground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xce",
+                    "0xcf"
+                ],
                 "hex": "#ffba22"
             },
             "groups": [
-                "ansiBrightYellow",
+                "ansiBrightOrange",
                 "charts.orange",
-                ".*warning.*foreground.*",
                 "editorLightBulb.foreground",
                 ".*modified.*",
-                "minimap.warningHighlight",
                 ".*badge.*background.*",
                 "editorOverviewRuler.modifiedForeground",
                 "gitDecoration.modifiedResourceForeground",
