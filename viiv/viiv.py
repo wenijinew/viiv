@@ -26,7 +26,7 @@ HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 
 # debug
-DEBUG_PROPERTY = ["notebook.focusedCellBackground"]
+DEBUG_PROPERTY = ["list.inactiveSelectionIconForeground"]
 DEBUG_GROUP = [".*\\.(?!unfocus)focus.*background.*"]
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -407,12 +407,23 @@ class Config(dict):
     def _get_color(self, area, target_property) -> dict:
         """Get the color config.
 
-        Each area has many color configurations for different groups. each group could match one or many different color properties.
-        By going through all color configurations in the given area, and then check if any group in each color configuration matched the target property by using different matching rules.
-        Finally, if multiple groups matched the target property, then pick up the one using match rule having the least matching rule value(which means highest priority).
-        If no any group matched the target property, then return None which means there is no color config matching the targe property in this area. For example, 'background' area cannot have any color config to match 'activityBar.foreground'.
+        Each area has many color configurations for different groups.
+        Each group could match one or many different color properties.
+        By going through all color configurations in the given area,
+        and then check if any group in each color configuration matched
+        the target property by using different matching rules.
+        Finally, if multiple groups matched the target property,
+        then pick up the one using match rule having the least matching
+        rule value (which means highest priority).
+        If no any group matched the target property,
+        then return None which means there is no color config matching
+        the target property in this area. For example, 'background' area
+        cannot have any color config to match 'activityBar.foreground'.
 
-        Matching rule will be returned also. Then if many areas have matched color config for the target property, then pick up the one with the least matching rule. If the same, then print warning for duplicated configuration and pickup the first one.
+        Matching rule will be returned also. Then if many areas have matched
+        color config for the target property, then pick up the one with
+        the least matching rule. If the same, then print warning for duplicated
+        configuration and pickup the first one.
 
         Parameters:
 
@@ -451,9 +462,6 @@ class Config(dict):
             "area": area,
         }
 
-    def __repr__(self) -> str:
-        return super().__repr__()
-
 
 class TemplateConfig(dict):
     """Wrapper class for template config."""
@@ -467,6 +475,18 @@ class TemplateConfig(dict):
         super().__init__(config_path=config_path)
 
     def append_or_replace_alpha(self, old_color, new_color, component: ColorComponent):
+        """
+        Append or replace the alpha component of a color.
+
+        Args:
+            old_color (str): The original color string.
+            new_color (str): The new color string.
+            component (ColorComponent): The color component to be replaced or appended.
+
+        Returns:
+            str: The updated color string.
+
+        """
         if component == ColorComponent.ALPHA:
             _color = old_color[0:7] + new_color[7:9]
         elif re.match(RGB_HEX_REGEX, old_color):
@@ -480,7 +500,15 @@ class TemplateConfig(dict):
         return old_color
 
     def generate_template(self, config: Config = None):
-        """Generate template with color configuration."""
+        """
+        Generates a template based on the provided configuration.
+
+        Args:
+            config (Config, optional): The configuration object. Defaults to None.
+
+        Returns:
+            None
+        """
         if config is None:
             _color_config_path = f"{os.getcwd()}/config.json"
             config = Config(config_path=_color_config_path)
@@ -610,6 +638,16 @@ class TemplateConfig(dict):
 
 
 def _dump_json_file(json_file_path, json_data):
+    """
+    Writes the given JSON data to a file at the specified path.
+
+    Parameters:
+        json_file_path (str): The path to the JSON file.
+        json_data (dict): The JSON data to be written to the file.
+
+    Returns:
+        None
+    """
     if not os.path.exists(os.path.dirname(json_file_path)):
         json_file_path = (
             os.getcwd() + os.path.sep + "output" + os.path.sep + json_file_path
@@ -629,21 +667,38 @@ def print_colors(value, theme="dynamic"):
 
 
 def print_palette():
+    """
+    Print the dynamic palette, selected UI palette, and selected token palette.
+
+    This function prints the dynamic palette, selected UI palette, and selected token palette
+    to the console. The dynamic palette is loaded from the file "dynamic-palette.json" located
+    in the "output" directory. The selected UI palette is loaded from the file specified by
+    the constant variable "SELECTED_UI_COLOR_FILE_PATH". The selected token palette is loaded
+    from the file specified by the constant variable "SELECTED_TOKEN_COLOR_FILE_PATH".
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
     print("Dynamic palette:")
     dynamic_palette_json_file = f"{os.getcwd()}/output/dynamic-palette.json"
-    dynamic_palette_json = json.load(open(dynamic_palette_json_file))
+    with open(dynamic_palette_json_file, "r", encoding="utf-8") as file:
+        dynamic_palette_json = json.load(file)
     for k, v in dynamic_palette_json.items():
         print(pe.bg(v, f"{k}: {v}"))
 
     print("Selected UI palette:")
-    selected_ui_palette_json = json.load(open(SELECTED_UI_COLOR_FILE_PATH))
-    for k, v in selected_ui_palette_json.items():
-        print(pe.bg(v, f"{k}: {v}"))
-
+    with open(SELECTED_UI_COLOR_FILE_PATH, encoding="utf-8") as selected_ui_file:
+        selected_ui_palette_json = json.load(selected_ui_file)
+        for k, v in selected_ui_palette_json.items():
+            print(pe.bg(v, f"{k}: {v}"))
     print("Selected Token palette:")
-    selected_token_palette_json = json.load(open(SELECTED_TOKEN_COLOR_FILE_PATH))
-    for k, v in selected_token_palette_json.items():
-        print(pe.bg(v, f"{k}: {v}"))
+    with open(SELECTED_TOKEN_COLOR_FILE_PATH, encoding="utf-8") as selected_token_file:
+        selected_token_palette_json = json.load(selected_token_file)
+        for k, v in selected_token_palette_json.items():
+            print(pe.bg(v, f"{k}: {v}"))
 
 
 DEFAULT_THEMES_MAP = {
@@ -659,11 +714,31 @@ DEFAULT_THEMES_MAP = {
 
 
 def pirnt_default_themes():
+    """
+    Print the default themes.
+
+    This function iterates over the `DEFAULT_THEMES_MAP` dictionary and prints each theme along with its corresponding colors using the `pe.bg` function.
+
+    Parameters:
+        None
+
+    Returns:
+        None
+    """
     for theme, colors in DEFAULT_THEMES_MAP.items():
         print(pe.bg(colors, f"{theme}"))
 
 
 def generate_default_themes(target_theme="black"):
+    """
+    Generates default themes based on the given target theme.
+
+    Parameters:
+        target_theme (str): The target theme to generate. If not provided, all default themes will be generated.
+
+    Returns:
+        None
+    """
     for theme, colors in DEFAULT_THEMES_MAP.items():
         if target_theme and theme != target_theme:
             continue
@@ -685,7 +760,24 @@ def generate_random_theme_file(
     dark_base_colors=None,
     theme_filename_prefix="viiv-dynamic",
 ):
-    """Generate random theme file."""
+    """
+    Generates a random theme file with specified parameters.
+
+    Args:
+        colors_total (int): The total number of colors.
+        gradations_total (int): The total number of color gradations.
+        dark_color_gradations_total (int): The total number of dark color gradations.
+        general_min_color (int): The minimum color value.
+        general_max_color (int): The maximum color value.
+        dark_color_min (int): The minimum dark color value.
+        dark_color_max (int): The maximum dark color value.
+        dark_colors_total (int): The total number of dark colors.
+        dark_base_colors (list): The list of dark base colors.
+        theme_filename_prefix (str): The prefix for the theme filename.
+
+    Returns:
+        None
+    """
     template_config = TemplateConfig()
     template_config.generate_template()
     template_config_data = template_config.config
@@ -750,6 +842,20 @@ def generate_random_theme_file(
 
 
 def debug_color_config():
+    """
+    Generates a debug color configuration.
+
+    This function iterates over the configuration settings and prints the area,
+    groups, and color information for each area. It checks if the groups contain the
+    keywords "background" or "foreground" and modifies the color configuration
+    accordingly. The modified color configuration is then printed.
+
+    Parameters:
+    None
+
+    Returns:
+    None
+    """
     config = Config()
     for area, area_config in config.config.items():
         print(area)
