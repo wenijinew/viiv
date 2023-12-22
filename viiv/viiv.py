@@ -26,8 +26,8 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = [".*icon.*foreground.*"]
-DEBUG_GROUP = [".*icon.*foreground.*"]
+DEBUG_PROPERTY = []
+DEBUG_GROUP = []
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
@@ -714,14 +714,14 @@ def print_palette():
 
 
 DEFAULT_THEMES_MAP = {
-    "black": ["#0c0c0c", "#0d0d0d", "#0e0e0e", "#0f0f0f"],
-    "red": ["#020000", "#040000", "#060000", "#080000"],
-    "orange": ["#020100", "#040200", "#080400", "#090400"],
-    "yellow": ["#0c0c00", "#0d0d00", "#0e0e00", "#0f0f00"],
-    "green": ["#000c00", "#000d00", "#000e00", "#000f00"],
-    "cyan": ["#000c0c", "#000d0d", "#000e0e", "#000f0f"],
-    "blue": ["#00000c", "#00000d", "#00000e", "#00000f"],
-    "violet": ["#0c000c", "#0d000d", "#0e000e", "#0f000f"],
+    "black": ["#010101", "#010101", "#010101", "#010101"],
+    "red": ["#010000", "#010000", "#010000", "#010000"],
+    "orange": ["#020100", "#020100", "#020100", "#020100"],
+    "yellow": ["#010100", "#010100", "#010100", "#010100"],
+    "green": ["#000100", "#000100", "#000100", "#000100"],
+    "cyan": ["#000101", "#000101", "#000101", "#000101"],
+    "blue": ["#000001", "#000001", "#000001", "#000001"],
+    "violet": ["#010001", "#010001", "#010001", "#010001"],
 }
 
 
@@ -765,9 +765,9 @@ def generate_random_theme_file(
     gradations_total=60,
     dark_color_gradations_total=60,
     general_min_color=60,
-    general_max_color=180,
-    dark_color_min=10,
-    dark_color_max=20,
+    general_max_color=140,
+    dark_color_min=1,
+    dark_color_max=5,
     dark_colors_total=4,
     dark_base_colors=None,
     theme_filename_prefix="viiv-dynamic",
