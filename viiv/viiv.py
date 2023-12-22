@@ -12,7 +12,7 @@ from enum import Enum
 
 from peelee import peelee as pe
 
-# reserved
+# reserved constants
 TOKEN_COLOR_PREFIX = "T_"
 WORKBENCH_COLOR_PREFIX = "W_"
 PLACEHOLDER_REGEX = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2,4}"
@@ -21,6 +21,7 @@ PLACEHOLDER_REGEX_WITH_ALPHA = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
 RGB_HEX_REGEX = r"#[a-zA-Z0-9]{6,8}"
 RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
+
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
@@ -36,7 +37,7 @@ SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-token-palette.j
 
 
 class ColorComponent(Enum):
-    """Color component for color range."""
+    """Color component for color ranges."""
 
     BASIC = 1
     LIGHT = 2

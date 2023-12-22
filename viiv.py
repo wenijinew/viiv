@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run viiv"""
+"""Run viiv main() function."""
 
 
 import sys
