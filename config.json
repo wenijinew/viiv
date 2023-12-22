@@ -94,20 +94,17 @@
                     "0xdf"
                 ],
                 "basic_range": [
-                    2,
-                    3
+                    1,
+                    2
                 ],
                 "light_range": [
-                    10,
-                    20
+                    1,
+                    59
                 ]
             },
             "groups": [
                 "decoration",
                 "titleBar.activeForeground",
-                ".*badge.*background.*",
-                "editorLineNumber.activeForeground",
-                ".*cursor.foreground",
                 ".*hover.*foreground.*",
                 "tab.activeBorderTop",
                 "activityBar.foreground",
@@ -116,6 +113,7 @@
                 "notebook.focusedCellBorder",
                 "tab.activeForeground",
                 "menu.foreground",
+                ".*badge.*background.*",
                 "menu.separatorBackground",
                 "quickInput.foreground",
                 "icon.foreground",
@@ -133,16 +131,17 @@
                     "0x42"
                 ],
                 "basic_range": [
-                    2,
-                    3
+                    1,
+                    2
                 ],
                 "light_range": [
-                    10,
-                    20
+                    1,
+                    60
                 ]
             },
             "groups": [
                 "decoration",
+                "menu.selectionBackground",
                 ".*list.*hover.*background.*",
                 "lineHighlightBackground"
             ]
@@ -204,6 +203,8 @@
             },
             "groups": [
                 "ansiYellow",
+                ".*cursor.foreground",
+                "editorLineNumber.activeForeground",
                 ".*warning.*background.*"
             ],
             "replace_color_component": [
@@ -239,9 +240,7 @@
             },
             "groups": [
                 "ansiOrange",
-                ".*unnecessary.*",
-                "wordHighlightStrongBorder",
-                ".*Link.activeForeground"
+                ".*unnecessary.*"
             ],
             "replace_color_component": [
                 "ALL"
@@ -257,10 +256,11 @@
             },
             "groups": [
                 "ansiBrightOrange",
+                "wordHighlightStrongBorder",
+                ".*Link.activeForeground",
                 "charts.orange",
                 "editorLightBulb.foreground",
                 ".*modified.*",
-                ".*badge.*background.*",
                 "editorOverviewRuler.modifiedForeground",
                 "gitDecoration.modifiedResourceForeground",
                 "editorGutter.modifiedBackground",
@@ -313,7 +313,7 @@
                     "0x99",
                     "0xcc"
                 ],
-                "hex": "#195ad3"
+                "hex": "#4d4dff"
             },
             "groups": [
                 "ansiBlue",
@@ -324,6 +324,7 @@
                 "problemsInfoIcon.foreground",
                 "editorOverviewRuler.infoForeground",
                 "editorOverviewRuler.selectionHighlightForeground",
+                "textLink.foreground",
                 "minimap.selectionHighlight"
             ],
             "replace_color_component": [
@@ -336,13 +337,12 @@
                     "0x99",
                     "0xcc"
                 ],
-                "hex": "#4e5eea"
+                "hex": "#84a3f9"
             },
             "groups": [
                 "ansiBrightBlue",
                 "gitDecoration.renamedResourceForeground",
-                "minimap.selectionOccurrenceHighlight",
-                "textLink.foreground"
+                "minimap.selectionOccurrenceHighlight"
             ],
             "replace_color_component": [
                 "ALL"
