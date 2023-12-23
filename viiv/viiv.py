@@ -6,12 +6,10 @@ import json
 import os
 import random
 import re
-import shutil
 import sys
 import time
 from enum import Enum
 
-from more_itertools import side_effect
 from peelee import peelee as pe
 
 # reserved constants
@@ -78,11 +76,6 @@ def _to_int(value: str) -> int:
     return int(value)
 
 
-def _read_config(config_path):
-    with open(config_path, "r") as f:
-        return json.load(f)
-
-
 def is_property_area(area):
     """Check if the current theme is a property area."""
     return area in ["background", "foreground"]
@@ -124,9 +117,6 @@ class ColorsWrapper(dict):
             area=area,
             replace_color_component=replace_color_component,
         )
-
-    def __repr__(self) -> str:
-        return super().__repr__()
 
 
 class ColorConfig(dict):
@@ -243,7 +233,7 @@ class Config(dict):
         if config_path is None:
             config_path = f"{os.getcwd()}/config.json"
         self.config_path = config_path
-        self.config = _read_config(config_path)
+        self.config = _load_json_file(config_path)
         self.areas = self.config.keys()
         default_color_config = list(
             filter(
@@ -451,7 +441,7 @@ class Config(dict):
         _matches = []
         for groups_config in area_config:
             groups = groups_config["groups"]
-            groups.sort(key=lambda x: len(x), reverse=True)
+            groups.sort(reverse=True)
             _match = self._match(groups, target_property)
             if _match:
                 color = groups_config["color"]
@@ -484,7 +474,7 @@ class TemplateConfig(dict):
         if config_path is None:
             config_path = THEME_TEMPLATE_JSON_FILE
         self.config_path = config_path
-        self.config = _read_config(config_path)
+        self.config = _load_json_file(config_path)
         self.color_properties = list(self.config["colors"].keys())
         super().__init__(config_path=config_path)
 
@@ -533,14 +523,14 @@ class TemplateConfig(dict):
 
         # workbench colors
         used_groups = []
-        for property in self.color_properties:
-            color_wrappers = config.get_color_wrappers(property)
+        for property_name in self.color_properties:
+            color_wrappers = config.get_color_wrappers(property_name)
             if color_wrappers is None or not isinstance(color_wrappers, list):
-                print(property, type(color_wrappers))
+                print(property_name, type(color_wrappers))
                 continue
             color_wrappers_areas = [w.area for w in color_wrappers]
             if (
-                property in default_processed_properties
+                property_name in default_processed_properties
                 and "default" not in color_wrappers_areas
             ):
                 continue
@@ -556,13 +546,13 @@ class TemplateConfig(dict):
                     continue
                 color = colors[random.randint(0, len(colors) - 1)]
                 color_orig = color
-                if property in workbench_colors:
-                    if property in customized_properties:
+                if property_name in workbench_colors:
+                    if property_name in customized_properties:
                         continue
                     if area not in ["default", "token"]:
                         continue
                     else:
-                        old_color = workbench_colors[property]
+                        old_color = workbench_colors[property_name]
                         _changed = False
                         if ColorComponent.BASIC in replace_color_component:
                             color = self.append_or_replace_alpha(
@@ -587,26 +577,26 @@ class TemplateConfig(dict):
                             _changed = True
                         if (
                             ColorComponent.ALL in replace_color_component
-                            or property == group
+                            or property_name == group
                         ):
                             color = color_orig
                 if group in DEBUG_GROUP:
                     print(
-                        f" (G {debug_group_counter}) >>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
+                        f" (G {debug_group_counter}) >>>: '{property_name}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
                     )
                     debug_group_counter += 1
-                if property in DEBUG_PROPERTY:
+                if property_name in DEBUG_PROPERTY:
                     print(
-                        f" (P {debug_property_counter}) >>>: '{property}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
+                        f" (P {debug_property_counter}) >>>: '{property_name}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
                     )
                     debug_property_counter += 1
                 if area == "default" and group != "default":
-                    default_processed_properties.append(property)
-                if group == property:
-                    customized_properties.append(property)
+                    default_processed_properties.append(property_name)
+                if group == property_name:
+                    customized_properties.append(property_name)
                 if group not in used_groups:
                     used_groups.append(group)
-                workbench_colors[property] = color
+                workbench_colors[property_name] = color
 
         workbench_colors = dict(sorted(workbench_colors.items(), key=lambda x: x[0]))
         self.config["colors"] = workbench_colors
@@ -636,7 +626,7 @@ class TemplateConfig(dict):
                 )
         new_token_configs.sort(key=lambda x: x["scope"])
         self.config["tokenColors"] = new_token_configs
-        json.dump(self.config, open(self.config_path, "w"), indent=4)
+        _dump_json_file(self.config_path, self.config)
         _dump_json_file("used_groups.json", used_groups)
 
         # clever code?!
@@ -668,18 +658,27 @@ def _dump_json_file(json_file_path, json_data):
         json_file_path = (
             os.getcwd() + os.path.sep + "output" + os.path.sep + json_file_path
         )
-    with open(json_file_path, "w") as f:
+    with open(json_file_path, "w", encoding="utf-8") as f:
         json.dump(json_data, f, indent=4)
 
 
 def print_colors(value, theme="dynamic"):
     dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
-    dynamic_theme_json = json.load(open(dynamic_theme_json_file))
-    theme_template_json = json.load(open(THEME_TEMPLATE_JSON_FILE))
+    dynamic_theme_json = _load_json_file(dynamic_theme_json_file)
+    theme_template_json = _load_json_file(THEME_TEMPLATE_JSON_FILE)
     colors = dynamic_theme_json["colors"]
     for k, v in colors.items():
         if k.lower().find(value) != -1 or re.match(f".*{value}.*", k, re.IGNORECASE):
             print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
+
+
+def _load_json_file(json_file_path):
+    """
+    Loads the JSON file at the specified path.
+    """
+    with open(json_file_path, "r", encoding="utf-8") as file:
+        json_data = json.load(file)
+        return json_data
 
 
 def print_palette():
@@ -840,13 +839,13 @@ def generate_random_theme_file(
 
     selected_ui_color = {}
     selected_token_color = {}
-    for property, color in template_config_data["colors"].items():
-        color = template_config_data["colors"][property]
+    for property_name, color in template_config_data["colors"].items():
+        color = template_config_data["colors"][property_name]
         color_placeholder = color[0:7]
         alpha = color[7:9]
         if color_placeholder in palette_data:
             color_replacement = palette_data[color_placeholder] + alpha
-            template_config_data["colors"][property] = color_replacement
+            template_config_data["colors"][property_name] = color_replacement
             selected_ui_color[color_placeholder] = color_replacement
 
     for token_color in template_config_data["tokenColors"]:
@@ -857,33 +856,13 @@ def generate_random_theme_file(
         token_color["settings"]["foreground"] = color_replacement
         selected_token_color[color_placeholder] = color_replacement
 
-    DYNAMIC_THEME_PATH = (
+    dynamic_theme_path = (
         f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
     )
-    json.dump(
-        palette_data,
-        open(PALETTE_FILE_PATH, "w"),
-        indent=4,
-        sort_keys=True,
-    )
-    json.dump(
-        template_config_data,
-        open(DYNAMIC_THEME_PATH, "w"),
-        indent=4,
-        sort_keys=True,
-    )
-    json.dump(
-        selected_ui_color,
-        open(SELECTED_UI_COLOR_FILE_PATH, "w"),
-        indent=4,
-        sort_keys=True,
-    )
-    json.dump(
-        selected_token_color,
-        open(SELECTED_TOKEN_COLOR_FILE_PATH, "w"),
-        indent=4,
-        sort_keys=True,
-    )
+    _dump_json_file(PALETTE_FILE_PATH, palette_data)
+    _dump_json_file(dynamic_theme_path, template_config_data)
+    _dump_json_file(SELECTED_UI_COLOR_FILE_PATH, selected_ui_color)
+    _dump_json_file(SELECTED_TOKEN_COLOR_FILE_PATH, selected_token_color)
 
 
 def debug_color_config():
@@ -923,12 +902,7 @@ def debug_color_config():
                 color["light_range"] = [1, 60]
             print("new", json.dumps(color, indent=4, sort_keys=True))
 
-    json.dump(
-        config.config,
-        open(config.config_path, "w"),
-        indent=4,
-        sort_keys=True,
-    )
+    _dump_json_file(config.config_path, config.config)
 
 
 def main():
