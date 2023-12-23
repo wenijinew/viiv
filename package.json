@@ -2,7 +2,7 @@
   "name": "viiv",
   "displayName": "viiv",
   "description": "A VsCode theme that puts developers into focus mode quickly. ",
-  "version": "0.2.15",
+  "version": "0.2.16",
   "engines": {
     "vscode": "^1.83.0"
   },
@@ -17,14 +17,14 @@
   "contributes": {
     "themes": [
       {
+        "label": "ViiV-Black",
+        "uiTheme": "vs-dark",
+        "path": "./themes/viiv-black-color-theme.json"
+      },
+      {
         "label": "ViiV-Red",
         "uiTheme": "vs-dark",
         "path": "./themes/viiv-red-color-theme.json"
-      },
-      {
-        "label": "ViiV-Orange",
-        "uiTheme": "vs-dark",
-        "path": "./themes/viiv-orange-color-theme.json"
       },
       {
         "label": "ViiV-Yellow",
@@ -52,19 +52,14 @@
         "path": "./themes/viiv-violet-color-theme.json"
       },
       {
-        "label": "ViiV-Black",
+        "label": "ViiV-Dark-Black",
         "uiTheme": "vs-dark",
-        "path": "./themes/viiv-black-color-theme.json"
+        "path": "./themes/viiv-dark-black-color-theme.json"
       },
       {
         "label": "ViiV-Dark-Red",
         "uiTheme": "vs-dark",
         "path": "./themes/viiv-dark-red-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Orange",
-        "uiTheme": "vs-dark",
-        "path": "./themes/viiv-dark-orange-color-theme.json"
       },
       {
         "label": "ViiV-Dark-Yellow",
@@ -92,9 +87,39 @@
         "path": "./themes/viiv-dark-violet-color-theme.json"
       },
       {
-        "label": "ViiV-Dark-Black",
+        "label": "ViiV-Random-Black",
         "uiTheme": "vs-dark",
-        "path": "./themes/viiv-dark-black-color-theme.json"
+        "path": "./themes/viiv-random-black-color-theme.json"
+      },
+      {
+        "label": "ViiV-Random-Red",
+        "uiTheme": "vs-dark",
+        "path": "./themes/viiv-random-red-color-theme.json"
+      },
+      {
+        "label": "ViiV-Random-Yellow",
+        "uiTheme": "vs-dark",
+        "path": "./themes/viiv-random-yellow-color-theme.json"
+      },
+      {
+        "label": "ViiV-Random-Green",
+        "uiTheme": "vs-dark",
+        "path": "./themes/viiv-random-green-color-theme.json"
+      },
+      {
+        "label": "ViiV-Random-Cyan",
+        "uiTheme": "vs-dark",
+        "path": "./themes/viiv-random-cyan-color-theme.json"
+      },
+      {
+        "label": "ViiV-Random-Blue",
+        "uiTheme": "vs-dark",
+        "path": "./themes/viiv-randomblue-color-theme.json"
+      },
+      {
+        "label": "ViiV-Random-Violet",
+        "uiTheme": "vs-dark",
+        "path": "./themes/viiv-random-violet-color-theme.json"
       },
       {
         "label": "ViiV",
