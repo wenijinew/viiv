@@ -26,7 +26,7 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = []
+DEBUG_PROPERTY = ["list.inactiveSelectionBackground"]
 DEBUG_GROUP = []
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -509,7 +509,7 @@ class TemplateConfig(dict):
         elif component == ColorComponent.BASIC:
             _color = old_color[0:2] + new_color[2:5] + old_color[5:]
 
-        return old_color
+        return _color
 
     def generate_template(self, config: Config = None):
         """
@@ -714,14 +714,22 @@ def print_palette():
 
 
 DEFAULT_THEMES_MAP = {
-    "black": ["#010101", "#010101", "#010101", "#010101"],
-    "red": ["#010000", "#010000", "#010000", "#010000"],
-    "orange": ["#020100", "#020100", "#020100", "#020100"],
-    "yellow": ["#010100", "#010100", "#010100", "#010100"],
-    "green": ["#000100", "#000100", "#000100", "#000100"],
-    "cyan": ["#000101", "#000101", "#000101", "#000101"],
-    "blue": ["#000001", "#000001", "#000001", "#000001"],
-    "violet": ["#010001", "#010001", "#010001", "#010001"],
+    "dark-black": ["#010101", "#010101", "#010101", "#010101"],
+    "dark-red": ["#010000", "#010000", "#010000", "#010000"],
+    "dark-orange": ["#020100", "#020100", "#020100", "#020100"],
+    "dark-yellow": ["#010100", "#010100", "#010100", "#010100"],
+    "dark-green": ["#000100", "#000100", "#000100", "#000100"],
+    "dark-cyan": ["#000101", "#000101", "#000101", "#000101"],
+    "dark-blue": ["#000001", "#000001", "#000001", "#000001"],
+    "dark-violet": ["#010001", "#010001", "#010001", "#010001"],
+    "black": ["#0c0c0c", "#0c0c0c", "#0c0c0c", "#0c0c0c"],
+    "red": ["#0c0000", "#0c0000", "#0c0000", "#0c0000"],
+    "orange": ["#160b00", "#160b00", "#160b00", "#160b00"],
+    "yellow": ["#0c0c00", "#0c0c00", "#0c0c00", "#0c0c00"],
+    "green": ["#000c00", "#000c00", "#000c00", "#000c00"],
+    "cyan": ["#000c0c", "#000c0c", "#000c0c", "#000c0c"],
+    "blue": ["#00000c", "#00000c", "#00000c", "#00000c"],
+    "violet": ["#0c000c", "#0c000c", "#0c000c", "#0c000c"],
 }
 
 
@@ -766,8 +774,8 @@ def generate_random_theme_file(
     dark_color_gradations_total=60,
     general_min_color=60,
     general_max_color=140,
-    dark_color_min=1,
-    dark_color_max=5,
+    dark_color_min=5,
+    dark_color_max=10,
     dark_colors_total=4,
     dark_base_colors=None,
     theme_filename_prefix="viiv-dynamic",
