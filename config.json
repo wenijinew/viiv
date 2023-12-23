@@ -98,14 +98,13 @@
                     2
                 ],
                 "light_range": [
-                    1,
-                    59
+                    5,
+                    10
                 ]
             },
             "groups": [
                 "decoration",
                 "titleBar.activeForeground",
-                ".*hover.*foreground.*",
                 "tab.activeBorderTop",
                 "activityBar.foreground",
                 "activityBar.activeBorder",
@@ -113,7 +112,6 @@
                 "notebook.focusedCellBorder",
                 "tab.activeForeground",
                 "menu.foreground",
-                ".*badge.*background.*",
                 "menu.separatorBackground",
                 "quickInput.foreground",
                 "icon.foreground",
@@ -135,8 +133,8 @@
                     2
                 ],
                 "light_range": [
-                    1,
-                    60
+                    25,
+                    30
                 ]
             },
             "groups": [
@@ -203,7 +201,9 @@
             },
             "groups": [
                 "ansiYellow",
+                ".*badge.*background.*",
                 ".*cursor.foreground",
+                ".*hover.*foreground.*",
                 "editorLineNumber.activeForeground",
                 ".*warning.*background.*"
             ],
@@ -291,8 +291,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
-                    "0xff"
+                    "0xce",
+                    "0xcf"
                 ],
                 "hex": "#cc00ff"
             },
@@ -557,13 +557,12 @@
                 "scrollbarSlider.hoverBackground",
                 "minimapSlider.activeBackground",
                 "minimapSlider.hoverBackground",
-                ".*(?!in)selectionBackground.*",
                 ".*highlight.*",
                 ".*outline.*",
                 "tree.inactiveIndentGuidesStroke",
                 "editorIndentGuide.background.*",
                 ".*\\.(?!unfold)fold.*",
-                ".*\\.(?!inactive)(active|selected|focus).*background.*",
+                ".*\\.(?!inactive)(active|select|focus).*background.*",
                 ".*editor.*match.*",
                 "editor.*(highlight|selection).*background",
                 "tab.unfocusedActiveBorderTop",
@@ -660,8 +659,8 @@
                 "titleBar.activeBackground",
                 "(activityBar|menu).background",
                 ".*badge.*foreground.*",
-                "list.inactiveSelectionBackground",
                 "editorOverviewRuler",
+                "list.inactiveSelectionBackground",
                 "notebook.focusedCellBackground"
             ],
             "replace_color_component": [

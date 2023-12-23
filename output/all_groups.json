@@ -1,6 +1,5 @@
 [
     "(activityBar|menu).background",
-    ".*(?!in)selectionBackground.*",
     ".*(?!unresolved)resolved.*(foreground|icon).*",
     ".*(add|inserted|success).*(foreground|icon).*",
     ".*(add|insert|success).*background.*",
@@ -9,7 +8,7 @@
     ".*(inactive|unfocus|disabled).*(background|border).*",
     ".*(inactive|unfocus|disabled).*foreground.*",
     ".*Link.activeForeground",
-    ".*\\.(?!inactive)(active|selected|focus).*background.*",
+    ".*\\.(?!inactive)(active|select|focus).*background.*",
     ".*\\.(?!unfold)fold.*",
     ".*background.*",
     ".*badge.*background.*",
