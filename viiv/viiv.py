@@ -6,10 +6,12 @@ import json
 import os
 import random
 import re
+import shutil
 import sys
 import time
 from enum import Enum
 
+from more_itertools import side_effect
 from peelee import peelee as pe
 
 # reserved constants
@@ -732,21 +734,16 @@ DEFAULT_THEMES_MAP = {
     "violet": ["#0c000c", "#0c000c", "#0c000c", "#0c000c"],
 }
 
-
-def pirnt_default_themes():
-    """
-    Print the default themes.
-
-    This function iterates over the `DEFAULT_THEMES_MAP` dictionary and prints each theme along with its corresponding colors using the `pe.bg` function.
-
-    Parameters:
-        None
-
-    Returns:
-        None
-    """
-    for theme, colors in DEFAULT_THEMES_MAP.items():
-        print(pe.bg(colors, f"{theme}"))
+# 3 colors for workbench: activityBar.background, sideBar.background, and editor.background
+CUSTOMIZED_THEMES_MAP = {
+    "ericsson-black": ["#0c0c0c", "#181818", "#242424"],
+    "github-blue": ["#010409", "#0E1117", "#171B22"],
+}
+CUSTOMIZED_COLOR_PROPERTIES = [
+    "activityBar.background",
+    "sideBar.background",
+    "editor.background",
+]
 
 
 def generate_default_themes(target_theme="black"):
@@ -765,7 +762,35 @@ def generate_default_themes(target_theme="black"):
         generate_random_theme_file(
             dark_base_colors=colors, theme_filename_prefix=f"viiv-{theme}"
         )
-        time.sleep(5)
+        time.sleep(2)
+
+    # create customized themes
+    create_customized_themes()
+
+
+def create_customized_themes(target_theme="black"):
+    """
+    Generates customized themes based on the given target theme.
+    """
+    # copy black theme to generate customized themes by replacing the
+    # background colors of activityBar, sideBar and editor.
+    target_theme_path = f"{os.getcwd()}/themes/viiv-{target_theme}-color-theme.json"
+    for theme, customized_bg_colors in CUSTOMIZED_THEMES_MAP.items():
+        with open(target_theme_path, "r", encoding="utf-8") as file:
+            target_theme_json = json.load(file)
+        colors = target_theme_json["colors"]
+        for index, bg_color_property in enumerate(CUSTOMIZED_COLOR_PROPERTIES):
+            current_bg_color = colors[bg_color_property]
+            new_bg_color = re.sub(
+                RGB_HEX_REGEX_WITHOUT_ALPHA,
+                customized_bg_colors[index],
+                current_bg_color,
+            )
+            colors[bg_color_property] = new_bg_color
+        target_theme_json["colors"] = colors
+        theme_path = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
+        with open(theme_path, "w", encoding="utf-8") as file:
+            json.dump(target_theme_json, file, indent=4)
 
 
 def generate_random_theme_file(
