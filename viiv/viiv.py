@@ -606,6 +606,7 @@ class TemplateConfig(dict):
                     used_groups.append(group)
                 workbench_colors[property] = color
 
+        workbench_colors = dict(sorted(workbench_colors.items(), key=lambda x: x[0]))
         self.config["colors"] = workbench_colors
 
         # token colors
@@ -631,6 +632,7 @@ class TemplateConfig(dict):
                 print(
                     f"{scope} is processed by the token color {group} in the area {area}"
                 )
+        new_token_configs.sort(key=lambda x: x["scope"])
         self.config["tokenColors"] = new_token_configs
         json.dump(self.config, open(self.config_path, "w"), indent=4)
         _dump_json_file("used_groups.json", used_groups)
