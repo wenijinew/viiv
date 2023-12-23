@@ -181,6 +181,7 @@
                 "minimapGutter.addedBackground",
                 "editorLightBulbAutoFix.foreground",
                 "testing.runAction",
+                "iconPassed",
                 "editorOverviewRuler.addedForeground",
                 ".*(add|inserted|success).*(foreground|icon).*",
                 ".*(?!unresolved)resolved.*(foreground|icon).*",
@@ -282,7 +283,7 @@
             "groups": [
                 "ansiMagenta",
                 "errorBackground",
-                ".*debug.*background.*",
+                ".*(error|debug).*background.*",
                 "charts.purple",
                 ".*error.*(background|border).*"
             ],
@@ -300,6 +301,8 @@
             },
             "groups": [
                 "ansiBrightMagenta",
+                "iconErrored",
+                "error.*foreground",
                 "editorOverviewRuler.errorForeground",
                 "minimap.errorHighlight",
                 ".*error.*foreground.*",
@@ -321,7 +324,7 @@
                 "ansiBlue",
                 "charts.blue",
                 "editorInfo.foreground",
-                ".*info.*",
+                ".*info.*background",
                 "editorHint.foreground",
                 "problemsInfoIcon.foreground",
                 "editorOverviewRuler.infoForeground",
@@ -343,6 +346,8 @@
             },
             "groups": [
                 "ansiBrightBlue",
+                "info.*foreground",
+                "iconQueued",
                 "gitDecoration.renamedResourceForeground",
                 "minimap.selectionOccurrenceHighlight"
             ],
@@ -380,6 +385,7 @@
             },
             "groups": [
                 "ansiBrightRed",
+                "iconFailed",
                 "terminalCommandDecoration.errorBackground",
                 "editorGutter.deletedBackground",
                 ".*(delete|remove).*foreground.*",
@@ -484,6 +490,38 @@
             "groups": [
                 "ansiBrightBlack",
                 "input.background"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x99",
+                    "0xcc"
+                ],
+                "hex": "#808080"
+            },
+            "groups": [
+                "ansiGray",
+                "iconUnset"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x99",
+                    "0xcc"
+                ],
+                "hex": "#c0c0c0"
+            },
+            "groups": [
+                "ansiBrightGray",
+                "iconSkipped"
             ],
             "replace_color_component": [
                 "ALL"
