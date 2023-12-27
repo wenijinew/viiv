@@ -792,6 +792,7 @@ def generate_random_theme_file(
     Returns:
         None
     """
+    print(theme_filename_prefix)
     template_config = TemplateConfig()
     template_config.generate_template()
     template_config_data = template_config.config
