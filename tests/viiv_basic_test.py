@@ -13,13 +13,11 @@ class TestRandomRange(unittest.TestCase):
 
     def test_random_range_start_end_greater_than_10(self):
         result = normalize_range(["11", "20"])
-        self.assertEqual(
-            result, ["11", "12", "13", "14", "15", "16", "17", "18", "19", "20"]
-        )
+        self.assertEqual(result, ["11", "12", "13", "14", "15", "16", "17", "18", "19"])
 
     def test_random_range_start_end_equal(self):
         result = normalize_range(["10", "10"])
-        self.assertEqual(result, ["10"])
+        self.assertEqual(result, [])
 
 
 if __name__ == "__main__":

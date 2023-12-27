@@ -733,6 +733,14 @@ DEFAULT_THEMES_MAP = {
     "violet": ["#0c000c", "#0c000c", "#0c000c", "#0c000c"],
     "ericsson-black": ["#0c0c0c", "#0c0c0c", "#0c0c0c", "#0c0c0c"],
     "github-blue": ["#010409", "#010409", "#010409", "#010409"],
+    "dynamic":[],
+    "random-black":[],
+    "random-blue":[],
+    "random-cyan":[],
+    "random-green":[],
+    "random-red":[],
+    "random-violet":[],
+    "random-yellow":[],
 }
 
 
