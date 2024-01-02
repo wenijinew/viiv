@@ -105,6 +105,7 @@
             "groups": [
                 "decoration",
                 ".*badge.*background.*",
+                ".*input.*border",
                 ".*cursor.foreground",
                 ".*Link.activeForeground",
                 "editorIndentGuide.activeBackground",
@@ -508,8 +509,7 @@
                 "hex": "#333333"
             },
             "groups": [
-                "ansiBrightBlack",
-                "input.background"
+                "ansiBrightBlack"
             ],
             "replace_color_component": [
                 "ALL"
@@ -721,6 +721,7 @@
                 "titleBar.activeBackground",
                 "(activityBar|menu).background",
                 ".*badge.*foreground.*",
+                ".*input.*background",
                 "editorOverviewRuler",
                 "list.inactiveSelectionBackground",
                 "notebook.focusedCellBackground"
@@ -771,6 +772,7 @@
             "groups": [
                 "tab.activeBackground",
                 "breadcrumb.background",
+                ".*input.*placeholderForeground.*",
                 ".*(inactive|unfocus|disabled).*foreground.*"
             ],
             "replace_color_component": [
