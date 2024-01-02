@@ -26,7 +26,7 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = ["statusBarItem.hoverForeground"]
+DEBUG_PROPERTY = ["menubar.selectionBackground"]
 DEBUG_GROUP = []
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -235,6 +235,7 @@ class Config(dict):
         self.config_path = config_path
         self.config = _load_json_file(config_path)
         self.areas = self.config.keys()
+        # default color config and token default color config
         default_color_config = list(
             filter(
                 lambda x: "default" in x["groups"],
@@ -255,11 +256,24 @@ class Config(dict):
             "token",
             default_token_color_config["groups"][0],
         )
+        # decoration groups
+        self.decoration_groups = []
+        for area in self.areas:
+            for color_config in self.config[area]:
+                groups = color_config["groups"]
+                if "decoration" in groups:
+                    self.decoration_groups.extend(groups)
+
+        # random base range for decoration groups
+        random_int = random.randint(1, 8)
+        self.basic_range_for_decoration_groups = [random_int, random_int + 1]
+
         super().__init__(
             config=self.config,
             areas=self.areas,
             default_color=self.default_color_config,
             default_token_color=self.default_token_color_config,
+            decoration_groups=self.decoration_groups,
         )
 
     def get_color_wrappers(self, target_property, target_area=None) -> list:
@@ -458,6 +472,11 @@ class Config(dict):
         _most_matched_config = min(_matches, key=lambda x: x["match_rule"].value)
         color = _most_matched_config["color"]
         group = _most_matched_config["group"]
+
+        # decoration groups use unified basic range which is random but unique
+        if group in self.decoration_groups:
+            color["basic_range"] = self.basic_range_for_decoration_groups
+
         replace_color_component = _most_matched_config["replace_color_component"]
         color_config = ColorConfig(color, area, group, replace_color_component)
         return {
@@ -733,14 +752,14 @@ DEFAULT_THEMES_MAP = {
     "violet": ["#0c000c", "#0c000c", "#0c000c", "#0c000c"],
     "ericsson-black": ["#0c0c0c", "#0c0c0c", "#0c0c0c", "#0c0c0c"],
     "github-blue": ["#010409", "#010409", "#010409", "#010409"],
-    "dynamic":[],
-    "random-black":[],
-    "random-blue":[],
-    "random-cyan":[],
-    "random-green":[],
-    "random-red":[],
-    "random-violet":[],
-    "random-yellow":[],
+    "dynamic": [],
+    "random-black": [],
+    "random-blue": [],
+    "random-cyan": [],
+    "random-green": [],
+    "random-red": [],
+    "random-violet": [],
+    "random-yellow": [],
 }
 
 
