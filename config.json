@@ -11,8 +11,8 @@
                     12
                 ],
                 "light_range": [
-                    57,
-                    58
+                    55,
+                    56
                 ]
             },
             "groups": [
@@ -31,8 +31,8 @@
                     12
                 ],
                 "light_range": [
-                    56,
-                    57
+                    54,
+                    55
                 ]
             },
             "groups": [
@@ -98,12 +98,17 @@
                     2
                 ],
                 "light_range": [
-                    5,
-                    10
+                    10,
+                    15
                 ]
             },
             "groups": [
                 "decoration",
+                ".*badge.*background.*",
+                ".*cursor.foreground",
+                ".*Link.activeForeground",
+                "editorIndentGuide.activeBackground",
+                "editorLineNumber.activeForeground",
                 "titleBar.activeForeground",
                 "tab.activeBorderTop",
                 "activityBar.foreground",
@@ -115,7 +120,6 @@
                 "menu.separatorBackground",
                 "quickInput.foreground",
                 "icon.foreground",
-                "button.border",
                 "scrollbarSlider.background",
                 "indentGuidesStroke",
                 "minimapSlider.background"
@@ -138,9 +142,31 @@
             },
             "groups": [
                 "decoration",
+                "menubar.selectionBackground",
                 "menu.selectionBackground",
-                ".*list.*hover.*background.*",
-                "lineHighlightBackground"
+                "button.hoverBackground",
+                "lineHighlightBackground",
+                ".*list.*hover.*background.*"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xce",
+                    "0xcf"
+                ],
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    50,
+                    51
+                ]
+            },
+            "groups": [
+                "decoration",
+                "button.background"
             ]
         },
         {
@@ -202,10 +228,6 @@
             },
             "groups": [
                 "ansiYellow",
-                ".*badge.*background.*",
-                ".*cursor.foreground",
-                "editorIndentGuide.activeBackground",
-                "editorLineNumber.activeForeground",
                 ".*warning.*background.*"
             ],
             "replace_color_component": [
@@ -258,7 +280,6 @@
             "groups": [
                 "ansiBrightOrange",
                 "wordHighlightStrongBorder",
-                ".*Link.activeForeground",
                 "charts.orange",
                 "editorLightBulb.foreground",
                 ".*modified.*",
@@ -317,7 +338,7 @@
                     "0x99",
                     "0xcc"
                 ],
-                "hex": "#4d4dff"
+                "hex": "#6767ff"
             },
             "groups": [
                 "ansiBlue",
@@ -719,8 +740,8 @@
                     12
                 ],
                 "light_range": [
-                    57,
-                    58
+                    59,
+                    60
                 ]
             },
             "groups": [
@@ -735,16 +756,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x81",
-                    "0x88"
+                    "0x91",
+                    "0x98"
                 ],
                 "basic_range": [
                     8,
                     9
                 ],
                 "light_range": [
-                    35,
-                    36
+                    25,
+                    26
                 ]
             },
             "groups": [
@@ -782,6 +803,7 @@
                 "editorGroupHeader.tabsBorder",
                 "editorGroupHeader.border",
                 "focusBorder",
+                "button.border",
                 "tab.activeBorder",
                 "tab.unfocusedActiveBorder",
                 "editor.lineHighlightBorder",
