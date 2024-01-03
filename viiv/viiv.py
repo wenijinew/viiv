@@ -682,6 +682,7 @@ def _dump_json_file(json_file_path, json_data):
 
 
 def print_colors(filter_value, theme="dynamic"):
+    assert theme is not None, "Please provide theme name."
     dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
     dynamic_theme_json = _load_json_file(dynamic_theme_json_file)
     theme_template_json = _load_json_file(THEME_TEMPLATE_JSON_FILE)
