@@ -681,13 +681,15 @@ def _dump_json_file(json_file_path, json_data):
         json.dump(json_data, f, indent=4)
 
 
-def print_colors(value, theme="dynamic"):
+def print_colors(filter_value, theme="dynamic"):
     dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
     dynamic_theme_json = _load_json_file(dynamic_theme_json_file)
     theme_template_json = _load_json_file(THEME_TEMPLATE_JSON_FILE)
     colors = dynamic_theme_json["colors"]
     for k, v in colors.items():
-        if k.lower().find(value) != -1 or re.match(f".*{value}.*", k, re.IGNORECASE):
+        if k.lower().find(filter_value) != -1 or re.match(
+            f".*{filter_value}.*", k, re.IGNORECASE
+        ):
             print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
 
 
@@ -700,7 +702,7 @@ def _load_json_file(json_file_path):
         return json_data
 
 
-def print_palette():
+def print_palette(filter=None):
     """
     Print the dynamic palette, selected UI palette, and selected token palette.
 
@@ -716,22 +718,29 @@ def print_palette():
     Returns:
     None
     """
-    print("Dynamic palette:")
+    print("Dynamic Palette:")
     dynamic_palette_json_file = f"{os.getcwd()}/output/dynamic-palette.json"
     with open(dynamic_palette_json_file, "r", encoding="utf-8") as file:
         dynamic_palette_json = json.load(file)
     for k, v in dynamic_palette_json.items():
+        if filter and k != filter:
+            continue
         print(pe.bg(v, f"{k}: {v}"))
 
-    print("Selected UI palette:")
+    print("\nSelected UI Palette:")
     with open(SELECTED_UI_COLOR_FILE_PATH, encoding="utf-8") as selected_ui_file:
         selected_ui_palette_json = json.load(selected_ui_file)
         for k, v in selected_ui_palette_json.items():
+            if filter and k != filter:
+                continue
             print(pe.bg(v, f"{k}: {v}"))
-    print("Selected Token palette:")
+
+    print("\nSelected Token Palette:")
     with open(SELECTED_TOKEN_COLOR_FILE_PATH, encoding="utf-8") as selected_token_file:
         selected_token_palette_json = json.load(selected_token_file)
         for k, v in selected_token_palette_json.items():
+            if filter and k != filter:
+                continue
             print(pe.bg(v, f"{k}: {v}"))
 
 
@@ -752,6 +761,7 @@ DEFAULT_THEMES_MAP = {
     "violet": ["#0c000c", "#0c000c", "#0c000c", "#0c000c"],
     "ericsson-black": ["#0c0c0c", "#0c0c0c", "#0c0c0c", "#0c0c0c"],
     "github-blue": ["#010409", "#010409", "#010409", "#010409"],
+    "twitter-dim": ["#0d1319", "#0d1319", "#0d1319", "#0d1319"],
     "dynamic": [],
     "random-black": [],
     "random-blue": [],
@@ -787,8 +797,8 @@ def generate_random_theme_file(
     dark_color_gradations_total=60,
     general_min_color=60,
     general_max_color=140,
-    dark_color_min=5,
-    dark_color_max=10,
+    dark_color_min=15,
+    dark_color_max=30,
     dark_colors_total=4,
     dark_base_colors=None,
     theme_filename_prefix="viiv-dynamic",
