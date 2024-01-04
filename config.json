@@ -92,22 +92,22 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xde",
-                    "0xdf"
+                    "0xfe",
+                    "0xff"
                 ],
                 "basic_range": [
-                    1,
-                    2
+                    11,
+                    12
                 ],
                 "light_range": [
                     10,
-                    15
+                    20
                 ]
             },
             "groups": [
                 "decoration",
                 ".*badge.*background.*",
-                ".*(input|active).*border",
+                ".*(input|active|checkbox|dropdown).*border",
                 ".*cursor.foreground",
                 ".*Link.activeForeground",
                 "editorIndentGuide.activeBackground",
