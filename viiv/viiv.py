@@ -26,11 +26,11 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = ["menubar.selectionBackground"]
+DEBUG_PROPERTY = ["editorSuggestWidget.background"]
 DEBUG_GROUP = []
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
-PALETTE_FILE_PATH = f"{os.getcwd()}/output/dynamic-palette.json"
+PALETTE_FILE_PATH = f"{os.getcwd()}/output/random-palette.json"
 SELECTED_UI_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-ui-palette.json"
 SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-token-palette.json"
 
@@ -454,6 +454,9 @@ class Config(dict):
         area_config = self.config[area]
         _matches = []
         for groups_config in area_config:
+            enabled = groups_config.get("enabled", True)
+            if not enabled:
+                continue
             groups = groups_config["groups"]
             groups.sort(reverse=True)
             _match = self._match(groups, target_property)
@@ -681,12 +684,12 @@ def _dump_json_file(json_file_path, json_data):
         json.dump(json_data, f, indent=4)
 
 
-def print_colors(filter_value, theme="dynamic"):
+def print_colors(filter_value, theme="random"):
     assert theme is not None, "Please provide theme name."
-    dynamic_theme_json_file = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
-    dynamic_theme_json = _load_json_file(dynamic_theme_json_file)
+    random_theme_json_file = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
+    random_theme_json = _load_json_file(random_theme_json_file)
     theme_template_json = _load_json_file(THEME_TEMPLATE_JSON_FILE)
-    colors = dynamic_theme_json["colors"]
+    colors = random_theme_json["colors"]
     for k, v in colors.items():
         if k.lower().find(filter_value) != -1 or re.match(
             f".*{filter_value}.*", k, re.IGNORECASE
@@ -705,10 +708,10 @@ def _load_json_file(json_file_path):
 
 def print_palette(filter=None):
     """
-    Print the dynamic palette, selected UI palette, and selected token palette.
+    Print the random palette, selected UI palette, and selected token palette.
 
-    This function prints the dynamic palette, selected UI palette, and selected token palette
-    to the console. The dynamic palette is loaded from the file "dynamic-palette.json" located
+    This function prints the random palette, selected UI palette, and selected token palette
+    to the console. The random palette is loaded from the file "random-palette.json" located
     in the "output" directory. The selected UI palette is loaded from the file specified by
     the constant variable "SELECTED_UI_COLOR_FILE_PATH". The selected token palette is loaded
     from the file specified by the constant variable "SELECTED_TOKEN_COLOR_FILE_PATH".
@@ -719,11 +722,11 @@ def print_palette(filter=None):
     Returns:
     None
     """
-    print("Dynamic Palette:")
-    dynamic_palette_json_file = f"{os.getcwd()}/output/dynamic-palette.json"
-    with open(dynamic_palette_json_file, "r", encoding="utf-8") as file:
-        dynamic_palette_json = json.load(file)
-    for k, v in dynamic_palette_json.items():
+    print("random Palette:")
+    random_palette_json_file = f"{os.getcwd()}/output/random-palette.json"
+    with open(random_palette_json_file, "r", encoding="utf-8") as file:
+        random_palette_json = json.load(file)
+    for k, v in random_palette_json.items():
         if filter and k != filter:
             continue
         print(pe.bg(v, f"{k}: {v}"))
@@ -763,14 +766,14 @@ DEFAULT_THEMES_MAP = {
     "ericsson-black": ["#0c0c0c", "#0c0c0c", "#0c0c0c", "#0c0c0c"],
     "github-blue": ["#010409", "#010409", "#010409", "#010409"],
     "twitter-dim": ["#0d1319", "#0d1319", "#0d1319", "#0d1319"],
-    "dynamic": [],
-    "random-black": [],
-    "random-blue": [],
-    "random-cyan": [],
-    "random-green": [],
-    "random-red": [],
-    "random-violet": [],
-    "random-yellow": [],
+    "random-0": [],
+    "random-1": [],
+    "random-2": [],
+    "random-3": [],
+    "random-4": [],
+    "random-5": [],
+    "random-6": [],
+    "random-7": [],
 }
 
 
@@ -798,11 +801,11 @@ def generate_random_theme_file(
     dark_color_gradations_total=60,
     general_min_color=60,
     general_max_color=140,
-    dark_color_min=15,
+    dark_color_min=10,
     dark_color_max=30,
     dark_colors_total=4,
     dark_base_colors=None,
-    theme_filename_prefix="viiv-dynamic",
+    theme_filename_prefix="viiv-random-0",
 ):
     """
     Generates a random theme file with specified parameters.
@@ -857,11 +860,9 @@ def generate_random_theme_file(
         token_color["settings"]["foreground"] = color_replacement
         selected_token_color[color_placeholder] = color_replacement
 
-    dynamic_theme_path = (
-        f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
-    )
+    random_theme_path = f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
     _dump_json_file(PALETTE_FILE_PATH, palette_data)
-    _dump_json_file(dynamic_theme_path, template_config_data)
+    _dump_json_file(random_theme_path, template_config_data)
     _dump_json_file(SELECTED_UI_COLOR_FILE_PATH, selected_ui_color)
     _dump_json_file(SELECTED_TOKEN_COLOR_FILE_PATH, selected_token_color)
 
@@ -918,9 +919,9 @@ def main():
     """
     opts, _ = getopt.getopt(
         sys.argv[1:],
-        "dgp:t:P",
+        "gp:rt:P",
         [
-            "--dynamic_theme",
+            "--random_theme",
             "--generate",
             "--print_colors=",
             "--theme=",
@@ -934,7 +935,7 @@ def main():
     for option, value in opts:
         if option in ("-g", "--generate_default_themes"):
             to_generate_default_themes = True
-        if option in ("-d", "--dynamic_theme"):
+        if option in ("-r", "--random_theme"):
             generate_random_theme_file()
         if option in ("-t", "--theme"):
             target_theme = value
