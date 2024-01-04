@@ -40,12 +40,14 @@
                 "editor",
                 "terminal",
                 "editorGhostText"
-            ]
+            ],
+            "enabled": false
         }
     ],
     "border": [
         {
             "color": {
+                "hex": "#000000",
                 "alpha_range": [
                     "0xfe",
                     "0xff"
@@ -55,8 +57,8 @@
                     12
                 ],
                 "light_range": [
-                    59,
-                    60
+                    51,
+                    52
                 ]
             },
             "groups": [
@@ -488,8 +490,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x99",
-                    "0xcc"
+                    "0xfe",
+                    "0xff"
                 ],
                 "hex": "#0c0c0c"
             },
@@ -636,19 +638,20 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x41",
-                    "0x48"
+                    "0xa1",
+                    "0xa2"
                 ],
                 "basic_range": [
                     11,
                     12
                 ],
                 "light_range": [
-                    41,
-                    42
+                    51,
+                    53
                 ]
             },
             "groups": [
+                "editorGroupHeader.tabsBackground",
                 "tab.inactiveBackground"
             ],
             "replace_color_component": [
@@ -659,7 +662,7 @@
             "color": {
                 "alpha_range": [
                     "0x21",
-                    "0x28"
+                    "0x2f"
                 ],
                 "basic_range": [
                     11,
@@ -667,7 +670,7 @@
                 ],
                 "light_range": [
                     41,
-                    42
+                    45
                 ]
             },
             "groups": [
@@ -719,6 +722,8 @@
             },
             "groups": [
                 "titleBar.activeBackground",
+                "activityBar.activeBackground",
+                "quickInput.background",
                 "(activityBar|menu).background",
                 ".*badge.*foreground.*",
                 ".*input.*background",
@@ -741,13 +746,11 @@
                     12
                 ],
                 "light_range": [
-                    56,
-                    57
+                    57,
+                    58
                 ]
             },
             "groups": [
-                "activityBar.activeBackground",
-                "quickInput.background",
                 "editor(Suggest|Hover)Widget.background"
             ],
             "replace_color_component": [
@@ -770,13 +773,31 @@
                 ]
             },
             "groups": [
-                "tab.activeBackground",
-                "breadcrumb.background",
                 ".*input.*placeholderForeground.*",
                 ".*(inactive|unfocus|disabled).*foreground.*"
             ],
             "replace_color_component": [
                 "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    55,
+                    56
+                ]
+            },
+            "groups": [
+                "tab.activeBackground",
+                "breadcrumb.background"
             ]
         },
         {
@@ -803,7 +824,6 @@
                 "editorError.border",
                 "tab.border",
                 "editorGroupHeader.tabsBorder",
-                "editorGroupHeader.border",
                 "focusBorder",
                 "button.border",
                 "tab.activeBorder",
