@@ -11,6 +11,9 @@ from enum import Enum
 
 from peelee import peelee as pe
 
+# random decoration color or not
+RANDOM_DECORATION_COLOR = False
+
 # reserved constants
 TOKEN_COLOR_PREFIX = "T_"
 WORKBENCH_COLOR_PREFIX = "W_"
@@ -264,8 +267,11 @@ class Config(dict):
                     self.decoration_groups.extend(groups)
 
         # random base range for decoration groups
-        random_int = random.randint(1, 8)
-        self.basic_range_for_decoration_groups = [random_int, random_int + 1]
+        if RANDOM_DECORATION_COLOR:
+            random_int = random.randint(1, 8)
+            self.basic_range_for_decoration_groups = [random_int, random_int + 1]
+        else:
+            self.basic_range_for_decoration_groups = [11, 12]
 
         super().__init__(
             config=self.config,
