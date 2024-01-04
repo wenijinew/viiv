@@ -7,7 +7,6 @@ import os
 import random
 import re
 import sys
-import time
 from enum import Enum
 
 from peelee import peelee as pe
@@ -233,7 +232,7 @@ class Config(dict):
         if config_path is None:
             config_path = f"{os.getcwd()}/config.json"
         self.config_path = config_path
-        self.config = _load_json_file(config_path)
+        self.config = load_json_file(config_path)
         self.areas = self.config.keys()
         # default color config and token default color config
         default_color_config = list(
@@ -496,7 +495,7 @@ class TemplateConfig(dict):
         if config_path is None:
             config_path = THEME_TEMPLATE_JSON_FILE
         self.config_path = config_path
-        self.config = _load_json_file(config_path)
+        self.config = load_json_file(config_path)
         self.color_properties = list(self.config["colors"].keys())
         super().__init__(config_path=config_path)
 
@@ -687,8 +686,8 @@ def _dump_json_file(json_file_path, json_data):
 def print_colors(filter_value, theme="random"):
     assert theme is not None, "Please provide theme name."
     random_theme_json_file = f"{os.getcwd()}/themes/viiv-{theme}-color-theme.json"
-    random_theme_json = _load_json_file(random_theme_json_file)
-    theme_template_json = _load_json_file(THEME_TEMPLATE_JSON_FILE)
+    random_theme_json = load_json_file(random_theme_json_file)
+    theme_template_json = load_json_file(THEME_TEMPLATE_JSON_FILE)
     colors = random_theme_json["colors"]
     for k, v in colors.items():
         if k.lower().find(filter_value) != -1 or re.match(
@@ -697,7 +696,7 @@ def print_colors(filter_value, theme="random"):
             print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
 
 
-def _load_json_file(json_file_path):
+def load_json_file(json_file_path):
     """
     Loads the JSON file at the specified path.
     """
@@ -752,10 +751,18 @@ DEFAULT_THEMES_MAP = {
     "dark-black": ["#010101", "#010101", "#010101", "#010101"],
     "dark-red": ["#010000", "#010000", "#010000", "#010000"],
     "dark-yellow": ["#010100", "#010100", "#010100", "#010100"],
+    "dark-desaturated-yellow": ["#202313", "#202313", "#202313", "#202313"],
+    "dark-olive-yellow": ["#222118", "#222118", "#222118", "#222118"],
     "dark-green": ["#000100", "#000100", "#000100", "#000100"],
+    "dark-lime-green": ["#1e2420", "#1e2420", "#1e2420", "#1e2420"],
     "dark-cyan": ["#000101", "#000101", "#000101", "#000101"],
+    "dark-grayish-cyan": ["#090c0c", "#090c0c", "#090c0c", "#090c0c"],
     "dark-blue": ["#000001", "#000001", "#000001", "#000001"],
+    "dark-desaturated-blue": ["#191f27", "#191f27", "#191f27", "#191f27"],
     "dark-violet": ["#010001", "#010001", "#010001", "#010001"],
+    "dark-pink": ["#271622", "#271622", "#271622", "#271622"],
+    "dark-magenta": ["#231626", "#231626", "#231626", "#231626"],
+    "dark-grayish-violet": ["#18171a", "#18171a", "#18171a", "#18171a"],
     "black": ["#0b0b0b", "#0b0b0b", "#0b0b0b", "#0b0b0b"],
     "red": ["#0c0000", "#0c0000", "#0c0000", "#0c0000"],
     "yellow": ["#0c0c00", "#0c0c00", "#0c0c00", "#0c0c00"],
