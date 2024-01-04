@@ -825,9 +825,25 @@ def discard_red_dark_color(palette_color_data):
     color_hex_c11 = palette_color_data["C_11_59"]
     color_rgb_c11 = pe.hex2rgb(color_hex_c11)
     max_rgb = max(color_rgb_c11)
-    if max_rgb == color_rgb_c11[0] and (max_rgb not in color_rgb_c11[1:]):
-        random_dark_base_color = random.randint(8, 10)
-        random_dark_base_color = pe.padding(random_dark_base_color)
+    if (max_rgb == color_rgb_c11[0]) and (max_rgb not in color_rgb_c11[1:]):
+        # Find the replacement in dark colors
+        random_dark_base_color = None
+        for index in range(8, 13):
+            index = pe.padding(index)
+            color_hex_c11 = palette_color_data.get(f"C_{index}_59")
+            if color_hex_c11 is None:
+                continue
+            color_rgb_c11 = pe.hex2rgb(color_hex_c11)
+            if max_rgb != color_rgb_c11[0]:
+                random_dark_base_color = index
+                break
+        # If no available replacement, return original palette data
+        if random_dark_base_color is None:
+            print(
+                f"Failed to discard red color {color_hex_c11} - No availalbe replacement"
+            )
+            return palette_color_data
+        # Replace
         random_dark_color_id = f"C_{random_dark_base_color}_59"
         random_dark_color = palette_color_data[random_dark_color_id]
         print(f"Discard red color {color_hex_c11} - Replace with '{random_dark_color}'")
@@ -836,7 +852,6 @@ def discard_red_dark_color(palette_color_data):
             palette_color_data[f"C_11_{i}"] = palette_color_data[
                 f"C_{random_dark_base_color}_{i}"
             ]
-        return discard_red_dark_color(palette_color_data)
     return palette_color_data
 
 
