@@ -282,6 +282,10 @@ class Config(dict):
             decoration_groups=self.decoration_groups,
         )
 
+    def get_discard_red_dark_color(self):
+        """Return value of the option 'discard_dark_red_color'."""
+        return self.options["discard_dark_red_color"]
+
     def get_color_wrappers(self, target_property, target_area=None) -> list:
         """Go through the config items in the basic groups and set the color by checking if the given 'group' contains the key of the groups.
 
@@ -718,7 +722,7 @@ def load_json_file(json_file_path):
         return json_data
 
 
-def print_palette(filter=None):
+def print_palette(filter_value=None):
     """
     Print the random palette, selected UI palette, and selected token palette.
 
@@ -734,12 +738,13 @@ def print_palette(filter=None):
     Returns:
     None
     """
-    print("random Palette:")
+    if filter_value is not None and len(filter_value.strip()) == 0:
+        filter_value = None
     random_palette_json_file = f"{os.getcwd()}/output/random-palette.json"
     with open(random_palette_json_file, "r", encoding="utf-8") as file:
         random_palette_json = json.load(file)
     for k, v in random_palette_json.items():
-        if filter and k != filter:
+        if filter_value and k != filter_value:
             continue
         print(pe.bg(v, f"{k}: {v}"))
 
@@ -747,7 +752,7 @@ def print_palette(filter=None):
     with open(SELECTED_UI_COLOR_FILE_PATH, encoding="utf-8") as selected_ui_file:
         selected_ui_palette_json = json.load(selected_ui_file)
         for k, v in selected_ui_palette_json.items():
-            if filter and k != filter:
+            if filter_value and k != filter_value:
                 continue
             print(pe.bg(v, f"{k}: {v}"))
 
@@ -755,7 +760,7 @@ def print_palette(filter=None):
     with open(SELECTED_TOKEN_COLOR_FILE_PATH, encoding="utf-8") as selected_token_file:
         selected_token_palette_json = json.load(selected_token_file)
         for k, v in selected_token_palette_json.items():
-            if filter and k != filter:
+            if filter_value and k != filter_value:
                 continue
             print(pe.bg(v, f"{k}: {v}"))
 
@@ -815,15 +820,35 @@ def generate_default_themes(target_theme="black"):
         )
 
 
+def discard_red_dark_color(palette_color_data):
+    """Discard red dark color from palette data - Don't use it as workbench color."""
+    color_hex_c11 = palette_color_data["C_11_59"]
+    color_rgb_c11 = pe.hex2rgb(color_hex_c11)
+    max_rgb = max(color_rgb_c11)
+    if max_rgb == color_rgb_c11[0] and (max_rgb not in color_rgb_c11[1:]):
+        random_dark_base_color = random.randint(8, 10)
+        random_dark_base_color = pe.padding(random_dark_base_color)
+        random_dark_color_id = f"C_{random_dark_base_color}_59"
+        random_dark_color = palette_color_data[random_dark_color_id]
+        print(f"Discard red color {color_hex_c11} - Replace with '{random_dark_color}'")
+        for i in range(60):
+            i = pe.padding(i)
+            palette_color_data[f"C_11_{i}"] = palette_color_data[
+                f"C_{random_dark_base_color}_{i}"
+            ]
+        return discard_red_dark_color(palette_color_data)
+    return palette_color_data
+
+
 def generate_random_theme_file(
     colors_total=7,
     gradations_total=60,
     dark_color_gradations_total=60,
     general_min_color=60,
-    general_max_color=140,
-    dark_color_min=10,
-    dark_color_max=30,
-    dark_colors_total=4,
+    general_max_color=180,
+    dark_color_min=15,
+    dark_color_max=20,
+    dark_colors_total=7,
     dark_base_colors=None,
     theme_filename_prefix="viiv-random-0",
 ):
@@ -834,13 +859,17 @@ def generate_random_theme_file(
         colors_total (int): The total number of colors.
         gradations_total (int): The total number of color gradations.
         dark_color_gradations_total (int): The total number of dark color gradations.
-        general_min_color (int): The minimum color value.
-        general_max_color (int): The maximum color value.
+        general_min_color (int): The minimum color value. Best value: 60.
+        general_max_color (int): The maximum color value. Best value: 180.
         dark_color_min (int): The minimum dark color value.
         dark_color_max (int): The maximum dark color value.
         dark_colors_total (int): The total number of dark colors.
         dark_base_colors (list): The list of dark base colors.
         theme_filename_prefix (str): The prefix for the theme filename.
+
+    Best value values for general min and max: 60, 180.This range can generate full color used for token colors. Therefore, no need to change them or pass other values unless you know what you are doing.
+
+    Good valus for dark colors min and max: 5, 15. The maximum value of dark colors max should be 30. No bigger value should be used unless for light-mode theme. When the range is changed, the values used in config.json might be tuned accordingly. With the configuration in v0.2.31, the best values are 15,20.
 
     Returns:
         None
@@ -860,6 +889,10 @@ def generate_random_theme_file(
         dark_colors_total=dark_colors_total,
         dark_colors=dark_base_colors,
     ).generate_palette()
+
+    config = Config()
+    if config.get_discard_red_dark_color():
+        palette_data = discard_red_dark_color(palette_data)
 
     selected_ui_color = {}
     selected_token_color = {}
@@ -939,13 +972,13 @@ def main():
     """
     opts, _ = getopt.getopt(
         sys.argv[1:],
-        "gp:rt:P",
+        "gp:rt:P:",
         [
             "--random_theme",
             "--generate",
             "--print_colors=",
             "--theme=",
-            "--print_palette",
+            "--print_palette=",
         ],
     )
     to_generate_default_themes = False
@@ -963,7 +996,7 @@ def main():
             to_print_colors = True
             print_colors_filter = value
         elif option in ("-P", "--print_palette"):
-            print_palette()
+            print_palette(value)
 
     if to_generate_default_themes:
         generate_default_themes(target_theme)

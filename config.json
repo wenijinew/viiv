@@ -1,6 +1,7 @@
 {
     "options": {
-        "random_decoration_color": false
+        "random_decoration_color": false,
+        "discard_dark_red_color": true
     },
     "background": [
         {
@@ -632,7 +633,7 @@
                 ],
                 "basic_range": [
                     1,
-                    8
+                    12
                 ],
                 "light_range": [
                     25,
@@ -874,11 +875,11 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xc1",
-                    "0xc8"
+                    "0xbe",
+                    "0xbf"
                 ],
                 "basic_range": [
-                    8,
+                    11,
                     12
                 ],
                 "light_range": [
@@ -917,7 +918,7 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xe8",
+                    "0xee",
                     "0xef"
                 ],
                 "basic_range": [
@@ -926,7 +927,7 @@
                 ],
                 "light_range": [
                     15,
-                    40
+                    60
                 ]
             },
             "groups": [
