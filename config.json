@@ -1,4 +1,7 @@
 {
+    "options": {
+        "random_decoration_color": false
+    },
     "background": [
         {
             "color": {
@@ -92,16 +95,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
-                    "0xff"
+                    "0xbe",
+                    "0xbf"
                 ],
                 "basic_range": [
                     11,
                     12
                 ],
                 "light_range": [
-                    10,
-                    20
+                    15,
+                    25
                 ]
             },
             "groups": [
@@ -112,20 +115,41 @@
                 ".*Link.activeForeground",
                 "editorIndentGuide.activeBackground",
                 "editorLineNumber.activeForeground",
-                "titleBar.activeForeground",
                 "tab.activeBorderTop",
-                "activityBar.foreground",
-                "activityBar.activeBorder",
                 "panelTitle.activeForeground",
                 "notebook.focusedCellBorder",
                 "tab.activeForeground",
-                "menu.foreground",
-                "menu.separatorBackground",
                 "quickInput.foreground",
                 "icon.foreground",
                 "scrollbarSlider.background",
                 "indentGuidesStroke",
                 "minimapSlider.background"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xbe",
+                    "0xbf"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    1,
+                    5
+                ]
+            },
+            "groups": [
+                "decoration",
+                "titleBar.activeForeground",
+                "menu.foreground",
+                "menu.separatorBackground",
+                "activityBar.foreground",
+                "activityBar.activeBorder",
+                "breadcrumb.foreground",
+                "terminal.foreground"
             ]
         },
         {
@@ -388,6 +412,7 @@
             },
             "groups": [
                 "ansiRed",
+                "statusBarItem.errorBackground",
                 ".*(delete|remove).*background.*",
                 "diffEditor.removedTextBackground",
                 "diffEditorGutter.removedLineBackground",
@@ -404,11 +429,12 @@
                     "0xcb",
                     "0xcc"
                 ],
-                "hex": "#ff5050"
+                "hex": "#ff6a6a"
             },
             "groups": [
                 "ansiBrightRed",
                 "iconFailed",
+                "statusBarItem.errorForeground",
                 "terminalCommandDecoration.errorBackground",
                 "editorGutter.deletedBackground",
                 ".*(delete|remove).*foreground.*",
@@ -479,9 +505,7 @@
                 "hex": "#f4f4f4"
             },
             "groups": [
-                "ansiBrightWhite",
-                "breadcrumb.foreground",
-                "terminal.foreground"
+                "ansiBrightWhite"
             ],
             "replace_color_component": [
                 "ALL"
@@ -669,8 +693,8 @@
                     12
                 ],
                 "light_range": [
-                    41,
-                    45
+                    55,
+                    60
                 ]
             },
             "groups": [
@@ -760,16 +784,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x91",
-                    "0x98"
+                    "0x41",
+                    "0x48"
                 ],
                 "basic_range": [
-                    8,
-                    9
+                    11,
+                    12
                 ],
                 "light_range": [
-                    25,
-                    26
+                    10,
+                    20
                 ]
             },
             "groups": [
@@ -833,6 +857,7 @@
                 "contrastBorder",
                 "sideBarSectionHeader.background",
                 ".*shadow.*",
+                ".*(menu|title|suggest).*border.*",
                 "activityBar.border",
                 "titleBar.border",
                 "editorGhostText.border",
@@ -868,16 +893,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x71",
-                    "0x7f"
+                    "0x31",
+                    "0x3f"
                 ],
                 "basic_range": [
-                    8,
+                    11,
                     12
                 ],
                 "light_range": [
-                    15,
-                    45
+                    1,
+                    5
                 ]
             },
             "groups": [
@@ -911,16 +936,16 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x9e",
-                    "0x9f"
+                    "0x4e",
+                    "0x4f"
                 ],
                 "basic_range": [
-                    8,
+                    11,
                     12
                 ],
                 "light_range": [
-                    34,
-                    35
+                    1,
+                    5
                 ]
             },
             "groups": [

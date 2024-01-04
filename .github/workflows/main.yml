@@ -28,6 +28,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           python -m pip install -r requirements.txt
+          pytest tests
           python viiv.py -g
       - uses: lannonbr/vsce-action@3.0.0
         with:

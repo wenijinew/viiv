@@ -11,9 +11,6 @@ from enum import Enum
 
 from peelee import peelee as pe
 
-# random decoration color or not
-RANDOM_DECORATION_COLOR = False
-
 # reserved constants
 TOKEN_COLOR_PREFIX = "T_"
 WORKBENCH_COLOR_PREFIX = "W_"
@@ -236,7 +233,7 @@ class Config(dict):
             config_path = f"{os.getcwd()}/config.json"
         self.config_path = config_path
         self.config = load_json_file(config_path)
-        self.areas = self.config.keys()
+        self.areas = list(filter(lambda k: k not in ["options"], self.config.keys()))
         # default color config and token default color config
         default_color_config = list(
             filter(
@@ -258,6 +255,10 @@ class Config(dict):
             "token",
             default_token_color_config["groups"][0],
         )
+        self.options = self.config["options"]
+        self.random_decoration_color = self.options.get(
+            "random_decoration_color", False
+        )
         # decoration groups
         self.decoration_groups = []
         for area in self.areas:
@@ -267,7 +268,7 @@ class Config(dict):
                     self.decoration_groups.extend(groups)
 
         # random base range for decoration groups
-        if RANDOM_DECORATION_COLOR:
+        if self.random_decoration_color:
             random_int = random.randint(1, 8)
             self.basic_range_for_decoration_groups = [random_int, random_int + 1]
         else:
@@ -578,35 +579,34 @@ class TemplateConfig(dict):
                         continue
                     if area not in ["default", "token"]:
                         continue
-                    else:
-                        old_color = workbench_colors[property_name]
-                        _changed = False
-                        if ColorComponent.BASIC in replace_color_component:
-                            color = self.append_or_replace_alpha(
-                                old_color if not _changed else color,
-                                color_orig,
-                                ColorComponent.BASIC,
-                            )
-                            _changed = True
-                        if ColorComponent.LIGHT in replace_color_component:
-                            color = self.append_or_replace_alpha(
-                                old_color if not _changed else color,
-                                color_orig,
-                                ColorComponent.LIGHT,
-                            )
-                            _changed = True
-                        if ColorComponent.ALPHA in replace_color_component:
-                            color = self.append_or_replace_alpha(
-                                old_color if not _changed else color,
-                                color_orig,
-                                ColorComponent.ALPHA,
-                            )
-                            _changed = True
-                        if (
-                            ColorComponent.ALL in replace_color_component
-                            or property_name == group
-                        ):
-                            color = color_orig
+                    old_color = workbench_colors[property_name]
+                    _changed = False
+                    if ColorComponent.BASIC in replace_color_component:
+                        color = self.append_or_replace_alpha(
+                            old_color if not _changed else color,
+                            color_orig,
+                            ColorComponent.BASIC,
+                        )
+                        _changed = True
+                    if ColorComponent.LIGHT in replace_color_component:
+                        color = self.append_or_replace_alpha(
+                            old_color if not _changed else color,
+                            color_orig,
+                            ColorComponent.LIGHT,
+                        )
+                        _changed = True
+                    if ColorComponent.ALPHA in replace_color_component:
+                        color = self.append_or_replace_alpha(
+                            old_color if not _changed else color,
+                            color_orig,
+                            ColorComponent.ALPHA,
+                        )
+                        _changed = True
+                    if (
+                        ColorComponent.ALL in replace_color_component
+                        or property_name == group
+                    ):
+                        color = color_orig
                 if group in DEBUG_GROUP:
                     print(
                         f" (G {debug_group_counter}) >>>: '{property_name}' is processed by the area '{area}' (color matching rule '{group}') - '{color}' - '{replace_color_component}' - {[_w.area for _w in color_wrappers]}\n"
@@ -659,7 +659,14 @@ class TemplateConfig(dict):
         # clever code?!
         all_groups = sorted(
             list(
-                set((c for v in config.config.values() for g in v for c in g["groups"]))
+                set(
+                    (
+                        c
+                        for a in config.areas
+                        for g in config.config[a]
+                        for c in g["groups"]
+                    )
+                )
             )
         )
         _dump_json_file("all_groups.json", all_groups)

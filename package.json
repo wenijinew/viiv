@@ -2,7 +2,7 @@
   "name": "viiv",
   "displayName": "viiv",
   "description": "A VsCode theme that puts developers into focus mode quickly. ",
-  "version": "0.2.29",
+  "version": "0.2.30",
   "engines": {
     "vscode": "^1.83.0"
   },
@@ -17,9 +17,29 @@
   "contributes": {
     "themes": [
       {
+        "label": "ViiV-Elite-Cyan",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-cyan-color-theme.json"
+      },
+      {
+        "label": "ViiV-Elite-Dark-Cyan-Desaturated",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-dark-cyan-desaturated-color-theme.json"
+      },
+      {
+        "label": "ViiV-Elite-Dark-Cyan",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-dark-cyan-color-theme.json"
+      },
+      {
         "label": "ViiV-Elite-Dark-Green",
         "uiTheme": "vs-dark",
         "path": "themes/viiv-elite-dark-green-color-theme.json"
+      },
+      {
+        "label": "ViiV-Elite-Dark-Violet",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-dark-violet-color-theme.json"
       },
       {
         "label": "ViiV-Elite-Dark-Pink",
@@ -82,9 +102,9 @@
         "path": "themes/viiv-dark-yellow-color-theme.json"
       },
       {
-        "label": "ViiV-Dark-Desaturated-Yellow",
+        "label": "ViiV-Dark-Yellow-Desaturated",
         "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-desaturated-yellow-color-theme.json"
+        "path": "themes/viiv-dark-yellow-desaturated-color-theme.json"
       },
       {
         "label": "ViiV-Dark-Olive-Yellow",
@@ -117,9 +137,9 @@
         "path": "themes/viiv-dark-blue-color-theme.json"
       },
       {
-        "label": "ViiV-Dark-Desaturated-Blue",
+        "label": "ViiV-Dark-Blue-Desaturated",
         "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-desaturated-blue-color-theme.json"
+        "path": "themes/viiv-dark-blue-desaturated-color-theme.json"
       },
       {
         "label": "ViiV-Dark-Violet",
