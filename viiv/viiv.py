@@ -563,7 +563,6 @@ class TemplateConfig(dict):
         workbench_colors = {}
         default_processed_properties = []
         customized_properties = []
-
         # workbench colors
         used_groups = []
         for property_name in self.color_properties:
