@@ -25,7 +25,7 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = ["editorSuggestWidget.background"]
+DEBUG_PROPERTY = ["editorHoverWidget.foreground"]
 DEBUG_GROUP = []
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
@@ -259,6 +259,12 @@ class Config(dict):
         self.random_decoration_color = self.options.get(
             "random_decoration_color", False
         )
+        self.random_decoration_color_basic_range = self.options.get(
+            "random_decoration_color_basic_range", [1, 11]
+        )
+        self.static_decoration_color_basic_range = self.options.get(
+            "static_decoration_color_basic_range", [1, 11]
+        )
         # decoration groups
         self.decoration_groups = []
         for area in self.areas:
@@ -269,10 +275,15 @@ class Config(dict):
 
         # random base range for decoration groups
         if self.random_decoration_color:
-            random_int = random.randint(1, 8)
+            random_int = random.randint(
+                self.random_decoration_color_basic_range[0],
+                self.random_decoration_color_basic_range[1],
+            )
             self.basic_range_for_decoration_groups = [random_int, random_int + 1]
         else:
-            self.basic_range_for_decoration_groups = [11, 12]
+            self.basic_range_for_decoration_groups = (
+                self.static_decoration_color_basic_range
+            )
 
         super().__init__(
             config=self.config,
@@ -816,7 +827,7 @@ def generate_default_themes(target_theme="black"):
         if target_theme and theme != target_theme:
             continue
         generate_random_theme_file(
-            dark_base_colors=colors, theme_filename_prefix=f"viiv-{theme}"
+            workbench_colors=colors, theme_filename_prefix=f"viiv-{theme}"
         )
 
 
@@ -830,11 +841,12 @@ def discard_red_dark_color(palette_color_data):
         random_dark_base_color = None
         for index in range(8, 13):
             index = pe.padding(index)
-            color_hex_c11 = palette_color_data.get(f"C_{index}_59")
-            if color_hex_c11 is None:
+            random_color_hex_c11 = palette_color_data.get(f"C_{index}_59")
+            if random_color_hex_c11 is None:
                 continue
-            color_rgb_c11 = pe.hex2rgb(color_hex_c11)
-            if max_rgb != color_rgb_c11[0]:
+            random_color_rgb_c11 = pe.hex2rgb(random_color_hex_c11)
+            random_max_rgb = max(random_color_rgb_c11)
+            if random_max_rgb != random_color_rgb_c11[0]:
                 random_dark_base_color = index
                 break
         # If no available replacement, return original palette data
@@ -856,15 +868,17 @@ def discard_red_dark_color(palette_color_data):
 
 
 def generate_random_theme_file(
-    colors_total=7,
-    gradations_total=60,
-    dark_color_gradations_total=60,
-    general_min_color=60,
-    general_max_color=180,
-    dark_color_min=15,
-    dark_color_max=20,
-    dark_colors_total=7,
-    dark_base_colors=None,
+    token_colors_total=7,
+    token_colors_gradations_total=60,
+    token_colors_min=120,
+    token_colors_max=180,
+    token_colors_saturity=0.35,
+    workbench_colors_total=7,
+    workbench_colors_gradations_total=60,
+    workbench_colors_min=19,
+    workbench_colors_max=20,
+    workbench_colors_saturity=0.2,
+    workbench_colors=None,
     theme_filename_prefix="viiv-random-0",
 ):
     """
@@ -890,22 +904,49 @@ def generate_random_theme_file(
         None
     """
     print(theme_filename_prefix)
+    config = Config()
+    token_colors_total = config.options.get("token_colors_total", token_colors_total)
+    token_colors_gradations_total = config.options.get(
+        "token_colors_gradations_total", token_colors_gradations_total
+    )
+    token_colors_min = config.options.get("token_colors_min", token_colors_min)
+    token_colors_max = config.options.get("token_colors_max", token_colors_max)
+    token_colors_saturity = config.options.get(
+        "token_colors_saturity", token_colors_saturity
+    )
+    workbench_colors_total = config.options.get(
+        "workbench_colors_total", workbench_colors_total
+    )
+    workbench_colors_gradations_total = config.options.get(
+        "workbench_colors_gradations_total", workbench_colors_gradations_total
+    )
+    workbench_colors_min = config.options.get(
+        "workbench_colors_min", workbench_colors_min
+    )
+    workbench_colors_max = config.options.get(
+        "workbench_colors_max", workbench_colors_max
+    )
+    workbench_colors_saturity = config.options.get(
+        "workbench_colors_saturity", workbench_colors_saturity
+    )
     template_config = TemplateConfig()
     template_config.generate_template()
     template_config_data = template_config.config
+
     palette_data = pe.Palette(
-        colors_total=colors_total,
-        gradations_total=gradations_total,
-        dark_color_gradations_total=dark_color_gradations_total,
-        color_min=general_min_color,
-        color_max=general_max_color,
-        dark_color_min=dark_color_min,
-        dark_color_max=dark_color_max,
-        dark_colors_total=dark_colors_total,
-        dark_colors=dark_base_colors,
+        colors_total=token_colors_total,
+        colors_gradations_total=token_colors_gradations_total,
+        colors_min=token_colors_min,
+        colors_max=token_colors_max,
+        colors_saturity=token_colors_saturity,
+        dark_colors_total=workbench_colors_total,
+        dark_colors_gradations_total=workbench_colors_gradations_total,
+        dark_colors_min=workbench_colors_min,
+        dark_colors_max=workbench_colors_max,
+        dark_colors_saturity=workbench_colors_saturity,
+        dark_colors=workbench_colors,
     ).generate_palette()
 
-    config = Config()
     if config.get_discard_red_dark_color():
         palette_data = discard_red_dark_color(palette_data)
 
@@ -956,7 +997,6 @@ def debug_color_config():
         for config in area_config:
             groups = config["groups"]
             color = config["color"]
-            print(groups, json.dumps(color, indent=4, sort_keys=True))
             has_background = (
                 len(list(filter(lambda x: x.lower().find("background") != -1, groups)))
                 > 0
@@ -970,7 +1010,6 @@ def debug_color_config():
             if has_foreground:
                 color["basic_range"] = [1, 8]
                 color["light_range"] = [1, 60]
-            print("new", json.dumps(color, indent=4, sort_keys=True))
 
     _dump_json_file(config.config_path, config.config)
 
