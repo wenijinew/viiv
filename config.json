@@ -1,7 +1,25 @@
 {
     "options": {
+        "token_colors_total": 7,
+        "token_colors_gradations_total": 60,
+        "token_colors_min": 120,
+        "token_colors_max": 180,
+        "token_colors_saturity": 0.35,
+        "workbench_colors_total": 7,
+        "workbench_colors_gradations_total": 60,
+        "workbench_colors_min": 19,
+        "workbench_colors_max": 20,
+        "workbench_colors_saturity": 0.19,
         "random_decoration_color": false,
-        "discard_dark_red_color": true
+        "discard_dark_red_color": true,
+        "random_decoration_color_basic_range": [
+            1,
+            11
+        ],
+        "static_decoration_color_basic_range": [
+            11,
+            12
+        ]
     },
     "background": [
         {
@@ -51,7 +69,6 @@
     "border": [
         {
             "color": {
-                "hex": "#000000",
                 "alpha_range": [
                     "0xfe",
                     "0xff"
@@ -61,8 +78,8 @@
                     12
                 ],
                 "light_range": [
-                    51,
-                    52
+                    59,
+                    60
                 ]
             },
             "groups": [
@@ -96,23 +113,67 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xbe",
-                    "0xbf"
+                    "0xce",
+                    "0xcf"
                 ],
                 "basic_range": [
                     11,
                     12
                 ],
                 "light_range": [
-                    15,
-                    25
+                    45,
+                    50
                 ]
             },
             "groups": [
                 "decoration",
+                "minimapSlider.background",
+                "scrollbarSlider.background"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xce",
+                    "0xcf"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    35,
+                    45
+                ]
+            },
+            "groups": [
+                "decoration",
+                "scrollbarSlider.hoverBackground",
+                "minimapSlider.hoverBackground"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    20,
+                    30
+                ]
+            },
+            "groups": [
+                "decoration",
+                "activityBar.foreground",
+                "activityBar.activeBorder",
                 ".*badge.*background.*",
-                ".*(input|active|checkbox|dropdown).*border",
                 ".*cursor.foreground",
+                ".*active.*border",
                 ".*Link.activeForeground",
                 "editorIndentGuide.activeBackground",
                 "editorLineNumber.activeForeground",
@@ -121,21 +182,21 @@
                 "notebook.focusedCellBorder",
                 "tab.activeForeground",
                 "quickInput.foreground",
-                "icon.foreground",
-                "scrollbarSlider.background",
                 "indentGuidesStroke",
-                "minimapSlider.background"
+                "editorHoverWidget.foreground",
+                "minimapSlider.activeBackground",
+                "scrollbarSlider.activeBackground"
             ]
         },
         {
             "color": {
                 "alpha_range": [
-                    "0xbe",
-                    "0xbf"
+                    "0x8e",
+                    "0x8f"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    9,
+                    10
                 ],
                 "light_range": [
                     1,
@@ -146,9 +207,7 @@
                 "decoration",
                 "titleBar.activeForeground",
                 "menu.foreground",
-                "menu.separatorBackground",
-                "activityBar.foreground",
-                "activityBar.activeBorder",
+                "icon.foreground",
                 "breadcrumb.foreground",
                 "terminal.foreground"
             ]
@@ -189,7 +248,7 @@
                 ],
                 "light_range": [
                     50,
-                    51
+                    55
                 ]
             },
             "groups": [
@@ -641,10 +700,6 @@
                 ]
             },
             "groups": [
-                "scrollbarSlider.activeBackground",
-                "scrollbarSlider.hoverBackground",
-                "minimapSlider.activeBackground",
-                "minimapSlider.hoverBackground",
                 ".*highlight.*",
                 ".*outline.*",
                 "tree.inactiveIndentGuidesStroke",
@@ -751,7 +806,7 @@
                 "quickInput.background",
                 "(activityBar|menu).background",
                 ".*badge.*foreground.*",
-                ".*input.*background",
+                ".*(input|checkbox|dropdown).*background.*",
                 "editorOverviewRuler",
                 "list.inactiveSelectionBackground",
                 "notebook.focusedCellBackground"
@@ -785,20 +840,21 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x41",
-                    "0x48"
+                    "0x65",
+                    "0x66"
                 ],
                 "basic_range": [
                     11,
                     12
                 ],
                 "light_range": [
-                    10,
-                    20
+                    15,
+                    16
                 ]
             },
             "groups": [
                 ".*input.*placeholderForeground.*",
+                "menu.separatorBackground",
                 ".*(inactive|unfocus|disabled).*foreground.*"
             ],
             "replace_color_component": [
@@ -850,7 +906,7 @@
                 "tab.border",
                 "editorGroupHeader.tabsBorder",
                 "focusBorder",
-                "button.border",
+                "button.(border|separator)",
                 "tab.activeBorder",
                 "tab.unfocusedActiveBorder",
                 "editor.lineHighlightBorder",
@@ -859,6 +915,7 @@
                 "sideBarSectionHeader.background",
                 ".*shadow.*",
                 ".*(menu|title|suggest).*border.*",
+                ".*(input|checkbox|dropdown).*border",
                 "activityBar.border",
                 "titleBar.border",
                 "editorGhostText.border",
@@ -875,8 +932,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xbe",
-                    "0xbf"
+                    "0x9e",
+                    "0x9f"
                 ],
                 "basic_range": [
                     11,
@@ -884,7 +941,7 @@
                 ],
                 "light_range": [
                     5,
-                    15
+                    6
                 ]
             },
             "groups": [
