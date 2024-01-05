@@ -94,171 +94,6 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xee",
-                    "0xff"
-                ],
-                "basic_range": [
-                    "1",
-                    "11"
-                ],
-                "light_range": [
-                    "0",
-                    "60"
-                ]
-            },
-            "groups": [
-                "default"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xce",
-                    "0xcf"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    45,
-                    50
-                ]
-            },
-            "groups": [
-                "decoration",
-                "minimapSlider.background",
-                "scrollbarSlider.background"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xce",
-                    "0xcf"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    35,
-                    45
-                ]
-            },
-            "groups": [
-                "decoration",
-                "scrollbarSlider.hoverBackground",
-                "minimapSlider.hoverBackground"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    20,
-                    30
-                ]
-            },
-            "groups": [
-                "decoration",
-                "activityBar.foreground",
-                "activityBar.activeBorder",
-                ".*badge.*background.*",
-                ".*cursor.foreground",
-                ".*active.*border",
-                ".*Link.activeForeground",
-                "editorIndentGuide.activeBackground",
-                "editorLineNumber.activeForeground",
-                "tab.activeBorderTop",
-                "panelTitle.activeForeground",
-                "notebook.focusedCellBorder",
-                "tab.activeForeground",
-                "quickInput.foreground",
-                "indentGuidesStroke",
-                "editorHoverWidget.foreground",
-                "minimapSlider.activeBackground",
-                "scrollbarSlider.activeBackground"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x8e",
-                    "0x8f"
-                ],
-                "basic_range": [
-                    9,
-                    10
-                ],
-                "light_range": [
-                    1,
-                    5
-                ]
-            },
-            "groups": [
-                "decoration",
-                "titleBar.activeForeground",
-                "menu.foreground",
-                "icon.foreground",
-                "breadcrumb.foreground",
-                "terminal.foreground"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x1e",
-                    "0x1f"
-                ],
-                "basic_range": [
-                    1,
-                    2
-                ],
-                "light_range": [
-                    25,
-                    30
-                ]
-            },
-            "groups": [
-                "decoration",
-                "menubar.selectionBackground",
-                "menu.selectionBackground",
-                "button.hoverBackground",
-                "lineHighlightBackground",
-                ".*list.*hover.*background.*"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xce",
-                    "0xcf"
-                ],
-                "basic_range": [
-                    1,
-                    2
-                ],
-                "light_range": [
-                    50,
-                    55
-                ]
-            },
-            "groups": [
-                "decoration",
-                "button.background"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
                     "0xcb",
                     "0xcc"
                 ],
@@ -636,6 +471,296 @@
         {
             "color": {
                 "alpha_range": [
+                    "0xee",
+                    "0xff"
+                ],
+                "basic_range": [
+                    "1",
+                    "11"
+                ],
+                "light_range": [
+                    "0",
+                    "60"
+                ]
+            },
+            "groups": [
+                "default"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x65",
+                    "0x66"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    15,
+                    25
+                ]
+            },
+            "groups": [
+                ".*input.*placeholderForeground.*",
+                "menu.separatorBackground",
+                ".*(inactive|unfocus|disabled).*foreground.*"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    15,
+                    25
+                ]
+            },
+            "groups": [
+                "decoration",
+                "activityBar.foreground",
+                "activityBar.activeBorder",
+                ".*badge.*background.*",
+                ".*cursor.foreground",
+                ".*active.*border",
+                ".*Link.activeForeground",
+                "editorIndentGuide.activeBackground",
+                "editorLineNumber.activeForeground",
+                "tab.activeBorderTop",
+                "panelTitle.activeForeground",
+                "notebook.focusedCellBorder",
+                "tab.activeForeground",
+                "indentGuidesStroke",
+                "menu(bar?)?.selectionForeground",
+                "editorHoverWidget.foreground",
+                ".*(hover|focus).*foreground.*",
+                "minimapSlider.activeBackground",
+                "scrollbarSlider.activeBackground"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xce",
+                    "0xcf"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    35,
+                    45
+                ]
+            },
+            "groups": [
+                "decoration",
+                "scrollbarSlider.hoverBackground",
+                "minimapSlider.hoverBackground",
+                "widget.border"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xce",
+                    "0xcf"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    45,
+                    50
+                ]
+            },
+            "groups": [
+                "decoration",
+                "minimapSlider.background",
+                "scrollbarSlider.background"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xa1",
+                    "0xa2"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    50,
+                    55
+                ]
+            },
+            "groups": [
+                "button.background",
+                "editorGroupHeader.tabsBackground",
+                "tab.inactiveBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x21",
+                    "0x2f"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    50,
+                    55
+                ]
+            },
+            "groups": [
+                ".*(inactive|unfocus|disabled).*(background|border).*"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    55,
+                    56
+                ]
+            },
+            "groups": [
+                "tab.activeBackground",
+                "breadcrumb.background"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    56,
+                    57
+                ]
+            },
+            "groups": [
+                "titleBar.activeBackground",
+                "activityBar.activeBackground",
+                "(activityBar|menu).background",
+                ".*badge.*foreground.*",
+                "quickInput.background",
+                "editorOverviewRuler.background",
+                "list.inactiveSelectionBackground",
+                "notebook.focusedCellBackground"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0xfe",
+                    "0xff"
+                ],
+                "basic_range": [
+                    11,
+                    12
+                ],
+                "light_range": [
+                    58,
+                    59
+                ]
+            },
+            "groups": [
+                ".*(input|checkbox|dropdown).*background.*",
+                "editor(Suggest|Hover)Widget.background"
+            ],
+            "replace_color_component": [
+                "ALL"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x8e",
+                    "0x8f"
+                ],
+                "basic_range": [
+                    9,
+                    10
+                ],
+                "light_range": [
+                    1,
+                    5
+                ]
+            },
+            "groups": [
+                "decoration",
+                "titleBar.activeForeground",
+                "menu.foreground",
+                "icon.foreground",
+                "quickInput.foreground",
+                "breadcrumb.foreground",
+                "terminal.foreground"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
+                    "0x1e",
+                    "0x1f"
+                ],
+                "basic_range": [
+                    1,
+                    2
+                ],
+                "light_range": [
+                    25,
+                    30
+                ]
+            },
+            "groups": [
+                "decoration",
+                "menubar.selectionBackground",
+                "menu.selectionBackground",
+                "button.hoverBackground",
+                "lineHighlightBackground",
+                ".*list.*hover.*background.*"
+            ]
+        },
+        {
+            "color": {
+                "alpha_range": [
                     "0x21",
                     "0x22"
                 ],
@@ -718,51 +843,6 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xa1",
-                    "0xa2"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    51,
-                    53
-                ]
-            },
-            "groups": [
-                "editorGroupHeader.tabsBackground",
-                "tab.inactiveBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x21",
-                    "0x2f"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    55,
-                    60
-                ]
-            },
-            "groups": [
-                ".*(inactive|unfocus|disabled).*(background|border).*"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
                     "0xfe",
                     "0xff"
                 ],
@@ -777,108 +857,11 @@
             },
             "groups": [
                 ".*editorSuggestWidget.*foreground.*",
-                ".*hover.*foreground.*",
                 ".*icon.*foreground.*",
                 "focusHighlightForeground"
             ],
             "replace_color_component": [
                 "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    56,
-                    57
-                ]
-            },
-            "groups": [
-                "titleBar.activeBackground",
-                "activityBar.activeBackground",
-                "quickInput.background",
-                "(activityBar|menu).background",
-                ".*badge.*foreground.*",
-                ".*(input|checkbox|dropdown).*background.*",
-                "editorOverviewRuler.background",
-                "list.inactiveSelectionBackground",
-                "notebook.focusedCellBackground"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    57,
-                    58
-                ]
-            },
-            "groups": [
-                "editor(Suggest|Hover)Widget.background"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0x65",
-                    "0x66"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    15,
-                    16
-                ]
-            },
-            "groups": [
-                ".*input.*placeholderForeground.*",
-                "menu.separatorBackground",
-                ".*(inactive|unfocus|disabled).*foreground.*"
-            ],
-            "replace_color_component": [
-                "ALL"
-            ]
-        },
-        {
-            "color": {
-                "alpha_range": [
-                    "0xfe",
-                    "0xff"
-                ],
-                "basic_range": [
-                    11,
-                    12
-                ],
-                "light_range": [
-                    55,
-                    56
-                ]
-            },
-            "groups": [
-                "tab.activeBackground",
-                "breadcrumb.background"
             ]
         },
         {
@@ -976,8 +959,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xee",
-                    "0xef"
+                    "0xf1",
+                    "0xf2"
                 ],
                 "basic_range": [
                     1,
@@ -1009,7 +992,6 @@
             },
             "groups": [
                 ".*comment.*",
-                ".*punctuation.*",
                 ".*document.*",
                 ".*docstring.*"
             ]
