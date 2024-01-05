@@ -435,7 +435,6 @@
                 "editorHint.foreground",
                 "problemsInfoIcon.foreground",
                 "editorOverviewRuler.infoForeground",
-                "editorOverviewRuler.selectionHighlightForeground",
                 "textLink.foreground",
                 "minimap.selectionHighlight"
             ],
@@ -456,6 +455,7 @@
                 "info.*foreground",
                 "iconQueued",
                 "gitDecoration.renamedResourceForeground",
+                "editorOverviewRuler.selectionHighlightForeground",
                 "minimap.selectionOccurrenceHighlight"
             ],
             "replace_color_component": [
@@ -807,7 +807,7 @@
                 "(activityBar|menu).background",
                 ".*badge.*foreground.*",
                 ".*(input|checkbox|dropdown).*background.*",
-                "editorOverviewRuler",
+                "editorOverviewRuler.background",
                 "list.inactiveSelectionBackground",
                 "notebook.focusedCellBackground"
             ],
@@ -924,6 +924,7 @@
                 "diffEditor.insertedTextBorder",
                 "diffEditor.move.border",
                 "diffEditor.moveActive.border",
+                "editorOverviewRuler.border",
                 "diffEditor.removedTextBorder"
             ]
         }
