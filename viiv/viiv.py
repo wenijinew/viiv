@@ -872,12 +872,12 @@ def generate_random_theme_file(
     token_colors_gradations_total=60,
     token_colors_min=120,
     token_colors_max=180,
-    token_colors_saturity=0.35,
+    token_colors_saturation=0.35,
     workbench_colors_total=7,
     workbench_colors_gradations_total=60,
     workbench_colors_min=19,
     workbench_colors_max=20,
-    workbench_colors_saturity=0.2,
+    workbench_colors_saturation=0.2,
     workbench_colors=None,
     theme_filename_prefix="viiv-random-0",
 ):
@@ -911,8 +911,8 @@ def generate_random_theme_file(
     )
     token_colors_min = config.options.get("token_colors_min", token_colors_min)
     token_colors_max = config.options.get("token_colors_max", token_colors_max)
-    token_colors_saturity = config.options.get(
-        "token_colors_saturity", token_colors_saturity
+    token_colors_saturation = config.options.get(
+        "token_colors_saturation", token_colors_saturation
     )
     workbench_colors_total = config.options.get(
         "workbench_colors_total", workbench_colors_total
@@ -926,8 +926,8 @@ def generate_random_theme_file(
     workbench_colors_max = config.options.get(
         "workbench_colors_max", workbench_colors_max
     )
-    workbench_colors_saturity = config.options.get(
-        "workbench_colors_saturity", workbench_colors_saturity
+    workbench_colors_saturation = config.options.get(
+        "workbench_colors_saturation", workbench_colors_saturation
     )
     template_config = TemplateConfig()
     template_config.generate_template()
@@ -938,12 +938,12 @@ def generate_random_theme_file(
         colors_gradations_total=token_colors_gradations_total,
         colors_min=token_colors_min,
         colors_max=token_colors_max,
-        colors_saturity=token_colors_saturity,
+        colors_saturation=token_colors_saturation,
         dark_colors_total=workbench_colors_total,
         dark_colors_gradations_total=workbench_colors_gradations_total,
         dark_colors_min=workbench_colors_min,
         dark_colors_max=workbench_colors_max,
-        dark_colors_saturity=workbench_colors_saturity,
+        dark_colors_saturation=workbench_colors_saturation,
         dark_colors=workbench_colors,
     ).generate_palette()
 
