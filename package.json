@@ -17,14 +17,14 @@
   "contributes": {
     "themes": [
       {
+        "label": "ViiV",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-color-theme.json"
+      },
+      {
         "label": "ViiV-Elite-Cyan",
         "uiTheme": "vs-dark",
         "path": "themes/viiv-elite-cyan-color-theme.json"
-      },
-      {
-        "label": "ViiV-Elite-Dark-Cyan-Desaturated",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-elite-dark-cyan-desaturated-color-theme.json"
       },
       {
         "label": "ViiV-Elite-Dark-Cyan",
@@ -32,9 +32,29 @@
         "path": "themes/viiv-elite-dark-cyan-color-theme.json"
       },
       {
+        "label": "ViiV-Elite-Yellow",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-yellow-color-theme.json"
+      },
+      {
+        "label": "ViiV-Elite-Dark-Yellow",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-dark-yellow-color-theme.json"
+      },
+      {
+        "label": "ViiV-Elite-Green",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-green-color-theme.json"
+      },
+      {
         "label": "ViiV-Elite-Dark-Green",
         "uiTheme": "vs-dark",
         "path": "themes/viiv-elite-dark-green-color-theme.json"
+      },
+      {
+        "label": "ViiV-Elite-Violet",
+        "uiTheme": "vs-dark",
+        "path": "themes/viiv-elite-violet-color-theme.json"
       },
       {
         "label": "ViiV-Elite-Dark-Violet",
@@ -42,174 +62,14 @@
         "path": "themes/viiv-elite-dark-violet-color-theme.json"
       },
       {
-        "label": "ViiV-Elite-Dark-Pink",
+        "label": "ViiV-Elite-Blue",
         "uiTheme": "vs-dark",
-        "path": "themes/viiv-elite-dark-pink-color-theme.json"
-      },
-      {
-        "label": "ViiV-Elite-Dark-Magenta",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-elite-dark-magenta-color-theme.json"
+        "path": "themes/viiv-elite-blue-color-theme.json"
       },
       {
         "label": "ViiV-Elite-Dark-Blue",
         "uiTheme": "vs-dark",
         "path": "themes/viiv-elite-dark-blue-color-theme.json"
-      },
-      {
-        "label": "ViiV-Elite-Dark-Red",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-elite-dark-red-color-theme.json"
-      },
-      {
-        "label": "ViiV-Black",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-black-color-theme.json"
-      },
-      {
-        "label": "ViiV-Red",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-red-color-theme.json"
-      },
-      {
-        "label": "ViiV-Yellow",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-yellow-color-theme.json"
-      },
-      {
-        "label": "ViiV-Green",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-green-color-theme.json"
-      },
-      {
-        "label": "ViiV-Cyan",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-cyan-color-theme.json"
-      },
-      {
-        "label": "ViiV-Blue",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-blue-color-theme.json"
-      },
-      {
-        "label": "ViiV-Violet",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-violet-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Black",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-black-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Red",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-red-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Yellow",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-yellow-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Yellow-Desaturated",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-yellow-desaturated-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Olive-Yellow",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-olive-yellow-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Green",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-green-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Lime-Green",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-lime-green-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Cyan",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-cyan-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Grayish-Cyan",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-grayish-cyan-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Blue",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-blue-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Blue-Desaturated",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-blue-desaturated-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Violet",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-violet-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Grayish-Violet",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-grayish-violet-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Pink",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-pink-color-theme.json"
-      },
-      {
-        "label": "ViiV-Dark-Magenta",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-dark-magenta-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-0",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-0-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-1",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-1-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-2",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-2-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-3",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-3-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-4",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-4-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-5",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-5-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-6",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-6-color-theme.json"
-      },
-      {
-        "label": "ViiV-Random-7",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-random-7-color-theme.json"
       },
       {
         "label": "ViiV-Ericsson-Black",
@@ -225,11 +85,6 @@
         "label": "ViiV-Twitter-Dim",
         "uiTheme": "vs-dark",
         "path": "themes/viiv-twitter-dim-color-theme.json"
-      },
-      {
-        "label": "ViiV",
-        "uiTheme": "vs-dark",
-        "path": "themes/viiv-color-theme.json"
       }
     ]
   },
