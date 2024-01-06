@@ -868,15 +868,18 @@ def _generate_random_theme_file(
     Returns:
         None
     """
-    theme_name = kwargs.get("theme_name", "viiv-random-0")
+    theme_name = kwargs.get("theme_name", "viiv")
     print(theme_name)
     template_config = TemplateConfig()
     template_config.generate_template()
     template_config_data = template_config.config
-    workbench_colors = kwargs.get("workbench_colors", [])
-    workbench_base_color_name = kwargs.get(
-        "workbench_base_color_name", pe.ColorName.BLUE.name
-    )
+    workbench_base_color = kwargs.get("workbench_base_color")
+    workbench_base_color_name = kwargs.get("workbench_base_color_name", "RANDOM")
+    workbench_colors_hue = kwargs.get("workbench_colors_hue")
+    workbench_editor_color = kwargs.get("workbench_editor_color")
+    workbench_editor_color_id = kwargs.get("workbench_editor_color_id")
+    all_colors_total = token_colors_total + workbench_colors_total
+
     palette_data = pe.Palette(
         colors_total=token_colors_total,
         colors_gradations_total=token_colors_gradations_total,
@@ -888,13 +891,23 @@ def _generate_random_theme_file(
         dark_colors_gradations_total=workbench_colors_gradations_total,
         dark_colors_min=workbench_colors_min,
         dark_colors_max=workbench_colors_max,
+        dark_colors_hue=workbench_colors_hue,
         dark_colors_saturation=workbench_colors_saturation,
         dark_colors_lightness=workbench_colors_lightness,
-        dark_colors=workbench_colors,
+        dark_base_color=workbench_base_color,
         dark_base_color_name=workbench_base_color_name,
     ).generate_palette()
+
     if config.get_discard_red_dark_color():
         palette_data = discard_red_dark_color(palette_data)
+
+    # workbench_editor_color is customized and won't use the one in generated
+    # palette
+    if workbench_editor_color:
+        str_workbench_edtor_color_id = (
+            f"C_{all_colors_total}_{pe.padding(workbench_editor_color_id)}"
+        )
+        palette_data[str_workbench_edtor_color_id] = workbench_editor_color
 
     selected_ui_color = {}
     selected_token_color = {}
@@ -935,7 +948,10 @@ def generate_themes(target_theme=None):
             continue
         workbench_base_color_name = theme_config.get(
             "workbench_base_color_name",
-            config.options.get("workbench_base_color_name", pe.ColorName.BLUE.name),
+            config.options.get("workbench_base_color_name", pe.ColorName.RANDOM.name),
+        )
+        workbench_base_color = theme_config.get(
+            "workbench_base_color", config.options.get("workbench_base_color")
         )
         token_colors_total = theme_config.get(
             "token_colors_total", config.options.get("token_colors_total", 7)
@@ -970,14 +986,13 @@ def generate_themes(target_theme=None):
         workbench_colors_max = theme_config.get(
             "workbench_colors_max", config.options.get("workbench_colors_max", 20)
         )
+        workbench_colors_hue = theme_config.get("workbench_colors_hue")
         workbench_colors_saturation = theme_config.get(
             "workbench_colors_saturation",
-            config.options.get("workbench_colors_saturation", 0.08),
         )
-        workbench_colors_lightness = theme_config.get(
-            "workbench_colors_lightness",
-            config.options.get("workbench_colors_lightness", 0.08),
-        )
+        workbench_colors_lightness = theme_config.get("workbench_colors_lightness")
+        workbench_editor_color = theme_config.get("workbench_editor_color")
+        workbench_editor_color_id = theme_config.get("workbench_editor_color_id")
         _generate_random_theme_file(
             token_colors_total=token_colors_total,
             token_colors_gradations_total=token_colors_gradations_total,
@@ -989,10 +1004,14 @@ def generate_themes(target_theme=None):
             workbench_colors_gradations_total=workbench_colors_gradations_total,
             workbench_colors_min=workbench_colors_min,
             workbench_colors_max=workbench_colors_max,
+            workbench_colors_hue=workbench_colors_hue,
             workbench_colors_saturation=workbench_colors_saturation,
             workbench_colors_lightness=workbench_colors_lightness,
             theme_name=theme_name,
             workbench_base_color_name=workbench_base_color_name,
+            workbench_base_color=workbench_base_color,
+            workbench_editor_color=workbench_editor_color,
+            workbench_editor_color_id=workbench_editor_color_id,
         )
 
 
@@ -1014,11 +1033,15 @@ def generate_random_theme():
     )
     workbench_colors_min = config.options.get("workbench_colors_min", 19)
     workbench_colors_max = config.options.get("workbench_colors_max", 20)
+    # don't set default value for workbench_colors_hue to generate 'random'
+    # theme because it will make the base color static rather than 'random'
+    workbench_colors_hue = config.options.get("workbench_colors_hue")
     workbench_colors_saturation = config.options.get("workbench_colors_saturation", 0.2)
     workbench_colors_lightness = config.options.get("workbench_colors_lightness", 0.09)
     workbench_base_color_name = config.options.get(
-        "workbench_base_color_name", pe.ColorName.BLUE.name
+        "workbench_base_color_name", pe.ColorName.RANDOM.name
     )
+    workbench_base_color = config.options.get("workbench_base_color")
     _generate_random_theme_file(
         token_colors_total=token_colors_total,
         token_colors_gradations_total=token_colors_gradations_total,
@@ -1030,9 +1053,11 @@ def generate_random_theme():
         workbench_colors_gradations_total=workbench_colors_gradations_total,
         workbench_colors_min=workbench_colors_min,
         workbench_colors_max=workbench_colors_max,
+        workbench_colors_hue=workbench_colors_hue,
         workbench_colors_saturation=workbench_colors_saturation,
         workbench_colors_lightness=workbench_colors_lightness,
         workbench_base_color_name=workbench_base_color_name,
+        workbench_base_color=workbench_base_color,
     )
 
 
