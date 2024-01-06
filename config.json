@@ -2,25 +2,90 @@
     "options": {
         "token_colors_total": 7,
         "token_colors_gradations_total": 60,
-        "token_colors_min": 120,
-        "token_colors_max": 180,
-        "token_colors_saturity": 0.35,
+        "token_colors_min": 80,
+        "token_colors_max": 160,
+        "token_colors_saturation": 0.35,
+        "token_colors_lightness": 0.55,
         "workbench_colors_total": 7,
         "workbench_colors_gradations_total": 60,
-        "workbench_colors_min": 19,
-        "workbench_colors_max": 20,
-        "workbench_colors_saturity": 0.19,
+        "workbench_colors_min": 10,
+        "workbench_colors_max": 41,
+        "workbench_colors_saturation": 0.085,
+        "workbench_colors_lightness": 0.085,
+        "workbench_base_color_name": "RED",
         "random_decoration_color": false,
         "discard_dark_red_color": true,
         "random_decoration_color_basic_range": [
             1,
-            11
+            14
         ],
         "static_decoration_color_basic_range": [
-            11,
-            12
+            14,
+            15
         ]
     },
+    "themes": [
+        {
+            "name": "ViiV-Elite-Cyan",
+            "workbench_base_color_name": "CYAN",
+            "workbench_colors_saturation": 0.35,
+            "workbench_colors_lightness": 0.08
+        },
+        {
+            "name": "ViiV-Elite-Dark-Cyan",
+            "workbench_base_color_name": "CYAN",
+            "workbench_colors_saturation": 0.5,
+            "workbench_colors_lightness": 0.05
+        },
+        {
+            "name": "ViiV-Elite-Green",
+            "workbench_base_color_name": "GREEN",
+            "workbench_colors_saturation": 0.35,
+            "workbench_colors_lightness": 0.08
+        },
+        {
+            "name": "ViiV-Elite-Dark-Green",
+            "workbench_base_color_name": "GREEN",
+            "workbench_colors_saturation": 0.5,
+            "workbench_colors_lightness": 0.05
+        },
+        {
+            "name": "ViiV-Elite-Yellow",
+            "workbench_base_color_name": "YELLOW",
+            "workbench_colors_saturation": 0.35,
+            "workbench_colors_lightness": 0.08
+        },
+        {
+            "name": "ViiV-Elite-Dark-Yellow",
+            "workbench_base_color_name": "YELLOW",
+            "workbench_colors_saturation": 0.5,
+            "workbench_colors_lightness": 0.05
+        },
+        {
+            "name": "ViiV-Elite-Violet",
+            "workbench_base_color_name": "VIOLET",
+            "workbench_colors_saturation": 0.35,
+            "workbench_colors_lightness": 0.08
+        },
+        {
+            "name": "ViiV-Elite-Dark-Violet",
+            "workbench_base_color_name": "VIOLET",
+            "workbench_colors_saturation": 0.5,
+            "workbench_colors_lightness": 0.05
+        },
+        {
+            "name": "ViiV-Elite-Blue",
+            "workbench_base_color_name": "BLUE",
+            "workbench_colors_saturation": 0.35,
+            "workbench_colors_lightness": 0.08
+        },
+        {
+            "name": "ViiV-Elite-Dark-Blue",
+            "workbench_base_color_name": "BLUE",
+            "workbench_colors_saturation": 0.5,
+            "workbench_colors_lightness": 0.05
+        }
+    ],
     "background": [
         {
             "color": {
@@ -29,8 +94,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     55,
@@ -49,8 +114,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     54,
@@ -74,8 +139,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     59,
@@ -476,7 +541,7 @@
                 ],
                 "basic_range": [
                     "1",
-                    "11"
+                    "14"
                 ],
                 "light_range": [
                     "0",
@@ -494,8 +559,8 @@
                     "0x66"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     15,
@@ -518,8 +583,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     15,
@@ -555,8 +620,8 @@
                     "0xcf"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     35,
@@ -577,8 +642,8 @@
                     "0xcf"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     45,
@@ -598,8 +663,8 @@
                     "0xa2"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     50,
@@ -622,8 +687,8 @@
                     "0x2f"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     50,
@@ -644,8 +709,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     55,
@@ -664,8 +729,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     56,
@@ -693,8 +758,8 @@
                     "0xff"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     58,
@@ -817,7 +882,7 @@
                 ],
                 "basic_range": [
                     1,
-                    12
+                    15
                 ],
                 "light_range": [
                     25,
@@ -872,7 +937,7 @@
                 ],
                 "basic_range": [
                     8,
-                    12
+                    15
                 ],
                 "light_range": [
                     59,
@@ -920,8 +985,8 @@
                     "0x9f"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     5,
@@ -939,8 +1004,8 @@
                     "0x3f"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     1,
@@ -959,8 +1024,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xf1",
-                    "0xf2"
+                    "0xfe",
+                    "0xff"
                 ],
                 "basic_range": [
                     1,
@@ -982,8 +1047,8 @@
                     "0x4f"
                 ],
                 "basic_range": [
-                    11,
-                    12
+                    14,
+                    15
                 ],
                 "light_range": [
                     1,

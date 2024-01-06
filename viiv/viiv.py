@@ -25,13 +25,22 @@ RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
 # debug
-DEBUG_PROPERTY = ["editor.wordHighlightStrongBackground"]
+DEBUG_PROPERTY = []
 DEBUG_GROUP = []
 
 THEME_TEMPLATE_JSON_FILE = f"{os.getcwd()}/templates/viiv-color-theme.template.json"
 PALETTE_FILE_PATH = f"{os.getcwd()}/output/random-palette.json"
 SELECTED_UI_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-ui-palette.json"
 SELECTED_TOKEN_COLOR_FILE_PATH = f"{os.getcwd()}/output/selected-token-palette.json"
+
+
+def load_json_file(json_file_path):
+    """
+    Loads the JSON file at the specified path.
+    """
+    with open(json_file_path, "r", encoding="utf-8") as file:
+        json_data = json.load(file)
+        return json_data
 
 
 class ColorComponent(Enum):
@@ -233,7 +242,9 @@ class Config(dict):
             config_path = f"{os.getcwd()}/config.json"
         self.config_path = config_path
         self.config = load_json_file(config_path)
-        self.areas = list(filter(lambda k: k not in ["options"], self.config.keys()))
+        self.areas = list(
+            filter(lambda k: k not in ["options", "themes"], self.config.keys())
+        )
         # default color config and token default color config
         default_color_config = list(
             filter(
@@ -510,6 +521,9 @@ class Config(dict):
         }
 
 
+config = Config()
+
+
 class TemplateConfig(dict):
     """Wrapper class for template config."""
 
@@ -723,15 +737,6 @@ def print_colors(filter_value, theme="random"):
             print(pe.bg(v, f"{k}: {v} ({theme_template_json['colors'][k]})"))
 
 
-def load_json_file(json_file_path):
-    """
-    Loads the JSON file at the specified path.
-    """
-    with open(json_file_path, "r", encoding="utf-8") as file:
-        json_data = json.load(file)
-        return json_data
-
-
 def print_palette(filter_value=None):
     """
     Print the random palette, selected UI palette, and selected token palette.
@@ -754,7 +759,11 @@ def print_palette(filter_value=None):
     with open(random_palette_json_file, "r", encoding="utf-8") as file:
         random_palette_json = json.load(file)
     for k, v in random_palette_json.items():
-        if filter_value and k != filter_value:
+        if (
+            filter_value
+            and k != filter_value
+            and not re.match(f".*{filter_value}.*", k, re.IGNORECASE)
+        ):
             continue
         print(pe.bg(v, f"{k}: {v}"))
 
@@ -762,7 +771,11 @@ def print_palette(filter_value=None):
     with open(SELECTED_UI_COLOR_FILE_PATH, encoding="utf-8") as selected_ui_file:
         selected_ui_palette_json = json.load(selected_ui_file)
         for k, v in selected_ui_palette_json.items():
-            if filter_value and k != filter_value:
+            if (
+                filter_value
+                and k != filter_value
+                and not re.match(f".*{filter_value}.*", k, re.IGNORECASE)
+            ):
                 continue
             print(pe.bg(v, f"{k}: {v}"))
 
@@ -770,7 +783,11 @@ def print_palette(filter_value=None):
     with open(SELECTED_TOKEN_COLOR_FILE_PATH, encoding="utf-8") as selected_token_file:
         selected_token_palette_json = json.load(selected_token_file)
         for k, v in selected_token_palette_json.items():
-            if filter_value and k != filter_value:
+            if (
+                filter_value
+                and k != filter_value
+                and not re.match(f".*{filter_value}.*", k, re.IGNORECASE)
+            ):
                 continue
             print(pe.bg(v, f"{k}: {v}"))
 
@@ -830,37 +847,114 @@ def generate_default_themes(target_theme="black"):
         )
 
 
+def generate_themes(target_theme=None):
+    """
+    Generates configured themes.
+    """
+    for theme_config in config.config["themes"]:
+        theme_name = theme_config["name"]
+        if target_theme and (
+            theme_name != target_theme
+            and not re.match(f".*{target_theme}.*", theme_name, re.IGNORECASE)
+        ):
+            continue
+        workbench_base_color_name = theme_config.get(
+            "workbench_base_color_name",
+            config.options.get("workbench_base_color_name", pe.ColorName.BLUE.name),
+        )
+        token_colors_total = theme_config.get(
+            "token_colors_total", config.options.get("token_colors_total", 7)
+        )
+        token_colors_gradations_total = theme_config.get(
+            "token_colors_gradations_total",
+            config.options.get("token_colors_gradations_total", 60),
+        )
+        token_colors_min = theme_config.get(
+            "token_colors_min", config.options.get("token_colors_min", 120)
+        )
+        token_colors_max = theme_config.get(
+            "token_colors_max", config.options.get("token_colors_max", 180)
+        )
+        token_colors_saturation = theme_config.get(
+            "token_colors_saturation",
+            config.options.get("token_colors_saturation", 0.35),
+        )
+        token_colors_lightness = theme_config.get(
+            "token_colors_lightness", config.options.get("token_colors_lightness", 0.15)
+        )
+        workbench_colors_total = theme_config.get(
+            "workbench_colors_total", config.options.get("workbench_colors_total", 7)
+        )
+        workbench_colors_gradations_total = theme_config.get(
+            "workbench_colors_gradations_total",
+            config.options.get("workbench_colors_gradations_total", 60),
+        )
+        workbench_colors_min = theme_config.get(
+            "workbench_colors_min", config.options.get("workbench_colors_min", 19)
+        )
+        workbench_colors_max = theme_config.get(
+            "workbench_colors_max", config.options.get("workbench_colors_max", 20)
+        )
+        workbench_colors_saturation = theme_config.get(
+            "workbench_colors_saturation",
+            config.options.get("workbench_colors_saturation", 0.08),
+        )
+        workbench_colors_lightness = theme_config.get(
+            "workbench_colors_lightness",
+            config.options.get("workbench_colors_lightness", 0.08),
+        )
+        generate_random_theme_file(
+            token_colors_total=token_colors_total,
+            token_colors_gradations_total=token_colors_gradations_total,
+            token_colors_min=token_colors_min,
+            token_colors_max=token_colors_max,
+            token_colors_saturation=token_colors_saturation,
+            token_colors_lightness=token_colors_lightness,
+            workbench_colors_total=workbench_colors_total,
+            workbench_colors_gradations_total=workbench_colors_gradations_total,
+            workbench_colors_min=workbench_colors_min,
+            workbench_colors_max=workbench_colors_max,
+            workbench_colors_saturation=workbench_colors_saturation,
+            workbench_colors_lightness=workbench_colors_lightness,
+            theme_name=theme_name,
+            workbench_base_color_name=workbench_base_color_name,
+        )
+
+
 def discard_red_dark_color(palette_color_data):
     """Discard red dark color from palette data - Don't use it as workbench color."""
-    color_hex_c11 = palette_color_data["C_11_59"]
-    color_rgb_c11 = pe.hex2rgb(color_hex_c11)
-    max_rgb = max(color_rgb_c11)
-    if (max_rgb == color_rgb_c11[0]) and (max_rgb not in color_rgb_c11[1:]):
+    workbench_color_index = 14  # TODO
+    workbench_color_hex = palette_color_data[f"C_{workbench_color_index}_59"]
+    workbench_color_rgb = pe.hex2rgb(workbench_color_hex)
+    max_rgb = max(workbench_color_rgb)
+    if (max_rgb == workbench_color_rgb[0]) and (max_rgb not in workbench_color_rgb[1:]):
         # Find the replacement in dark colors
         random_dark_base_color = None
-        for index in range(8, 13):
+        for index in range(8, 13):  # TODO
             index = pe.padding(index)
-            random_color_hex_c11 = palette_color_data.get(f"C_{index}_59")
-            if random_color_hex_c11 is None:
+            random_workbench_color_hex = palette_color_data.get(f"C_{index}_59")
+            if random_workbench_color_hex is None:
                 continue
-            random_color_rgb_c11 = pe.hex2rgb(random_color_hex_c11)
-            random_max_rgb = max(random_color_rgb_c11)
-            if random_max_rgb != random_color_rgb_c11[0]:
+            random_workbench_color_rgb = pe.hex2rgb(random_workbench_color_hex)
+            random_max_rgb = max(random_workbench_color_rgb)
+            if random_max_rgb != random_workbench_color_rgb[0]:
                 random_dark_base_color = index
                 break
         # If no available replacement, return original palette data
         if random_dark_base_color is None:
             print(
-                f"Failed to discard red color {color_hex_c11} - No availalbe replacement"
+                f"Failed to discard red color {workbench_color_hex} - No availalbe replacement"
             )
             return palette_color_data
         # Replace
         random_dark_color_id = f"C_{random_dark_base_color}_59"
         random_dark_color = palette_color_data[random_dark_color_id]
-        print(f"Discard red color {color_hex_c11} - Replace with '{random_dark_color}'")
+        print(
+            f"Discard red color {workbench_color_hex} - Replace with '{random_dark_color}'"
+        )
         for i in range(60):
             i = pe.padding(i)
-            palette_color_data[f"C_11_{i}"] = palette_color_data[
+            palette_color_data[f"C_{workbench_color_index}_{i}"] = palette_color_data[
                 f"C_{random_dark_base_color}_{i}"
             ]
     return palette_color_data
@@ -872,13 +966,14 @@ def generate_random_theme_file(
     token_colors_min=120,
     token_colors_max=180,
     token_colors_saturation=0.35,
+    token_colors_lightness=0.15,
     workbench_colors_total=7,
     workbench_colors_gradations_total=60,
     workbench_colors_min=19,
     workbench_colors_max=20,
     workbench_colors_saturation=0.2,
-    workbench_colors=None,
-    theme_filename_prefix="viiv-random-0",
+    workbench_colors_lightness=0.09,
+    **kwargs,
 ):
     """
     Generates a random theme file with specified parameters.
@@ -902,50 +997,31 @@ def generate_random_theme_file(
     Returns:
         None
     """
-    print(theme_filename_prefix)
-    config = Config()
-    token_colors_total = config.options.get("token_colors_total", token_colors_total)
-    token_colors_gradations_total = config.options.get(
-        "token_colors_gradations_total", token_colors_gradations_total
-    )
-    token_colors_min = config.options.get("token_colors_min", token_colors_min)
-    token_colors_max = config.options.get("token_colors_max", token_colors_max)
-    token_colors_saturation = config.options.get(
-        "token_colors_saturation", token_colors_saturation
-    )
-    workbench_colors_total = config.options.get(
-        "workbench_colors_total", workbench_colors_total
-    )
-    workbench_colors_gradations_total = config.options.get(
-        "workbench_colors_gradations_total", workbench_colors_gradations_total
-    )
-    workbench_colors_min = config.options.get(
-        "workbench_colors_min", workbench_colors_min
-    )
-    workbench_colors_max = config.options.get(
-        "workbench_colors_max", workbench_colors_max
-    )
-    workbench_colors_saturation = config.options.get(
-        "workbench_colors_saturation", workbench_colors_saturation
-    )
+    theme_name = kwargs.get("theme_name", "viiv-random-0")
+    print(theme_name)
     template_config = TemplateConfig()
     template_config.generate_template()
     template_config_data = template_config.config
-
+    workbench_colors = kwargs.get("workbench_colors", [])
+    workbench_base_color_name = kwargs.get(
+        "workbench_base_color_name", pe.ColorName.BLUE.name
+    )
     palette_data = pe.Palette(
         colors_total=token_colors_total,
         colors_gradations_total=token_colors_gradations_total,
         colors_min=token_colors_min,
         colors_max=token_colors_max,
         colors_saturation=token_colors_saturation,
+        colors_lightness=token_colors_lightness,
         dark_colors_total=workbench_colors_total,
         dark_colors_gradations_total=workbench_colors_gradations_total,
         dark_colors_min=workbench_colors_min,
         dark_colors_max=workbench_colors_max,
         dark_colors_saturation=workbench_colors_saturation,
+        dark_colors_lightness=workbench_colors_lightness,
         dark_colors=workbench_colors,
+        dark_base_color_name=workbench_base_color_name,
     ).generate_palette()
-
     if config.get_discard_red_dark_color():
         palette_data = discard_red_dark_color(palette_data)
 
@@ -968,11 +1044,51 @@ def generate_random_theme_file(
         token_color["settings"]["foreground"] = color_replacement
         selected_token_color[color_placeholder] = color_replacement
 
-    random_theme_path = f"{os.getcwd()}/themes/{theme_filename_prefix}-color-theme.json"
+    random_theme_path = f"{os.getcwd()}/themes/{theme_name.lower()}-color-theme.json"
     _dump_json_file(PALETTE_FILE_PATH, palette_data)
     _dump_json_file(random_theme_path, template_config_data)
     _dump_json_file(SELECTED_UI_COLOR_FILE_PATH, selected_ui_color)
     _dump_json_file(SELECTED_TOKEN_COLOR_FILE_PATH, selected_token_color)
+
+
+def create_random_theme_file():
+    """
+    Creates a random theme file with configuration options.
+    """
+    token_colors_total = config.options.get("token_colors_total", 7)
+    token_colors_gradations_total = config.options.get(
+        "token_colors_gradations_total", 60
+    )
+    token_colors_min = config.options.get("token_colors_min", 120)
+    token_colors_max = config.options.get("token_colors_max", 180)
+    token_colors_saturation = config.options.get("token_colors_saturation", 0.35)
+    token_colors_lightness = config.options.get("token_colors_lightness", 0.15)
+    workbench_colors_total = config.options.get("workbench_colors_total", 7)
+    workbench_colors_gradations_total = config.options.get(
+        "workbench_colors_gradations_total", 60
+    )
+    workbench_colors_min = config.options.get("workbench_colors_min", 19)
+    workbench_colors_max = config.options.get("workbench_colors_max", 20)
+    workbench_colors_saturation = config.options.get("workbench_colors_saturation", 0.2)
+    workbench_colors_lightness = config.options.get("workbench_colors_lightness", 0.09)
+    workbench_base_color_name = config.options.get(
+        "workbench_base_color_name", pe.ColorName.BLUE.name
+    )
+    generate_random_theme_file(
+        token_colors_total=token_colors_total,
+        token_colors_gradations_total=token_colors_gradations_total,
+        token_colors_min=token_colors_min,
+        token_colors_max=token_colors_max,
+        token_colors_saturation=token_colors_saturation,
+        token_colors_lightness=token_colors_lightness,
+        workbench_colors_total=workbench_colors_total,
+        workbench_colors_gradations_total=workbench_colors_gradations_total,
+        workbench_colors_min=workbench_colors_min,
+        workbench_colors_max=workbench_colors_max,
+        workbench_colors_saturation=workbench_colors_saturation,
+        workbench_colors_lightness=workbench_colors_lightness,
+        workbench_base_color_name=workbench_base_color_name,
+    )
 
 
 def debug_color_config():
@@ -990,7 +1106,6 @@ def debug_color_config():
     Returns:
     None
     """
-    config = Config()
     for area, area_config in config.config.items():
         print(area)
         for config in area_config:
@@ -1042,7 +1157,7 @@ def main():
         if option in ("-g", "--generate_default_themes"):
             to_generate_default_themes = True
         if option in ("-r", "--random_theme"):
-            generate_random_theme_file()
+            create_random_theme_file()
         if option in ("-t", "--theme"):
             target_theme = value
         elif option in ("-p", "--print_colors"):
@@ -1052,7 +1167,7 @@ def main():
             print_palette(value)
 
     if to_generate_default_themes:
-        generate_default_themes(target_theme)
+        generate_themes(target_theme)
 
     if to_print_colors:
         print_colors(print_colors_filter, target_theme)
