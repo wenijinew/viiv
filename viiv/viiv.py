@@ -868,6 +868,13 @@ def _generate_random_theme_file(
     Returns:
         None
     """
+    theme_mode = kwargs.get("theme_mode")
+    if theme_mode is None:
+        random_int = random.randint(100, 999)
+        if random_int % 2 == 0:
+            theme_mode = "DARK"
+        else:
+            theme_mode = "LIGHT"
     theme_name = kwargs.get("theme_name", "viiv")
     print(theme_name)
     template_config = TemplateConfig()
@@ -896,6 +903,7 @@ def _generate_random_theme_file(
         dark_colors_lightness=workbench_colors_lightness,
         dark_base_color=workbench_base_color,
         dark_base_color_name=workbench_base_color_name,
+        palette_mode=theme_mode,
     ).generate_palette()
 
     if config.get_discard_red_dark_color():
@@ -1019,6 +1027,7 @@ def generate_random_theme():
     """
     Creates a random theme file with configuration options.
     """
+    theme_mode = config.options.get("theme_mode")
     token_colors_total = config.options.get("token_colors_total", 7)
     token_colors_gradations_total = config.options.get(
         "token_colors_gradations_total", 60
@@ -1043,6 +1052,7 @@ def generate_random_theme():
     )
     workbench_base_color = config.options.get("workbench_base_color")
     _generate_random_theme_file(
+        theme_mode=theme_mode,
         token_colors_total=token_colors_total,
         token_colors_gradations_total=token_colors_gradations_total,
         token_colors_min=token_colors_min,
