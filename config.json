@@ -1,6 +1,6 @@
 {
     "options": {
-        "theme_mode": "LIGHT",
+        "theme_mode": "DARK",
         "token_colors_total": 7,
         "token_colors_gradations_total": 60,
         "token_colors_min": 10,
@@ -289,8 +289,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xce",
-                    "0xcf"
+                    "0xfe",
+                    "0xff"
                 ],
                 "hex": "#ffba22"
             },
@@ -748,6 +748,7 @@
                 ]
             },
             "groups": [
+                "activityBar.activeBackground",
                 "tab.activeBackground",
                 "breadcrumb.background"
             ]
@@ -769,7 +770,6 @@
             },
             "groups": [
                 "titleBar.activeBackground",
-                "activityBar.activeBackground",
                 "(activityBar|menu).background",
                 ".*badge.*foreground.*",
                 "quickInput.background",
@@ -1062,7 +1062,7 @@
                     8
                 ],
                 "light_range": [
-                    35,
+                    25,
                     59
                 ]
             },
