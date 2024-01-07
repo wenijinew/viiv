@@ -3,10 +3,10 @@
         "theme_mode": "LIGHT",
         "token_colors_total": 7,
         "token_colors_gradations_total": 60,
-        "token_colors_min": 60,
-        "token_colors_max": 120,
-        "token_colors_saturation": 0.75,
-        "token_colors_lightness": 0.65,
+        "token_colors_min": 10,
+        "token_colors_max": 40,
+        "token_colors_saturation": 0.15,
+        "token_colors_lightness": 0.05,
         "workbench_colors_total": 7,
         "workbench_colors_gradations_total": 60,
         "workbench_colors_min": 10,
@@ -14,6 +14,7 @@
         "workbench_colors_saturation": 0.25,
         "workbench_colors_lightness": 0.15,
         "workbench_base_color_name": "RANDOM",
+        "light_bold_token_scope_regex": ".*(entity.name.type|storage.type|keyword|interface|support.type).*",
         "random_decoration_color": false,
         "discard_dark_red_color": true,
         "random_decoration_color_basic_range": [
@@ -608,8 +609,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
-                    "0xff"
+                    "0xce",
+                    "0xcf"
                 ],
                 "basic_range": [
                     14,
@@ -806,8 +807,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
-                    "0xff"
+                    "0xae",
+                    "0xaf"
                 ],
                 "basic_range": [
                     9,
@@ -815,7 +816,7 @@
                 ],
                 "light_range": [
                     1,
-                    2
+                    5
                 ]
             },
             "groups": [
@@ -1010,8 +1011,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xfe",
-                    "0xff"
+                    "0x9e",
+                    "0x9f"
                 ],
                 "basic_range": [
                     14,
@@ -1019,7 +1020,7 @@
                 ],
                 "light_range": [
                     5,
-                    10
+                    6
                 ]
             },
             "groups": [
@@ -1029,8 +1030,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0x81",
-                    "0x8f"
+                    "0x41",
+                    "0x4f"
                 ],
                 "basic_range": [
                     14,
@@ -1061,8 +1062,8 @@
                     8
                 ],
                 "light_range": [
-                    30,
-                    40
+                    35,
+                    59
                 ]
             },
             "groups": [
@@ -1072,8 +1073,8 @@
         {
             "color": {
                 "alpha_range": [
-                    "0xae",
-                    "0xaf"
+                    "0x6e",
+                    "0x6f"
                 ],
                 "basic_range": [
                     14,
