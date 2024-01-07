@@ -906,6 +906,13 @@ def _generate_random_theme_file(
         palette_mode=theme_mode,
     ).generate_palette()
 
+    # if theme_mode == "LIGHT", set full saturation of token colors
+    if theme_mode == "LIGHT":
+        for color_id, color_value in palette_data.items():
+            color_basic_id = int(color_id[2:4])
+            if color_basic_id <= token_colors_total:
+                palette_data[color_id] = pe.set_saturation(color_value, 1)
+
     if config.get_discard_red_dark_color():
         palette_data = discard_red_dark_color(palette_data)
 
