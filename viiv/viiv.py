@@ -885,7 +885,9 @@ def _generate_random_theme_file(
     workbench_colors_hue = kwargs.get("workbench_colors_hue")
     workbench_editor_color = kwargs.get("workbench_editor_color")
     workbench_editor_color_id = kwargs.get("workbench_editor_color_id")
-    light_bold_token_scope_regex = kwargs.get("light_bold_token_scope_regex", ".*(keyword|type).*")
+    light_bold_token_scope_regex = kwargs.get(
+        "light_bold_token_scope_regex", ".*(keyword|type).*"
+    )
     all_colors_total = token_colors_total + workbench_colors_total
 
     palette_data = pe.Palette(
@@ -907,12 +909,37 @@ def _generate_random_theme_file(
         palette_mode=theme_mode,
     ).generate_palette()
 
-    # if theme_mode == "LIGHT", set full saturation of token colors
     if theme_mode == "LIGHT":
         for color_id, color_value in palette_data.items():
             color_basic_id = int(color_id[2:4])
-            if color_basic_id <= token_colors_total:
-                palette_data[color_id] = pe.set_saturation(color_value, 1)
+            if color_basic_id > token_colors_total:
+                palette_data[color_id] = pe.set_saturation(color_value, 0.35)
+                palette_data[color_id] = pe.set_saturation(palette_data[color_id], 0.25)
+    # if theme_mode == "LIGHT", set full saturation of token colors
+    # if theme_mode == "LIGHT":
+    #    for color_id, color_value in palette_data.items():
+    #        color_basic_id = int(color_id[2:4])
+    #        if color_basic_id <= token_colors_total:
+    #            palette_data[color_id] = pe.set_saturation(color_value, 1)
+    #            palette_data[color_id] = pe.set_saturation(palette_data[color_id], 0.65)
+    # reverse the last 10 dark colors except for the last one, if the theme is light to have the effect that the title bar and activity bar are darker than side bar and editor background
+    # keeping the last one because it will be used as the border color
+    # the side effect is that the editor background will be darker
+    # this is a good solution
+    if theme_mode == "LIGHT":
+        list_items = list(palette_data.items())
+        last_10_without_last = list_items[-10:-1]
+        last_10_without_last_keys = [item[0] for item in last_10_without_last]
+        last_10_without_last_values = [item[1] for item in last_10_without_last]
+        last_10_without_last_values.reverse()
+        last_10_without_last_reversed = dict(
+            zip(last_10_without_last_keys, last_10_without_last_values)
+        )
+        palette_data = {
+            **dict(list_items[0:-10]),
+            **dict(last_10_without_last_reversed),
+            **dict(list_items[-1:]),
+        }
 
     if config.get_discard_red_dark_color():
         palette_data = discard_red_dark_color(palette_data)
@@ -927,6 +954,7 @@ def _generate_random_theme_file(
 
     selected_ui_color = {}
     selected_token_color = {}
+
     for property_name, color in template_config_data["colors"].items():
         color = template_config_data["colors"][property_name]
         color_placeholder = color[0:7]
@@ -935,15 +963,34 @@ def _generate_random_theme_file(
             color_replacement = palette_data[color_placeholder] + alpha
             template_config_data["colors"][property_name] = color_replacement
             selected_ui_color[color_placeholder] = color_replacement
+        # special processing #TODO - move to configuration
+        if theme_mode == "LIGHT" and re.match(
+            ".*(warning|modified).*foreground.*", property_name, re.IGNORECASE
+        ):
+            color = template_config_data["colors"][property_name]
+            template_config_data["colors"][property_name] = pe.set_lightness(
+                color, 0.35
+            )
 
     for token_color in template_config_data["tokenColors"]:
         foreground = token_color["settings"]["foreground"]
         color_placeholder = foreground[0:7]
         alpha = foreground[7:9]
-        color_replacement = palette_data[color_placeholder] + alpha
+        palette_color = palette_data[color_placeholder]
+
+        # special processing #TODO - move to configuration
+        if theme_mode == "LIGHT":
+            hls_color = pe.hex2hls(palette_color)
+            lightness = hls_color[1]
+            if lightness > 0.35:
+                palette_color = pe.set_lightness(palette_color, 0.35)
+
+        color_replacement = palette_color + alpha
         token_color["settings"]["foreground"] = color_replacement
         token_scope = token_color["scope"]
-        is_keyword_or_type = re.match(light_bold_token_scope_regex, token_scope, re.IGNORECASE)
+        is_keyword_or_type = re.match(
+            light_bold_token_scope_regex, token_scope, re.IGNORECASE
+        )
         if theme_mode == "LIGHT" and is_keyword_or_type:
             token_color["settings"]["fontStyle"] = "bold"
         selected_token_color[color_placeholder] = color_replacement
@@ -1083,7 +1130,7 @@ def generate_random_theme():
         workbench_colors_lightness=workbench_colors_lightness,
         workbench_base_color_name=workbench_base_color_name,
         workbench_base_color=workbench_base_color,
-        light_bold_token_scope_regex=light_bold_token_scope_regex
+        light_bold_token_scope_regex=light_bold_token_scope_regex,
     )
 
 
