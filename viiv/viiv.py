@@ -20,7 +20,7 @@ PLACEHOLDER_REGEX_WITH_ALPHA = r"C_[a-zA-Z0-9]{2}_[a-zA-Z0-9]{2}[a-zA-Z0-9]{2}"
 RGB_HEX_REGEX = r"#[a-zA-Z0-9]{6,8}"
 RGB_HEX_REGEX_WITHOUT_ALPHA = r"#[a-zA-Z0-9]{6}"
 RGB_HEX_REGEX_WITH_ALPHA = r"#[a-zA-Z0-9]{8}"
-
+LIGHT_BOLD_TOKEN_SCOPE_REGEX_DEFAULT = r".*(keyword|type).*"
 
 HEX_NUMBER_STR_PATTERN = re.compile(r"^0x[0-9a-zA-Z]+$")
 
@@ -885,6 +885,7 @@ def _generate_random_theme_file(
     workbench_colors_hue = kwargs.get("workbench_colors_hue")
     workbench_editor_color = kwargs.get("workbench_editor_color")
     workbench_editor_color_id = kwargs.get("workbench_editor_color_id")
+    light_bold_token_scope_regex = kwargs.get("light_bold_token_scope_regex", ".*(keyword|type).*")
     all_colors_total = token_colors_total + workbench_colors_total
 
     palette_data = pe.Palette(
@@ -941,6 +942,10 @@ def _generate_random_theme_file(
         alpha = foreground[7:9]
         color_replacement = palette_data[color_placeholder] + alpha
         token_color["settings"]["foreground"] = color_replacement
+        token_scope = token_color["scope"]
+        is_keyword_or_type = re.match(light_bold_token_scope_regex, token_scope, re.IGNORECASE)
+        if theme_mode == "LIGHT" and is_keyword_or_type:
+            token_color["settings"]["fontStyle"] = "bold"
         selected_token_color[color_placeholder] = color_replacement
 
     random_theme_path = f"{os.getcwd()}/themes/{theme_name.lower()}-color-theme.json"
@@ -1058,6 +1063,9 @@ def generate_random_theme():
         "workbench_base_color_name", pe.ColorName.RANDOM.name
     )
     workbench_base_color = config.options.get("workbench_base_color")
+    light_bold_token_scope_regex = config.options.get(
+        "light_bold_token_scope_regex", LIGHT_BOLD_TOKEN_SCOPE_REGEX_DEFAULT
+    )
     _generate_random_theme_file(
         theme_mode=theme_mode,
         token_colors_total=token_colors_total,
@@ -1075,6 +1083,7 @@ def generate_random_theme():
         workbench_colors_lightness=workbench_colors_lightness,
         workbench_base_color_name=workbench_base_color_name,
         workbench_base_color=workbench_base_color,
+        light_bold_token_scope_regex=light_bold_token_scope_regex
     )
 
 
