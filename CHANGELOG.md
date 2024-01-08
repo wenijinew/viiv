@@ -6,11 +6,16 @@ Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how 
 
 ## [Unreleased]
 
-- [0.2.7] - 2023-12-31
+- [0.2.34] - 2023-12-31
 
 ### Added
 
+- Support both dark and light mode with one configuration(`config.json`)
+- To have lighter workbench color, increase values of 'workbench_colors_min' and 'workbench_colors_max'. Normally, it's not necessary to change other properties.
+
 ### Fixed
+
+- Sometimes, it's failed to discard 'RED' dark color because there is no availabe replacement in base colors list. In that case, increase 'R' value.
 
 ### Changed
 
