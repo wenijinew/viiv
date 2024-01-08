@@ -1,6 +1,5 @@
 {
     "options": {
-        "theme_mode": "DARK",
         "token_colors_total": 7,
         "token_colors_gradations_total": 60,
         "token_colors_min": 10,
@@ -14,6 +13,7 @@
         "workbench_colors_saturation": 0.25,
         "workbench_colors_lightness": 0.15,
         "workbench_base_color_name": "RANDOM",
+        "workbench_base_color_rate": 0.8,
         "light_bold_token_scope_regex": ".*(entity.name.type|storage.type|keyword|interface|support.type).*",
         "random_decoration_color": false,
         "discard_dark_red_color": false,
@@ -28,10 +28,30 @@
     },
     "themes": [
         {
-            "name": "ViiV-Ericsson-Dark-Black",
+            "name": "ViiV",
             "theme_mode": "DARK",
-            "workbench_base_color": "#0A0A0A",
-            "workbench_editor_color": "#181818",
+            "workbench_editor_color": "#282C34",
+            "workbench_base_color_rate": 0.8,
+            "workbench_editor_color_id": 55
+        },
+        {
+            "name": "ViiV-Xcode-Dark",
+            "theme_mode": "DARK",
+            "workbench_editor_color": "#292A30",
+            "workbench_base_color_rate": 0.8,
+            "workbench_editor_color_id": 55
+        },
+        {
+            "name": "ViiV-Nord-Dark",
+            "theme_mode": "DARK",
+            "workbench_editor_color": "#2E3440",
+            "workbench_editor_color_id": 55
+        },
+        {
+            "name": "ViiV-Atom-Dark",
+            "theme_mode": "DARK",
+            "workbench_base_color": "#1C1F24",
+            "workbench_editor_color": "#282C34",
             "workbench_editor_color_id": 55
         },
         {
@@ -39,6 +59,13 @@
             "theme_mode": "DARK",
             "workbench_base_color": "#1D1D1D",
             "workbench_editor_color": "#262626",
+            "workbench_editor_color_id": 55
+        },
+        {
+            "name": "ViiV-Ericsson-Dark-Black",
+            "theme_mode": "DARK",
+            "workbench_base_color": "#0F0F0F",
+            "workbench_editor_color": "#181818",
             "workbench_editor_color_id": 55
         },
         {
@@ -131,10 +158,6 @@
             "workbench_base_color_name": "BLUE",
             "workbench_colors_saturation": 0.5,
             "workbench_colors_lightness": 0.03
-        },
-        {
-            "name": "ViiV",
-            "workbench_base_color_name": "RANDOM"
         }
     ],
     "background": [
