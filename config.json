@@ -1,6 +1,5 @@
 {
     "options": {
-        "theme_mode": "DARK",
         "token_colors_total": 7,
         "token_colors_gradations_total": 60,
         "token_colors_min": 10,
@@ -9,14 +8,14 @@
         "token_colors_lightness": 0.05,
         "workbench_colors_total": 7,
         "workbench_colors_gradations_total": 60,
-        "workbench_colors_min": 10,
-        "workbench_colors_max": 40,
+        "workbench_colors_min": 20,
+        "workbench_colors_max": 60,
         "workbench_colors_saturation": 0.25,
         "workbench_colors_lightness": 0.15,
         "workbench_base_color_name": "RANDOM",
         "light_bold_token_scope_regex": ".*(entity.name.type|storage.type|keyword|interface|support.type).*",
         "random_decoration_color": false,
-        "discard_dark_red_color": true,
+        "discard_dark_red_color": false,
         "random_decoration_color_basic_range": [
             1,
             14
@@ -600,6 +599,7 @@
             "groups": [
                 ".*input.*placeholderForeground.*",
                 "menu.separatorBackground",
+                "tab.unfocusedActiveBorderTop",
                 ".*(inactive|unfocus|disabled).*foreground.*"
             ],
             "replace_color_component": [
@@ -928,7 +928,6 @@
                 ".*\\.(?!inactive)(active|select|focus).*background.*",
                 ".*editor.*match.*",
                 "editor.*(highlight|selection).*background",
-                "tab.unfocusedActiveBorderTop",
                 ".*ruler.*foreground.*"
             ],
             "replace_color_component": [
