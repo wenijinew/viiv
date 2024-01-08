@@ -1091,7 +1091,7 @@ def generate_random_theme():
     theme_name = config.options.get("theme_name")
     if theme_name:
         return generate_themes(theme_name)
-    theme_mode = config.options.get("theme_mode")
+    theme_mode = config.options.get("theme_mode").upper()
     token_colors_total = config.options.get("token_colors_total", 7)
     token_colors_gradations_total = config.options.get(
         "token_colors_gradations_total", 60
@@ -1115,6 +1115,8 @@ def generate_random_theme():
         "workbench_base_color_name", pe.ColorName.RANDOM.name
     )
     workbench_base_color = config.options.get("workbench_base_color")
+    workbench_editor_color = config.options.get("workbench_editor_color")
+    workbench_editor_color_id = config.options.get("workbench_editor_color_id")
     light_bold_token_scope_regex = config.options.get(
         "light_bold_token_scope_regex", LIGHT_BOLD_TOKEN_SCOPE_REGEX_DEFAULT
     )
@@ -1135,6 +1137,8 @@ def generate_random_theme():
         workbench_colors_lightness=workbench_colors_lightness,
         workbench_base_color_name=workbench_base_color_name,
         workbench_base_color=workbench_base_color,
+        workbench_editor_color=workbench_editor_color,
+        workbench_editor_color_id=workbench_editor_color_id,
         light_bold_token_scope_regex=light_bold_token_scope_regex,
     )
 
