@@ -2,37 +2,25 @@
 
 All notable changes to the "eu-vscode" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
-## [Unreleased]
-
-- [0.2.34] - 2023-12-31
-
-### Added
+## [v0.2.35] - 2024-01-08
 
 - Support both dark and light mode with one configuration(`config.json`)
-- To have lighter workbench color, increase values of 'workbench_colors_min' and 'workbench_colors_max'. Normally, it's not necessary to change other properties.
+- Pre-configured themes name could be configured in 'options'
+- The option 'theme_mode' in options is optional. If it's not configured, then theme mode will be random - could be dark or light.
+- The option 'theme_mode' in pre-configured themes is required - the pre-configured theme must be DARK or LIGHT.
+- The option parameters are tuned to be the best. No need to make more changes unless the change can generate better themes.
+- To have lighter workbench color, increase values of 'workbench_colors_min' and 'workbench_colors_max'. Normally, it's not necessary to change other parameters.
 
-### Fixed
-
-- Sometimes, it's failed to discard 'RED' dark color because there is no availabe replacement in base colors list. In that case, increase 'R' value.
-
-### Changed
-
-### Removed
-
-## [0.2.6] - 2023-12-19
-
-Applied peelee v0.2.1 solution for random base color generation, the theme token color is stable, elegant, vivid, and comfortable for human eyes.
-It's a great improvement!
-
-## [0.1.4] - 2023-12-09
-
-### Added
-
-- Python utility script to help automatically generate token colors in the theme file.
-- Applied placeholders for all colors in the theme template file.
-- Be able to generate countless charming theme files.42ee2a9 - 2024-01-06 08:45:29 - wenijinew@gmail.com - 1. configure themes in config.json. each theme can have it.. (HEAD -> main)
+fe62d29 - 2024-01-08 08:01:23 - wenijinew@gmail.com - The property 'theme_mode' is required for pre-configured themes. Otherwise, the theme_mode will be randomly decided and it could be light which is not expected for pre-configured dark themes. (HEAD -> main, origin/np)
+d7b2dea - 2024-01-08 06:55:17 - wenijinew@gmail.com - Dark and Light modes look perfect
+58fc120 - 2024-01-08 06:21:42 - wenijinew@gmail.com - Fixed tab.inactiveBackground in LIGHT mode
+d1253f7 - 2024-01-08 05:36:25 - wenijinew@gmail.com - Workbench color tuning is good for both dark and light mode
+83a2481 - 2024-01-07 21:29:05 - wenijinew@gmail.com - Keep lightness as 0.35 if it's bigger than 0.35 for light mode
+e1b8389 - 2024-01-07 18:28:22 - wenijinew@gmail.com - set fontStyle as bold if light mode
+151d7b4 - 2024-01-07 13:37:17 - wenijinew@gmail.com - Workable solution to have one configuration to adapt both dark and light mode  
+c5cd9f1 - 2024-01-07 13:27:34 - wenijinew@gmail.com - Better light mode configuration
+6cc8e01 - 2024-01-07 07:45:51 - wenijinew@gmail.com - Support ligth mode. User can generate random theme and it could be dark or light
+theme. #125
 
 ## [v0.2.32] - 2024-01-06
 
@@ -316,3 +304,7 @@ b1fea09 - 2023-10-19 09:27:03 - wenijinew@gmail.com - [FMP] Test Code - Tuning t
 5716fe9 - 2023-10-17 11:49:47 - wenijinew@gmail.com - Tuning theme for pythno, markdown, workbenth  
 b0de25a - 2023-10-16 16:46:01 - wenijinew@gmail.com - [Init] Tuning foreground color for menu, file explorer fil..
 219e08f - 2023-10-16 14:53:24 - wenijinew@gmail.com - [Init] Create files
+
+## Reference
+
+Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
