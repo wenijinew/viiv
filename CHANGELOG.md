@@ -10,6 +10,7 @@ All notable changes to the "eu-vscode" extension will be documented in this file
 - The option 'theme_mode' in pre-configured themes is required - the pre-configured theme must be DARK or LIGHT.
 - The option parameters are tuned to be the best. No need to make more changes unless the change can generate better themes.
 - To have lighter workbench color, increase values of 'workbench_colors_min' and 'workbench_colors_max'. Normally, it's not necessary to change other parameters.
+- If LIGHT mode, then the property 'light_bold_token_scope_regex' can be used to decide which token scopes to be 'bold' to improve readability.
 
 fe62d29 - 2024-01-08 08:01:23 - wenijinew@gmail.com - The property 'theme_mode' is required for pre-configured themes. Otherwise, the theme_mode will be randomly decided and it could be light which is not expected for pre-configured dark themes. (HEAD -> main, origin/np)
 d7b2dea - 2024-01-08 06:55:17 - wenijinew@gmail.com - Dark and Light modes look perfect
