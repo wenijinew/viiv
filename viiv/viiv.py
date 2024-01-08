@@ -1007,6 +1007,7 @@ def generate_themes(target_theme=None):
     Generates configured themes.
     """
     for theme_config in config.config["themes"]:
+        theme_mode = theme_config.get("theme_mode", "DARK").upper()
         theme_name = theme_config["name"]
         if target_theme and (
             theme_name != target_theme
@@ -1075,6 +1076,7 @@ def generate_themes(target_theme=None):
             workbench_colors_saturation=workbench_colors_saturation,
             workbench_colors_lightness=workbench_colors_lightness,
             theme_name=theme_name,
+            theme_mode=theme_mode,
             workbench_base_color_name=workbench_base_color_name,
             workbench_base_color=workbench_base_color,
             workbench_editor_color=workbench_editor_color,
@@ -1086,6 +1088,9 @@ def generate_random_theme():
     """
     Creates a random theme file with configuration options.
     """
+    theme_name = config.options.get("theme_name")
+    if theme_name:
+        return generate_themes(theme_name)
     theme_mode = config.options.get("theme_mode")
     token_colors_total = config.options.get("token_colors_total", 7)
     token_colors_gradations_total = config.options.get(
