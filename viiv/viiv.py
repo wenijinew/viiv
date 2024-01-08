@@ -1060,6 +1060,14 @@ def generate_themes(target_theme=None):
         )
         workbench_colors_lightness = theme_config.get("workbench_colors_lightness")
         workbench_editor_color = theme_config.get("workbench_editor_color")
+        if workbench_editor_color and not workbench_base_color:
+            workbench_base_color_rate = theme_config.get(
+                "workbench_base_color_rate",
+                config.options.get("workbench_base_color_rate"),
+            )
+            workbench_base_color = _generate_workbench_base_color(
+                workbench_editor_color, workbench_base_color_rate
+            )
         workbench_editor_color_id = theme_config.get("workbench_editor_color_id")
         _generate_random_theme_file(
             token_colors_total=token_colors_total,
@@ -1084,6 +1092,17 @@ def generate_themes(target_theme=None):
         )
 
 
+def _generate_workbench_base_color(workbench_editor_color, workbench_base_color_rate):
+    hls_workbench_editor_color = pe.hex2hls(workbench_editor_color)
+    lightness_workbench_editor_color = hls_workbench_editor_color[1]
+    workbench_base_color = pe.set_lightness(
+        workbench_editor_color,
+        lightness_workbench_editor_color * workbench_base_color_rate,
+    )
+    print(workbench_editor_color, workbench_base_color)
+    return workbench_base_color
+
+
 def generate_random_theme():
     """
     Creates a random theme file with configuration options.
@@ -1091,7 +1110,9 @@ def generate_random_theme():
     theme_name = config.options.get("theme_name")
     if theme_name:
         return generate_themes(theme_name)
-    theme_mode = config.options.get("theme_mode").upper()
+    theme_mode = config.options.get("theme_mode")
+    if theme_mode:
+        theme_mode = theme_mode.upper()
     token_colors_total = config.options.get("token_colors_total", 7)
     token_colors_gradations_total = config.options.get(
         "token_colors_gradations_total", 60
@@ -1116,6 +1137,11 @@ def generate_random_theme():
     )
     workbench_base_color = config.options.get("workbench_base_color")
     workbench_editor_color = config.options.get("workbench_editor_color")
+    if workbench_editor_color and not workbench_base_color:
+        workbench_base_color_rate = config.options.get("workbench_base_color_rate", 0.8)
+        workbench_base_color = _generate_workbench_base_color(
+            workbench_editor_color, workbench_base_color_rate
+        )
     workbench_editor_color_id = config.options.get("workbench_editor_color_id")
     light_bold_token_scope_regex = config.options.get(
         "light_bold_token_scope_regex", LIGHT_BOLD_TOKEN_SCOPE_REGEX_DEFAULT
